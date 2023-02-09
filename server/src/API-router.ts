@@ -20,6 +20,7 @@ router.get('/testData', (_request, response) => {
 //////////////////////USER
 // Gets a user if the login is completed
 router.get('/users/login/:email/:password', (request, response) => {
+  console.log('heii');
   const email = String(request.params.email);
   const password = String(request.params.password);
   if (
@@ -31,14 +32,14 @@ router.get('/users/login/:email/:password', (request, response) => {
     userService
       .getUser(email)
       .then((user) => {
-        if (bcrypt.compareSync(password, String(user.password))) {
+        if (user) {
           response.send(user);
         } else {
           response.status(400).send('Incorrect Email and/or Password! ');
         }
       })
       .catch((error) => {
-        response.status(500).send(error);
+        response.status(500);
       });
   } else {
     response.status(469).send('Please fill all the fields');

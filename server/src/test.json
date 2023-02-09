@@ -1,5 +1,15 @@
 {
-  "user1": {},
+  "users": {
+    "1": {
+      "email": "abc@",
+      "name": "testesen",
+      "password": "123"
+    },
+    "2": {
+      "name": "",
+      "password": ""
+    }
+  },
 
   "test1": 1,
   "test2": 2
