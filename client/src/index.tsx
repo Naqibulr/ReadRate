@@ -6,6 +6,7 @@ import { Carousel, Card, Container, Navbar, Nav } from 'react-bootstrap';
 import { BookAdd, BookList, BookDetails, BookEdit } from './book-components';
 import { UserDetails, UserLogIn, RegisterUser } from './user-components';
 
+
 class Menu extends Component {
   render() {
     return (
@@ -59,7 +60,7 @@ class Home extends Component {
                   <Carousel.Item interval={1500}>
                     <img
                       className="d-block w-100"
-                      src="" 
+                      src=""
                       alt="First slide"
                       height={'auto'}
                     />
@@ -110,7 +111,7 @@ ReactDOM.render(
       <Menu />
       <Route exact path="/" component={Home} />
       <Route exact path="/books" component={BookList} />
-      <Route exact path="/books/add" component={BookAdd} /> 
+      <Route exact path="/books/add" component={BookAdd} />
       <Route exact path="/books/login" component={UserLogIn} />
       <Route exact path="/books/register" component={RegisterUser} />
       <Route exact path="/books/user" component={UserDetails} />

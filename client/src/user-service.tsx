@@ -21,6 +21,7 @@ class UserService {
     password: string,
     password2: string
   ) {
+    console.log('user service: ', first_name, last_name)
     return axios
       .post('/users/register', {
         email: email,
