@@ -271,9 +271,9 @@ export class RegisterUser extends Component {
       )
       .then((response) => {
         if (response.length > 0) {
-          Alert.danger(response);
         } else {
-          Alert.success('User created, please log in');
+          console.log(response.status)
+          console.log(response.data)
           loggedIn = true;
           history.push('/books/login');
         }
