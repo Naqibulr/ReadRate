@@ -20,7 +20,6 @@ router.get('/testData', (_request, response) => {
 //////////////////////USER
 // Gets a user if the login is completed
 router.get('/users/login/:email/:password', (request, response) => {
-  console.log('heii');
   const email = String(request.params.email);
   const password = String(request.params.password);
   if (
@@ -29,18 +28,10 @@ router.get('/users/login/:email/:password', (request, response) => {
     typeof password == 'string' &&
     password.length != 0
   ) {
-    var hashpassword: any;
-    bcrypt.hash(password, salt, (error, hash) => {
-      if (error) throw error;
-      hashpassword = hash;
-    });
-
-    console.log(password);
-    console.log(String(hashpassword));
     userService
       .getUser(email)
       .then((user) => {
-        if (bcrypt.compareSync(password, String(hashpassword))) {
+        if (bcrypt.compareSync(password, String(user.password))) {
           response.send(user);
         } else {
           response.status(400).send('Incorrect Email and/or Password! ');
@@ -58,7 +49,6 @@ router.get('/users/login/:email/:password', (request, response) => {
 router.post('/users/register', (request, response) => {
   const data = request.body;
   //Check required fields
-  console.log('router: ', data.first_name, data.last_name);
   if (!data.first_name || !data.last_name || !data.email || !data.password || !data.password2) {
     response.status(400).send('Please fill in all the fields');
     return;

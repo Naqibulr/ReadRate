@@ -21,7 +21,6 @@ class UserService {
     password: string,
     password2: string
   ) {
-    console.log('user service: ', first_name, last_name)
     return axios
       .post('/users/register', {
         email: email,
@@ -37,7 +36,6 @@ class UserService {
    * Log in with email and password
    */
   logIn(email: string, password: string) {
-    console.log("kik")
     return axios
       .get<User>('/users/login/' + email + '/' + password)
       .then((response) => response.data);

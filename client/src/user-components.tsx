@@ -109,11 +109,9 @@ export class UserLogIn extends Component {
 
   logIn() {
     if (this.email.length != 0 && this.password.length != 0) {
-      console.log("hei");
       userService
         .logIn(this.email, this.password)
         .then((user) => {
-          console.log("hei på deg");
           currentUser = user;
           loggedIn = true;
           Alert.success('Logged in as ' + currentUser.email);
