@@ -41,6 +41,7 @@ class UserService {
         first_name: newUser.first_name,
         last_name: newUser.last_name,
         password: newUser.password,
+        admin: false,
       });
 
       resolve(newUser as User);
