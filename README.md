@@ -21,5 +21,3 @@ cd client
 npm install
 npm start
 ```
-
-kuk
