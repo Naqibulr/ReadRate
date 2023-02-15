@@ -3,46 +3,13 @@ import * as React from 'react';
 import { Alert } from './widgets';
 import { Component } from 'react-simplified';
 import { HashRouter, NavLink, Route } from 'react-router-dom';
-import { Carousel, Card, Container, Navbar, Nav } from 'react-bootstrap';
+import { Carousel, Card, Container } from 'react-bootstrap';
 import { BookAdd, BookList, BookDetails, BookEdit } from './book-components';
 import { UserDetails, UserLogIn, RegisterUser } from './user-components';
-
-
-class Menu extends Component {
-  render() {
-    return (
-      /*Renders navbar using components from React-Bootstrap library */
-      <Navbar
-        collapseOnSelect
-        expand="lg"
-        variant="dark"
-        style={{ backgroundColor: 'rgb(20 20 20)' }}
-      >
-        <Container>
-          {/* Container to wrap elements of navbar within given margin of page end and start */}
-
-          <Navbar.Brand href="">
-            <img
-            />
-          </Navbar.Brand>
-          <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-          <Navbar.Collapse id="responsive-navbar-nav">
-            <Nav className="me-auto"></Nav>
-            <Nav>
-              <Nav.Link href="/#/books">Lorem ipsum</Nav.Link>
-              <Nav.Link href="/#/books/add">Lorem ipsum</Nav.Link>
-              <Nav.Link href="/#/books/user">Lorem ipsum</Nav.Link>
-            </Nav>
-          </Navbar.Collapse>
-        </Container>
-      </Navbar>
-    );
-  }
-}
+import { Menu } from './menu';
 
 class Home extends Component {
-  mounted() {
-  }
+  mounted() {}
   render() {
     return (
       <Container>
@@ -59,19 +26,10 @@ class Home extends Component {
               <Card.Body>
                 <Carousel variant="dark">
                   <Carousel.Item interval={1500}>
-                    <img
-                      className="d-block w-100"
-                      src=""
-                      alt="First slide"
-                      height={'auto'}
-                    />
+                    <img className="d-block w-100" src="" alt="First slide" height={'auto'} />
                   </Carousel.Item>
                   <Carousel.Item interval={500}>
-                    <img
-                      className="d-block w-100"
-                      src=""
-                      alt="Second slide"
-                    />
+                    <img className="d-block w-100" src="" alt="Second slide" />
                     <Carousel.Caption style={{ color: 'white', marginBottom: '23%' }}>
                       <h3>Lorem ipsum</h3>
 
@@ -81,11 +39,7 @@ class Home extends Component {
                     </Carousel.Caption>
                   </Carousel.Item>
                   <Carousel.Item>
-                    <img
-                      className="d-block w-100"
-                      src=""
-                      alt="Third slide"
-                    />
+                    <img className="d-block w-100" src="" alt="Third slide" />
                     <Carousel.Caption style={{ color: 'white', marginBottom: '23%' }}>
                       <h3>Logged in yet? </h3>
                       <NavLink
