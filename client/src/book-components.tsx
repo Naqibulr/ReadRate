@@ -6,7 +6,7 @@ import { Button, Form, Card, Row, Col, Container } from 'react-bootstrap';
 import { createHashHistory } from 'history';
 import { loggedIn, currentUser } from './user-components';
 import bookService from './book-service';
-// REMEMBER TO ADD IMPORTS FROM SERVICE 
+// REMEMBER TO ADD IMPORTS FROM SERVICE
 
 const history = createHashHistory(); // Use history.push(...) to programmatically change path
 
@@ -16,15 +16,12 @@ const history = createHashHistory(); // Use history.push(...) to programmaticall
 export class BookList extends Component {
   testData: String = '';
 
-
   render() {
     return (
       <>
         {/* Search bar for easy access to gicen book */}
         <Card style={{ border: 'none', padding: '15px' }}>
-          <Card.Title style={{ marginLeft: 'auto', marginRight: 'auto' }}>
-            Example title
-          </Card.Title>
+          <Card.Title style={{ marginLeft: 'auto', marginRight: 'auto' }}>Example title</Card.Title>
 
           {this.testData}
         </Card>
@@ -33,7 +30,6 @@ export class BookList extends Component {
   }
 
   mounted() {
-
     //retrieving testdata
     bookService
       .getAll()
@@ -41,12 +37,10 @@ export class BookList extends Component {
       .catch((error) => Alert.danger('Error getting books: ' + error.message));
   }
 
-  search(input: string) {
-  }
+  search(input: string) {}
 }
 
 export class BookDetails extends Component<{ match: { params: { book_id: number } } }> {
-
   render() {
     return (
       <>
@@ -61,60 +55,119 @@ export class BookDetails extends Component<{ match: { params: { book_id: number 
               textAlign: 'center',
             }}
             title={''}
-          >
-          </Card>
+          ></Card>
         </Container>
       </>
     );
   }
 
-  mounted() {
-  }
-
+  mounted() {}
 }
 
 export class BookAdd extends Component {
-  localvalue = ""
+  localvalue = '';
   render() {
     return (
-      <>
-        <Container>
+      <Card
+        style={{
+          border: '0',
+          textAlign: 'center',
+          margin: '10%',
+          marginTop: '3%',
+        }}
+      >
+        <Card.Title>Details:</Card.Title>
+        <Form>
           <Row>
             <Col>
-              <Card
-                style={{
-                  border: '0',
-                  textAlign: 'center',
-                  marginTop: '8%',
-                }}
-              >
-                <Card.Title>LOREM IPSUM:</Card.Title>
-                <Row>
-                  <Form.Control
-                    value={1}
-                    type="text"
-                    placeholder="Name"
-                    onChange={(event) => (this.localvalue = event.currentTarget.value)}
-                    style={{
-                      textAlign: 'center',
-                      width: '60%',
-                      marginLeft: 'auto',
-                      marginRight: 'auto',
-                      marginBottom: '10px',
-                    }}
-                  ></Form.Control>
-                </Row>
-              </Card>
+              <Form.Group className="mb-3" controlId="title">
+                <Form.Label>Title</Form.Label>
+                <Form.Control type="text" placeholder="Enter title" />
+              </Form.Group>
+            </Col>
+            <Col>
+              <Form.Group className="mb-3" controlId="isbn">
+                <Form.Label>ISBN</Form.Label>
+                <Form.Control type="text" placeholder="Enter ISBN" />
+              </Form.Group>
             </Col>
           </Row>
-        </Container>
-      </>
+          <Row>
+            <Col>
+              <Form.Group className="mb-3" controlId="author">
+                <Form.Label>Author</Form.Label>
+                <Form.Control type="text" placeholder="Enter author name" />
+              </Form.Group>
+            </Col>
+            <Col>
+              <Form.Group className="mb-3" controlId="releaseYear">
+                <Form.Label>Release year</Form.Label>
+                <Form.Control type="text" placeholder="Enter Release year" />
+              </Form.Group>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <Form.Group className="mb-3" controlId="publisher">
+                <Form.Label>Publisher</Form.Label>
+                <Form.Control type="text" placeholder="Enter publisher name" />
+              </Form.Group>
+            </Col>
+            <Col>
+              <Form.Group className="mb-3" controlId="pages">
+                <Form.Label>Number of pages</Form.Label>
+                <Form.Control type="text" placeholder="Enter number of pages" />
+              </Form.Group>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <Form.Group className="mb-3" controlId="description">
+                <Form.Label>Description</Form.Label>
+                <Form.Control type="text" as="textarea" placeholder="Enter description" rows={1} />
+              </Form.Group>
+            </Col>
+            <Col>
+              <Form.Group className="mb-3" controlId="image">
+                <Form.Label>Image</Form.Label>
+                <Form.Control type="file" placeholder="Upload image" />
+              </Form.Group>
+            </Col>
+          </Row>
+          <Row>
+            <Form.Label>Choose Genre</Form.Label>
+            <Form.Group className="mb-3" controlId="formBasicCheckbox">
+              <Form.Check inline type="checkbox" label="Fantasy" />
+              <Form.Check inline type="checkbox" label="Humour" />
+              <Form.Check inline type="checkbox" label="History" />
+              <Form.Check inline type="checkbox" label="Novel" />
+              <Form.Check inline type="checkbox" label="Children's" />
+              <Form.Check inline type="checkbox" label="Crime" />
+              <Form.Check inline type="checkbox" label="Drama" />
+              <Form.Check inline type="checkbox" label="Horror" />
+              <Form.Check inline type="checkbox" label="Poetry" />
+              <Form.Check inline type="checkbox" label="Science" />
+            </Form.Group>
+          </Row>
+          <Row>
+            <Button
+              variant="lg bg-success"
+              type="submit"
+              style={{
+                width: '50rem',
+                margin: 'auto',
+              }}
+            >
+              Submit
+            </Button>
+          </Row>
+        </Form>
+      </Card>
     );
   }
 }
 
 export class BookEdit extends Component<{ match: { params: { id: number } } }> {
-
   render() {
     return (
       <>
@@ -127,6 +180,5 @@ export class BookEdit extends Component<{ match: { params: { id: number } } }> {
     );
   }
 
-  mounted() {
-  }
+  mounted() {}
 }
