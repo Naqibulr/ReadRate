@@ -1,5 +1,6 @@
 import ReactDOM from 'react-dom';
 import * as React from 'react';
+import { Alert } from './widgets';
 import { Component } from 'react-simplified';
 import { HashRouter, NavLink, Route } from 'react-router-dom';
 import { Carousel, Card, Container } from 'react-bootstrap';
@@ -62,6 +63,7 @@ class Home extends Component {
 ReactDOM.render(
   <HashRouter>
     <div>
+      <Alert />
       <Menu />
       <Route exact path="/" component={Home} />
       <Route exact path="/books" component={BookList} />

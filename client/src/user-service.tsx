@@ -8,6 +8,7 @@ export type User = {
   first_name: string;
   last_name: string;
   password: string;
+  admin: boolean;
 };
 
 class UserService {
@@ -39,6 +40,7 @@ class UserService {
     return axios
       .get<User>('/users/login/' + email + '/' + password)
       .then((response) => response.data);
+
   }
 }
 

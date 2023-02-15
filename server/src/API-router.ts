@@ -38,7 +38,7 @@ router.get('/users/login/:email/:password', (request, response) => {
         }
       })
       .catch((error) => {
-        response.status(500).send(error);
+        response.status(500);
       });
   } else {
     response.status(469).send('Please fill all the fields');

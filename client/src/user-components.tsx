@@ -14,6 +14,7 @@ export let currentUser: User = {
   first_name: '',
   last_name: '',
   password: '',
+  admin: false,
 };
 
 const history = createHashHistory(); // Use history.push(...) 
@@ -134,7 +135,7 @@ export class UserLogIn extends Component {
 }
 
 export class RegisterUser extends Component {
-  user: User = { user_id: 0, email: '', first_name: '', last_name: '', password: '' };
+  user: User = { user_id: 0, email: '', first_name: '', last_name: '', password: '', admin: false };
   confirm_password: string = '';
 
   render() {
@@ -269,9 +270,9 @@ export class RegisterUser extends Component {
       )
       .then((response) => {
         if (response.length > 0) {
-          Alert.danger(response);
         } else {
-          Alert.success('User created, please log in');
+          console.log(response.status)
+          console.log(response.data)
           loggedIn = true;
           history.push('/books/login');
         }
@@ -280,7 +281,7 @@ export class RegisterUser extends Component {
   }
 
   clearInput() {
-    this.user = { user_id: 0, email: '', first_name: '', last_name: '', password: '' };
+    this.user = { user_id: 0, email: '', first_name: '', last_name: '', password: '', admin: false };
     this.confirm_password = '';
   }
 }
@@ -296,6 +297,7 @@ export class UserDetails extends Component {
             textAlign: 'center',
             marginLeft: 'auto',
             marginRight: 'auto',
+            height: "85vh"
           }}
         >
           {/* Page for all relevant user info for logged in user */}
@@ -307,10 +309,79 @@ export class UserDetails extends Component {
           </Row>
           <Row style={{ fontSize: '17px' }}>
             <Card.Text>
-              Your name: {currentUser.first_name} {currentUser.last_name}
+              You are {currentUser.admin ? "registered as an Admin user" : "registered as an ordinary user"}
             </Card.Text>
           </Row>
           <Row>
+            <Button
+              variant='outline-success'
+              onClick={() => this.requestAdmin()}
+              style={{
+                width: '15rem',
+                marginLeft: 'auto',
+                marginRight: 'auto',
+                marginBottom: '10px',
+              }}
+            >
+              Request Admin Status
+            </Button>
+          </Row>
+          <Row style={{ fontSize: '17px' }}>
+            <Card.Text style={{ fontWeight: 'bold' }}>Your reviews:</Card.Text>
+          </Row>
+          <Row>
+            <Col xs={3}>
+              Book title 1 <br />
+              4 / 5
+              <Form.Range />
+              <Form.Control as="textarea" rows={12}
+                value="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer bibendum convallis ornare. Aliquam id iaculis leo. In malesuada mi sed mauris euismod, vitae pretium leo feugiat. Sed at nisl blandit, volutpat arcu at, dignissim enim. Donec vel massa nulla. Maecenas eget sollicitudin nisl. Morbi et ex id elit vehicula fringilla at vel velit. Maecenas at quam odio. Donec id consectetur purus, sit amet lacinia dolor. Vivamus gravida leo ut nisl sollicitudin, ac sagittis lectus consectetur. Nulla iaculis vel lectus ac sodales. Maecenas at sapien pretium, vehicula sapien eget, feugiat ligula. Nulla egestas ligula non tempus commodo. Quisque tristique urna dui, non finibus nisi bibendum non. Mauris pulvinar sed lacus vitae convallis. Sed dictum efficitur nibh eget condimentum."
+              ></Form.Control>
+            </Col>
+            <Col xs={3}>
+              Book title 2 <br />
+              2 / 5
+              <Form.Range />
+              <Form.Control as="textarea" rows={12}
+                value="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer bibendum convallis ornare. Aliquam id iaculis leo. In malesuada mi sed mauris euismod, vitae pretium leo feugiat. Sed at nisl blandit, volutpat arcu at, dignissim enim. Donec vel massa nulla. Maecenas eget sollicitudin nisl. Morbi et ex id elit vehicula fringilla at vel velit. Maecenas at quam odio. Donec id consectetur purus, sit amet lacinia dolor. Vivamus gravida leo ut nisl sollicitudin, ac sagittis lectus consectetur. Nulla iaculis vel lectus ac sodales. Maecenas at sapien pretium, vehicula sapien eget, feugiat ligula. Nulla egestas ligula non tempus commodo. Quisque tristique urna dui, non finibus nisi bibendum non. Mauris pulvinar sed lacus vitae convallis. Sed dictum efficitur nibh eget condimentum."
+              ></Form.Control>
+            </Col>
+            <Col xs={3}>
+              Book title 3 <br />
+              3 / 5
+              <Form.Range />
+              <Form.Control as="textarea" rows={12}
+                value="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer bibendum convallis ornare. Aliquam id iaculis leo. In malesuada mi sed mauris euismod, vitae pretium leo feugiat. Sed at nisl blandit, volutpat arcu at, dignissim enim. Donec vel massa nulla. Maecenas eget sollicitudin nisl. Morbi et ex id elit vehicula fringilla at vel velit. Maecenas at quam odio. Donec id consectetur purus, sit amet lacinia dolor. Vivamus gravida leo ut nisl sollicitudin, ac sagittis lectus consectetur. Nulla iaculis vel lectus ac sodales. Maecenas at sapien pretium, vehicula sapien eget, feugiat ligula. Nulla egestas ligula non tempus commodo. Quisque tristique urna dui, non finibus nisi bibendum non. Mauris pulvinar sed lacus vitae convallis. Sed dictum efficitur nibh eget condimentum."
+              ></Form.Control>
+            </Col>
+            <Col xs={3}>
+              Book title 4 <br />
+              3 / 5
+              <Form.Range />
+              <Form.Control as="textarea" rows={12}
+                value="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer bibendum convallis ornare. Aliquam id iaculis leo. In malesuada mi sed mauris euismod, vitae pretium leo feugiat. Sed at nisl blandit, volutpat arcu at, dignissim enim. Donec vel massa nulla. Maecenas eget sollicitudin nisl. Morbi et ex id elit vehicula fringilla at vel velit. Maecenas at quam odio. Donec id consectetur purus, sit amet lacinia dolor. Vivamus gravida leo ut nisl sollicitudin, ac sagittis lectus consectetur. Nulla iaculis vel lectus ac sodales. Maecenas at sapien pretium, vehicula sapien eget, feugiat ligula. Nulla egestas ligula non tempus commodo. Quisque tristique urna dui, non finibus nisi bibendum non. Mauris pulvinar sed lacus vitae convallis. Sed dictum efficitur nibh eget condimentum."
+              ></Form.Control>
+            </Col>
+          </Row>
+          <Row>
+            <Card.Text style={{ fontWeight: 'bold' }}>Your Lists:</Card.Text>
+            <Col xs={3}>
+              <Card>
+                List 1
+              </Card>
+            </Col>
+            <Col xs={3}>
+              <Card>
+                List 2
+              </Card>
+            </Col>
+            <Col xs={3}>
+              <Card>
+                List 3
+              </Card>
+            </Col>
+          </Row>
+          <Row style={{ padding: "10vh" }}>
             <Button
               variant="outline-danger"
               onClick={() => this.logOut()}
@@ -339,6 +410,10 @@ export class UserDetails extends Component {
   logOut() {
     loggedIn = false;
     history.push('/books');
-    currentUser = { user_id: 0, email: '', first_name: '', last_name: '', password: '' };
+    currentUser = { user_id: 0, email: '', first_name: '', last_name: '', password: '', admin: false };
+  }
+
+  requestAdmin() {
+
   }
 }
