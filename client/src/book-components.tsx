@@ -74,6 +74,7 @@ export class BookAdd extends Component {
   description: string = '';
   genre: Array<string> = [];
   ischecked: boolean = false;
+  imagePath: string = '';
 
   handleCheckboxChange = (event: any) => {
     this.ischecked = event.target.checked;
@@ -100,8 +101,25 @@ export class BookAdd extends Component {
         ', ' +
         this.description +
         ', ' +
-        this.genre
+        this.genre +
+        ', ' +
+        this.imagePath
     );
+  }
+
+  imageUpload() {
+    const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+      const file = event.target.files?.[0];
+      console.log(event.target.files);
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          this.imagePath = event.target?.result as string;
+        };
+
+        reader.readAsDataURL(file);
+      }
+    };
   }
 
   render() {
@@ -198,7 +216,11 @@ export class BookAdd extends Component {
             <Col>
               <Form.Group className="mb-3" controlId="image">
                 <Form.Label>Image</Form.Label>
-                <Form.Control type="file" placeholder="Upload image" />
+                <Form.Control
+                  type="file"
+                  placeholder="Upload image"
+                  onClick={(event) => this.imageUpload()}
+                />
               </Form.Group>
             </Col>
           </Row>
@@ -212,15 +234,69 @@ export class BookAdd extends Component {
                 value="Fantasy"
                 onChange={(event) => this.handleCheckboxChange(event)}
               />
-              <Form.Check inline type="checkbox" label="Humour" value="Humor" />
-              <Form.Check inline type="checkbox" label="History" />
-              <Form.Check inline type="checkbox" label="Novel" />
-              <Form.Check inline type="checkbox" label="Children's" />
-              <Form.Check inline type="checkbox" label="Crime" />
-              <Form.Check inline type="checkbox" label="Drama" />
-              <Form.Check inline type="checkbox" label="Horror" />
-              <Form.Check inline type="checkbox" label="Poetry" />
-              <Form.Check inline type="checkbox" label="Science" />
+              <Form.Check
+                inline
+                type="checkbox"
+                label="Humour"
+                value="Humor"
+                onChange={(event) => this.handleCheckboxChange(event)}
+              />
+              <Form.Check
+                inline
+                type="checkbox"
+                label="History"
+                value="History"
+                onChange={(event) => this.handleCheckboxChange(event)}
+              />
+              <Form.Check
+                inline
+                type="checkbox"
+                label="Novel"
+                value="Novel"
+                onChange={(event) => this.handleCheckboxChange(event)}
+              />
+              <Form.Check
+                inline
+                type="checkbox"
+                label="Children's"
+                value="Children's"
+                onChange={(event) => this.handleCheckboxChange(event)}
+              />
+              <Form.Check
+                inline
+                type="checkbox"
+                label="Crime"
+                value="Crime"
+                onChange={(event) => this.handleCheckboxChange(event)}
+              />
+              <Form.Check
+                inline
+                type="checkbox"
+                label="Drama"
+                value="Drama"
+                onChange={(event) => this.handleCheckboxChange(event)}
+              />
+              <Form.Check
+                inline
+                type="checkbox"
+                label="Horror"
+                value="Horror"
+                onChange={(event) => this.handleCheckboxChange(event)}
+              />
+              <Form.Check
+                inline
+                type="checkbox"
+                label="Poetry"
+                value="Poetry"
+                onChange={(event) => this.handleCheckboxChange(event)}
+              />
+              <Form.Check
+                inline
+                type="checkbox"
+                label="Science"
+                value="Science"
+                onChange={(event) => this.handleCheckboxChange(event)}
+              />
             </Form.Group>
           </Row>
           <Row>
