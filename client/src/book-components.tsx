@@ -65,7 +65,45 @@ export class BookDetails extends Component<{ match: { params: { book_id: number 
 }
 
 export class BookAdd extends Component {
-  localvalue = '';
+  title: string = 'abc';
+  ISBN: string = '';
+  author: string = '';
+  releaseYear: number = 0;
+  publisher: string = '';
+  pages: number = 0;
+  description: string = '';
+  genre: Array<string> = [];
+  ischecked: boolean = false;
+
+  handleCheckboxChange = (event: any) => {
+    this.ischecked = event.target.checked;
+    if (this.ischecked) {
+      this.genre.push(event.target.value);
+    } else {
+      this.genre.splice(this.genre.indexOf(event.target.value), 1);
+    }
+  };
+
+  log() {
+    console.log(
+      this.title +
+        ', ' +
+        this.ISBN +
+        ', ' +
+        this.author +
+        ', ' +
+        this.releaseYear +
+        ', ' +
+        this.publisher +
+        ', ' +
+        this.pages +
+        ', ' +
+        this.description +
+        ', ' +
+        this.genre
+    );
+  }
+
   render() {
     return (
       <Card
@@ -82,13 +120,21 @@ export class BookAdd extends Component {
             <Col>
               <Form.Group className="mb-3" controlId="title">
                 <Form.Label>Title</Form.Label>
-                <Form.Control type="text" placeholder="Enter title" />
+                <Form.Control
+                  type="text"
+                  placeholder="Enter title"
+                  onChange={(event) => (this.title = event.currentTarget.value)}
+                />
               </Form.Group>
             </Col>
             <Col>
               <Form.Group className="mb-3" controlId="isbn">
                 <Form.Label>ISBN</Form.Label>
-                <Form.Control type="text" placeholder="Enter ISBN" />
+                <Form.Control
+                  type="text"
+                  placeholder="Enter ISBN"
+                  onChange={(event) => (this.ISBN = event.currentTarget.value)}
+                />
               </Form.Group>
             </Col>
           </Row>
@@ -96,13 +142,21 @@ export class BookAdd extends Component {
             <Col>
               <Form.Group className="mb-3" controlId="author">
                 <Form.Label>Author</Form.Label>
-                <Form.Control type="text" placeholder="Enter author name" />
+                <Form.Control
+                  type="text"
+                  placeholder="Enter author name"
+                  onChange={(event) => (this.author = event.currentTarget.value)}
+                />
               </Form.Group>
             </Col>
             <Col>
               <Form.Group className="mb-3" controlId="releaseYear">
                 <Form.Label>Release year</Form.Label>
-                <Form.Control type="text" placeholder="Enter Release year" />
+                <Form.Control
+                  type="text"
+                  placeholder="Enter Release year"
+                  onChange={(event) => (this.releaseYear = parseInt(event.currentTarget.value))}
+                />
               </Form.Group>
             </Col>
           </Row>
@@ -110,13 +164,21 @@ export class BookAdd extends Component {
             <Col>
               <Form.Group className="mb-3" controlId="publisher">
                 <Form.Label>Publisher</Form.Label>
-                <Form.Control type="text" placeholder="Enter publisher name" />
+                <Form.Control
+                  type="text"
+                  placeholder="Enter publisher name"
+                  onChange={(event) => (this.publisher = event.currentTarget.value)}
+                />
               </Form.Group>
             </Col>
             <Col>
               <Form.Group className="mb-3" controlId="pages">
                 <Form.Label>Number of pages</Form.Label>
-                <Form.Control type="text" placeholder="Enter number of pages" />
+                <Form.Control
+                  type="text"
+                  placeholder="Enter number of pages"
+                  onChange={(event) => (this.pages = parseInt(event.currentTarget.value))}
+                />
               </Form.Group>
             </Col>
           </Row>
@@ -124,7 +186,13 @@ export class BookAdd extends Component {
             <Col>
               <Form.Group className="mb-3" controlId="description">
                 <Form.Label>Description</Form.Label>
-                <Form.Control type="text" as="textarea" placeholder="Enter description" rows={1} />
+                <Form.Control
+                  type="text"
+                  as="textarea"
+                  placeholder="Enter description"
+                  rows={1}
+                  onChange={(event) => (this.description = event.currentTarget.value)}
+                />
               </Form.Group>
             </Col>
             <Col>
@@ -137,8 +205,14 @@ export class BookAdd extends Component {
           <Row>
             <Form.Label>Choose Genre</Form.Label>
             <Form.Group className="mb-3" controlId="formBasicCheckbox">
-              <Form.Check inline type="checkbox" label="Fantasy" />
-              <Form.Check inline type="checkbox" label="Humour" />
+              <Form.Check
+                inline
+                type="checkbox"
+                label="Fantasy"
+                value="Fantasy"
+                onChange={(event) => this.handleCheckboxChange(event)}
+              />
+              <Form.Check inline type="checkbox" label="Humour" value="Humor" />
               <Form.Check inline type="checkbox" label="History" />
               <Form.Check inline type="checkbox" label="Novel" />
               <Form.Check inline type="checkbox" label="Children's" />
@@ -151,8 +225,8 @@ export class BookAdd extends Component {
           </Row>
           <Row>
             <Button
+              onClick={() => this.log()}
               variant="lg bg-success"
-              type="submit"
               style={{
                 width: '50rem',
                 margin: 'auto',
