@@ -330,3 +330,26 @@ export class BookEdit extends Component<{ match: { params: { id: number } } }> {
 
   mounted() {}
 }
+
+interface BookCardProps {
+  title: string;
+  description: string;
+  imageSrc: string;
+}
+
+export class BookCard extends Component<BookCardProps> {
+  render() {
+    const { title, description, imageSrc } = this.props;
+
+    return (
+      <Card style={{ width: '18rem', marginLeft: '10px' }}>
+        <Card.Img variant="top" src={imageSrc} />
+        <Card.Body>
+          <Card.Title>{title}</Card.Title>
+          <Card.Text>{description}</Card.Text>
+          <Button variant="primary">Read more</Button>
+        </Card.Body>
+      </Card>
+    );
+  }
+}

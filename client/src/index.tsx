@@ -1,10 +1,10 @@
 import ReactDOM from 'react-dom';
 import * as React from 'react';
-import { Alert } from './widgets';
+import { Alert, Column } from './widgets';
 import { Component } from 'react-simplified';
 import { HashRouter, NavLink, Route } from 'react-router-dom';
-import { Carousel, Card, Container } from 'react-bootstrap';
-import { BookAdd, BookList, BookDetails, BookEdit } from './book-components';
+import { Carousel, Card, Container, Row, Col } from 'react-bootstrap';
+import { BookAdd, BookList, BookDetails, BookEdit, BookCard } from './book-components';
 import { UserDetails, UserLogIn, RegisterUser } from './user-components';
 import { Menu } from './menu';
 
@@ -13,48 +13,26 @@ class Home extends Component {
   render() {
     return (
       <Container>
-        <Card
-          style={{
-            border: 'none',
-            textAlign: 'center',
-            margin: '2%',
-          }}
-        >
-          {/* Carousel on first page with navlink to books and user */}
-          <Card.Body>
-            <Card style={{ border: 'none', textAlign: 'center', backgroundColor: '' }}>
-              <Card.Body>
-                <Carousel variant="dark">
-                  <Carousel.Item interval={1500}>
-                    <img className="d-block w-100" src="" alt="First slide" height={'auto'} />
-                  </Carousel.Item>
-                  <Carousel.Item interval={500}>
-                    <img className="d-block w-100" src="" alt="Second slide" />
-                    <Carousel.Caption style={{ color: 'white', marginBottom: '23%' }}>
-                      <h3>Lorem ipsum</h3>
-
-                      <NavLink to={'/books'} style={{ color: 'white', textDecoration: 'none' }}>
-                        Lorem ipsum
-                      </NavLink>
-                    </Carousel.Caption>
-                  </Carousel.Item>
-                  <Carousel.Item>
-                    <img className="d-block w-100" src="" alt="Third slide" />
-                    <Carousel.Caption style={{ color: 'white', marginBottom: '23%' }}>
-                      <h3>Logged in yet? </h3>
-                      <NavLink
-                        to={'/books/user'}
-                        style={{ color: 'white', textDecoration: 'none' }}
-                      >
-                        Click here to visit your profile
-                      </NavLink>
-                    </Carousel.Caption>
-                  </Carousel.Item>
-                </Carousel>
-              </Card.Body>
-            </Card>
-          </Card.Body>
-        </Card>
+        <Row className="my-3 p-3">
+          <BookCard
+            title="Hestelivet"
+            description="Hester liker gulerot, cavalos gostam de cenouras"
+            imageSrc="https://images.pexels.com/photos/9187302/pexels-photo-9187302.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2/100px100"
+          />
+          <BookCard
+            title="Hestelivet"
+            description="Hester liker gulerot, cavalos gostam de cenouras"
+            imageSrc="https://images.pexels.com/photos/9187302/pexels-photo-9187302.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2/100px100"
+          />
+          <BookCard
+            title="Hestelivet"
+            description="Hester liker gulerot, cavalos gostam de cenouras"
+            imageSrc="https://images.pexels.com/photos/9187302/pexels-photo-9187302.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2/100px100"
+          />
+        </Row>
+        <Row className="my-3 p-3"></Row>
+        <Row className="my-3 p-3"></Row>
+        <Row className="my-3 p-3"></Row>
       </Container>
     );
   }
