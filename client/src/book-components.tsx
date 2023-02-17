@@ -5,7 +5,8 @@ import { NavLink } from 'react-router-dom';
 import { Button, Form, Card, Row, Col, Container } from 'react-bootstrap';
 import { createHashHistory } from 'history';
 import { loggedIn, currentUser } from './user-components';
-import bookService from './book-service';
+import bookService, { Book } from './book-service';
+
 // REMEMBER TO ADD IMPORTS FROM SERVICE
 
 const history = createHashHistory(); // Use history.push(...) to programmatically change path
@@ -65,61 +66,55 @@ export class BookDetails extends Component<{ match: { params: { book_id: number 
 }
 
 export class BookAdd extends Component {
-  title: string = 'abc';
-  ISBN: string = '';
-  author: string = '';
-  releaseYear: number = 0;
-  publisher: string = '';
-  pages: number = 0;
-  description: string = '';
-  genre: Array<string> = [];
+  book: Book = {
+    title: '',
+    ISBN: '',
+    author: '',
+    releaseYear: 0,
+    publisher: '',
+    pages: 0,
+    description: '',
+    genre: [],
+    imagePath: '',
+  };
+
   ischecked: boolean = false;
-  imagePath: string = '';
 
   handleCheckboxChange = (event: any) => {
     this.ischecked = event.target.checked;
     if (this.ischecked) {
-      this.genre.push(event.target.value);
+      this.book.genre.push(event.target.value);
     } else {
-      this.genre.splice(this.genre.indexOf(event.target.value), 1);
+      this.book.genre.splice(this.book.genre.indexOf(event.target.value), 1);
     }
   };
 
   log() {
-    console.log(
-      this.title +
-        ', ' +
-        this.ISBN +
-        ', ' +
-        this.author +
-        ', ' +
-        this.releaseYear +
-        ', ' +
-        this.publisher +
-        ', ' +
-        this.pages +
-        ', ' +
-        this.description +
-        ', ' +
-        this.genre +
-        ', ' +
-        this.imagePath
+    console.log(this.book);
+  }
+
+  createBook() {}
+
+  addBook() {
+    bookService.addBook(
+      this.book.title,
+      this.book.ISBN,
+      this.book.author,
+      this.book.releaseYear,
+      this.book.publisher,
+      this.book.pages,
+      this.book.description,
+      this.book.genre,
+      this.book.imagePath
     );
   }
 
-  imageUpload() {
-    const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-      const file = event.target.files?.[0];
-      console.log(event.target.files);
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = (event) => {
-          this.imagePath = event.target?.result as string;
-        };
+  getBooks() {
+    bookService.getBooks();
+  }
 
-        reader.readAsDataURL(file);
-      }
-    };
+  getBook(ISBN: string) {
+    bookService.getBook(ISBN);
   }
 
   render() {
@@ -141,7 +136,7 @@ export class BookAdd extends Component {
                 <Form.Control
                   type="text"
                   placeholder="Enter title"
-                  onChange={(event) => (this.title = event.currentTarget.value)}
+                  onChange={(event) => (this.book.title = event.currentTarget.value)}
                 />
               </Form.Group>
             </Col>
@@ -151,7 +146,7 @@ export class BookAdd extends Component {
                 <Form.Control
                   type="text"
                   placeholder="Enter ISBN"
-                  onChange={(event) => (this.ISBN = event.currentTarget.value)}
+                  onChange={(event) => (this.book.ISBN = event.currentTarget.value)}
                 />
               </Form.Group>
             </Col>
@@ -163,7 +158,7 @@ export class BookAdd extends Component {
                 <Form.Control
                   type="text"
                   placeholder="Enter author name"
-                  onChange={(event) => (this.author = event.currentTarget.value)}
+                  onChange={(event) => (this.book.author = event.currentTarget.value)}
                 />
               </Form.Group>
             </Col>
@@ -173,7 +168,9 @@ export class BookAdd extends Component {
                 <Form.Control
                   type="text"
                   placeholder="Enter Release year"
-                  onChange={(event) => (this.releaseYear = parseInt(event.currentTarget.value))}
+                  onChange={(event) =>
+                    (this.book.releaseYear = parseInt(event.currentTarget.value))
+                  }
                 />
               </Form.Group>
             </Col>
@@ -185,7 +182,7 @@ export class BookAdd extends Component {
                 <Form.Control
                   type="text"
                   placeholder="Enter publisher name"
-                  onChange={(event) => (this.publisher = event.currentTarget.value)}
+                  onChange={(event) => (this.book.publisher = event.currentTarget.value)}
                 />
               </Form.Group>
             </Col>
@@ -195,7 +192,7 @@ export class BookAdd extends Component {
                 <Form.Control
                   type="text"
                   placeholder="Enter number of pages"
-                  onChange={(event) => (this.pages = parseInt(event.currentTarget.value))}
+                  onChange={(event) => (this.book.pages = parseInt(event.currentTarget.value))}
                 />
               </Form.Group>
             </Col>
@@ -209,7 +206,7 @@ export class BookAdd extends Component {
                   as="textarea"
                   placeholder="Enter description"
                   rows={1}
-                  onChange={(event) => (this.description = event.currentTarget.value)}
+                  onChange={(event) => (this.book.description = event.currentTarget.value)}
                 />
               </Form.Group>
             </Col>
@@ -217,9 +214,9 @@ export class BookAdd extends Component {
               <Form.Group className="mb-3" controlId="image">
                 <Form.Label>Image</Form.Label>
                 <Form.Control
-                  type="file"
-                  placeholder="Upload image"
-                  onClick={(event) => this.imageUpload()}
+                  type="text"
+                  placeholder="Enter image URL"
+                  onChange={(event) => (this.book.imagePath = event.currentTarget.value)}
                 />
               </Form.Group>
             </Col>
@@ -301,7 +298,7 @@ export class BookAdd extends Component {
           </Row>
           <Row>
             <Button
-              onClick={() => this.log()}
+              onClick={() => this.getBook('isbn')}
               variant="lg bg-success"
               style={{
                 width: '50rem',
@@ -315,6 +312,7 @@ export class BookAdd extends Component {
       </Card>
     );
   }
+  mounted() {}
 }
 
 export class BookEdit extends Component<{ match: { params: { id: number } } }> {
