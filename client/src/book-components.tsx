@@ -294,11 +294,25 @@ export class BookAdd extends Component {
                 value="Science"
                 onChange={(event) => this.handleCheckboxChange(event)}
               />
+              <Form.Check
+                inline
+                type="checkbox"
+                label="Tragedy"
+                value="Tragedy"
+                onChange={(event) => this.handleCheckboxChange(event)}
+              />
+              <Form.Check
+                inline
+                type="checkbox"
+                label="Fiction"
+                value="Fiction"
+                onChange={(event) => this.handleCheckboxChange(event)}
+              />
             </Form.Group>
           </Row>
           <Row>
             <Button
-              onClick={() => this.getBook('isbn')}
+              onClick={() => this.addBook()}
               variant="lg bg-success"
               style={{
                 width: '50rem',
@@ -330,7 +344,6 @@ export class BookEdit extends Component<{ match: { params: { id: number } } }> {
 
   mounted() {}
 }
-
 interface BookCardProps {
   title: string;
   description: string;
@@ -342,12 +355,12 @@ export class BookCard extends Component<BookCardProps> {
     const { title, description, imageSrc } = this.props;
 
     return (
-      <Card style={{ width: '18rem', marginLeft: '10px' }}>
-        <Card.Img variant="top" src={imageSrc} />
+      <Card className="shadow bg-white rounded" style={{ width: '14.5rem', margin: '2px' }}>
+        <Card.Img variant="top" src={imageSrc} style={{ width: '100', height: '200px' }} />
         <Card.Body>
           <Card.Title>{title}</Card.Title>
           <Card.Text>{description}</Card.Text>
-          <Button variant="primary">Read more</Button>
+          <Button variant="success">Read more</Button>
         </Card.Body>
       </Card>
     );

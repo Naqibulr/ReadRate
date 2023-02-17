@@ -12,27 +12,427 @@ class Home extends Component {
   mounted() {}
   render() {
     return (
-      <Container>
-        <Row className="my-3 p-3">
-          <BookCard
-            title="Hestelivet"
-            description="Hester liker gulerot, cavalos gostam de cenouras"
-            imageSrc="https://images.pexels.com/photos/9187302/pexels-photo-9187302.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2/100px100"
-          />
-          <BookCard
-            title="Hestelivet"
-            description="Hester liker gulerot, cavalos gostam de cenouras"
-            imageSrc="https://images.pexels.com/photos/9187302/pexels-photo-9187302.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2/100px100"
-          />
-          <BookCard
-            title="Hestelivet"
-            description="Hester liker gulerot, cavalos gostam de cenouras"
-            imageSrc="https://images.pexels.com/photos/9187302/pexels-photo-9187302.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2/100px100"
-          />
-        </Row>
-        <Row className="my-3 p-3"></Row>
-        <Row className="my-3 p-3"></Row>
-        <Row className="my-3 p-3"></Row>
+      <Container fluid>
+        <Carousel interval={null}>
+          <Carousel.Item style={{ padding: '1rem' }}>
+            <Row>
+              <Col xs={2}>
+                <BookCard
+                  title="Hestelivet"
+                  description="Hester liker gulerot, cavalos gostam de cenouras"
+                  imageSrc="https://upload.wikimedia.org/wikipedia/commons/7/7a/The_Great_Gatsby_Cover_1925_Retouched.jpg"
+                />
+              </Col>
+              <Col xs={2}>
+                <BookCard
+                  title="Hestelivet"
+                  description="Hester liker gulerot, cavalos gostam de cenouras"
+                  imageSrc="https://upload.wikimedia.org/wikipedia/commons/7/7a/The_Great_Gatsby_Cover_1925_Retouched.jpg"
+                />
+              </Col>
+              <Col xs={2}>
+                <BookCard
+                  title="Hestelivet"
+                  description="Hester liker gulerot, cavalos gostam de cenouras"
+                  imageSrc="https://upload.wikimedia.org/wikipedia/commons/7/7a/The_Great_Gatsby_Cover_1925_Retouched.jpg"
+                />
+              </Col>
+              <Col xs={2}>
+                <BookCard
+                  title="Hestelivet"
+                  description="Hester liker gulerot, cavalos gostam de cenouras"
+                  imageSrc="https://upload.wikimedia.org/wikipedia/commons/7/7a/The_Great_Gatsby_Cover_1925_Retouched.jpg"
+                />
+              </Col>
+              <Col xs={2}>
+                <BookCard
+                  title="Hestelivet"
+                  description="Hester liker gulerot, cavalos gostam de cenouras"
+                  imageSrc="https://upload.wikimedia.org/wikipedia/commons/7/7a/The_Great_Gatsby_Cover_1925_Retouched.jpg"
+                />
+              </Col>
+              <Col xs={2}>
+                <BookCard
+                  title="Hestelivet"
+                  description="Hester liker gulerot, cavalos gostam de cenouras"
+                  imageSrc="https://upload.wikimedia.org/wikipedia/commons/7/7a/The_Great_Gatsby_Cover_1925_Retouched.jpg"
+                />
+              </Col>
+            </Row>
+          </Carousel.Item>
+          <Carousel.Item style={{ padding: '1rem' }}>
+            <Row>
+              <Col xs={2}>
+                <BookCard
+                  title="Hestelivet"
+                  description="Hester liker gulerot, cavalos gostam de cenouras"
+                  imageSrc="https://upload.wikimedia.org/wikipedia/commons/7/7a/The_Great_Gatsby_Cover_1925_Retouched.jpg"
+                />
+              </Col>
+              <Col xs={2}>
+                <BookCard
+                  title="Hestelivet"
+                  description="Hester liker gulerot, cavalos gostam de cenouras"
+                  imageSrc="https://upload.wikimedia.org/wikipedia/commons/7/7a/The_Great_Gatsby_Cover_1925_Retouched.jpg"
+                />
+              </Col>
+              <Col xs={2}>
+                <BookCard
+                  title="Hestelivet"
+                  description="Hester liker gulerot, cavalos gostam de cenouras"
+                  imageSrc="https://upload.wikimedia.org/wikipedia/commons/7/7a/The_Great_Gatsby_Cover_1925_Retouched.jpg"
+                />
+              </Col>
+              <Col xs={2}>
+                <BookCard
+                  title="Hestelivet"
+                  description="Hester liker gulerot, cavalos gostam de cenouras"
+                  imageSrc="https://upload.wikimedia.org/wikipedia/commons/7/7a/The_Great_Gatsby_Cover_1925_Retouched.jpg"
+                />
+              </Col>
+              <Col xs={2}>
+                <BookCard
+                  title="Hestelivet"
+                  description="Hester liker gulerot, cavalos gostam de cenouras"
+                  imageSrc="https://upload.wikimedia.org/wikipedia/commons/7/7a/The_Great_Gatsby_Cover_1925_Retouched.jpg"
+                />
+              </Col>
+              <Col xs={2}>
+                <BookCard
+                  title="Hestelivet"
+                  description="Hester liker gulerot, cavalos gostam de cenouras"
+                  imageSrc="https://upload.wikimedia.org/wikipedia/commons/7/7a/The_Great_Gatsby_Cover_1925_Retouched.jpg"
+                />
+              </Col>
+            </Row>
+          </Carousel.Item>
+          <Carousel.Item style={{ padding: '1rem' }}>
+            <Row>
+              <Col xs={2}>
+                <BookCard
+                  title="Hestelivet"
+                  description="Hester liker gulerot, cavalos gostam de cenouras"
+                  imageSrc="https://upload.wikimedia.org/wikipedia/commons/7/7a/The_Great_Gatsby_Cover_1925_Retouched.jpg"
+                />
+              </Col>
+              <Col xs={2}>
+                <BookCard
+                  title="Hestelivet"
+                  description="Hester liker gulerot, cavalos gostam de cenouras"
+                  imageSrc="https://upload.wikimedia.org/wikipedia/commons/7/7a/The_Great_Gatsby_Cover_1925_Retouched.jpg"
+                />
+              </Col>
+              <Col xs={2}>
+                <BookCard
+                  title="Hestelivet"
+                  description="Hester liker gulerot, cavalos gostam de cenouras"
+                  imageSrc="https://upload.wikimedia.org/wikipedia/commons/7/7a/The_Great_Gatsby_Cover_1925_Retouched.jpg"
+                />
+              </Col>
+              <Col xs={2}>
+                <BookCard
+                  title="Hestelivet"
+                  description="Hester liker gulerot, cavalos gostam de cenouras"
+                  imageSrc="https://upload.wikimedia.org/wikipedia/commons/7/7a/The_Great_Gatsby_Cover_1925_Retouched.jpg"
+                />
+              </Col>
+              <Col xs={2}>
+                <BookCard
+                  title="Hestelivet"
+                  description="Hester liker gulerot, cavalos gostam de cenouras"
+                  imageSrc="https://upload.wikimedia.org/wikipedia/commons/7/7a/The_Great_Gatsby_Cover_1925_Retouched.jpg"
+                />
+              </Col>
+              <Col xs={2}>
+                <BookCard
+                  title="Hestelivet"
+                  description="Hester liker gulerot, cavalos gostam de cenouras"
+                  imageSrc="https://upload.wikimedia.org/wikipedia/commons/7/7a/The_Great_Gatsby_Cover_1925_Retouched.jpg"
+                />
+              </Col>
+            </Row>
+          </Carousel.Item>
+        </Carousel>
+        <Carousel interval={null}>
+          <Carousel.Item style={{ padding: '1rem' }}>
+            <Row>
+              <Col xs={2}>
+                <BookCard
+                  title="Hestelivet"
+                  description="Hester liker gulerot, cavalos gostam de cenouras"
+                  imageSrc="https://upload.wikimedia.org/wikipedia/commons/7/7a/The_Great_Gatsby_Cover_1925_Retouched.jpg"
+                />
+              </Col>
+              <Col xs={2}>
+                <BookCard
+                  title="Hestelivet"
+                  description="Hester liker gulerot, cavalos gostam de cenouras"
+                  imageSrc="https://upload.wikimedia.org/wikipedia/commons/7/7a/The_Great_Gatsby_Cover_1925_Retouched.jpg"
+                />
+              </Col>
+              <Col xs={2}>
+                <BookCard
+                  title="Hestelivet"
+                  description="Hester liker gulerot, cavalos gostam de cenouras"
+                  imageSrc="https://upload.wikimedia.org/wikipedia/commons/7/7a/The_Great_Gatsby_Cover_1925_Retouched.jpg"
+                />
+              </Col>
+              <Col xs={2}>
+                <BookCard
+                  title="Hestelivet"
+                  description="Hester liker gulerot, cavalos gostam de cenouras"
+                  imageSrc="https://upload.wikimedia.org/wikipedia/commons/7/7a/The_Great_Gatsby_Cover_1925_Retouched.jpg"
+                />
+              </Col>
+              <Col xs={2}>
+                <BookCard
+                  title="Hestelivet"
+                  description="Hester liker gulerot, cavalos gostam de cenouras"
+                  imageSrc="https://upload.wikimedia.org/wikipedia/commons/7/7a/The_Great_Gatsby_Cover_1925_Retouched.jpg"
+                />
+              </Col>
+              <Col xs={2}>
+                <BookCard
+                  title="Hestelivet"
+                  description="Hester liker gulerot, cavalos gostam de cenouras"
+                  imageSrc="https://upload.wikimedia.org/wikipedia/commons/7/7a/The_Great_Gatsby_Cover_1925_Retouched.jpg"
+                />
+              </Col>
+            </Row>
+          </Carousel.Item>
+          <Carousel.Item style={{ padding: '1rem' }}>
+            <Row>
+              <Col xs={2}>
+                <BookCard
+                  title="Hestelivet"
+                  description="Hester liker gulerot, cavalos gostam de cenouras"
+                  imageSrc="https://upload.wikimedia.org/wikipedia/commons/7/7a/The_Great_Gatsby_Cover_1925_Retouched.jpg"
+                />
+              </Col>
+              <Col xs={2}>
+                <BookCard
+                  title="Hestelivet"
+                  description="Hester liker gulerot, cavalos gostam de cenouras"
+                  imageSrc="https://upload.wikimedia.org/wikipedia/commons/7/7a/The_Great_Gatsby_Cover_1925_Retouched.jpg"
+                />
+              </Col>
+              <Col xs={2}>
+                <BookCard
+                  title="Hestelivet"
+                  description="Hester liker gulerot, cavalos gostam de cenouras"
+                  imageSrc="https://upload.wikimedia.org/wikipedia/commons/7/7a/The_Great_Gatsby_Cover_1925_Retouched.jpg"
+                />
+              </Col>
+              <Col xs={2}>
+                <BookCard
+                  title="Hestelivet"
+                  description="Hester liker gulerot, cavalos gostam de cenouras"
+                  imageSrc="https://upload.wikimedia.org/wikipedia/commons/7/7a/The_Great_Gatsby_Cover_1925_Retouched.jpg"
+                />
+              </Col>
+              <Col xs={2}>
+                <BookCard
+                  title="Hestelivet"
+                  description="Hester liker gulerot, cavalos gostam de cenouras"
+                  imageSrc="https://upload.wikimedia.org/wikipedia/commons/7/7a/The_Great_Gatsby_Cover_1925_Retouched.jpg"
+                />
+              </Col>
+              <Col xs={2}>
+                <BookCard
+                  title="Hestelivet"
+                  description="Hester liker gulerot, cavalos gostam de cenouras"
+                  imageSrc="https://upload.wikimedia.org/wikipedia/commons/7/7a/The_Great_Gatsby_Cover_1925_Retouched.jpg"
+                />
+              </Col>
+            </Row>
+          </Carousel.Item>
+          <Carousel.Item style={{ padding: '1rem' }}>
+            <Row>
+              <Col xs={2}>
+                <BookCard
+                  title="Hestelivet"
+                  description="Hester liker gulerot, cavalos gostam de cenouras"
+                  imageSrc="https://upload.wikimedia.org/wikipedia/commons/7/7a/The_Great_Gatsby_Cover_1925_Retouched.jpg"
+                />
+              </Col>
+              <Col xs={2}>
+                <BookCard
+                  title="Hestelivet"
+                  description="Hester liker gulerot, cavalos gostam de cenouras"
+                  imageSrc="https://upload.wikimedia.org/wikipedia/commons/7/7a/The_Great_Gatsby_Cover_1925_Retouched.jpg"
+                />
+              </Col>
+              <Col xs={2}>
+                <BookCard
+                  title="Hestelivet"
+                  description="Hester liker gulerot, cavalos gostam de cenouras"
+                  imageSrc="https://upload.wikimedia.org/wikipedia/commons/7/7a/The_Great_Gatsby_Cover_1925_Retouched.jpg"
+                />
+              </Col>
+              <Col xs={2}>
+                <BookCard
+                  title="Hestelivet"
+                  description="Hester liker gulerot, cavalos gostam de cenouras"
+                  imageSrc="https://upload.wikimedia.org/wikipedia/commons/7/7a/The_Great_Gatsby_Cover_1925_Retouched.jpg"
+                />
+              </Col>
+              <Col xs={2}>
+                <BookCard
+                  title="Hestelivet"
+                  description="Hester liker gulerot, cavalos gostam de cenouras"
+                  imageSrc="https://upload.wikimedia.org/wikipedia/commons/7/7a/The_Great_Gatsby_Cover_1925_Retouched.jpg"
+                />
+              </Col>
+              <Col xs={2}>
+                <BookCard
+                  title="Hestelivet"
+                  description="Hester liker gulerot, cavalos gostam de cenouras"
+                  imageSrc="https://upload.wikimedia.org/wikipedia/commons/7/7a/The_Great_Gatsby_Cover_1925_Retouched.jpg"
+                />
+              </Col>
+            </Row>
+          </Carousel.Item>
+        </Carousel>
+        <Carousel interval={null}>
+          <Carousel.Item style={{ padding: '1rem' }}>
+            <Row>
+              <Col xs={2}>
+                <BookCard
+                  title="Hestelivet"
+                  description="Hester liker gulerot, cavalos gostam de cenouras"
+                  imageSrc="https://upload.wikimedia.org/wikipedia/commons/7/7a/The_Great_Gatsby_Cover_1925_Retouched.jpg"
+                />
+              </Col>
+              <Col xs={2}>
+                <BookCard
+                  title="Hestelivet"
+                  description="Hester liker gulerot, cavalos gostam de cenouras"
+                  imageSrc="https://upload.wikimedia.org/wikipedia/commons/7/7a/The_Great_Gatsby_Cover_1925_Retouched.jpg"
+                />
+              </Col>
+              <Col xs={2}>
+                <BookCard
+                  title="Hestelivet"
+                  description="Hester liker gulerot, cavalos gostam de cenouras"
+                  imageSrc="https://upload.wikimedia.org/wikipedia/commons/7/7a/The_Great_Gatsby_Cover_1925_Retouched.jpg"
+                />
+              </Col>
+              <Col xs={2}>
+                <BookCard
+                  title="Hestelivet"
+                  description="Hester liker gulerot, cavalos gostam de cenouras"
+                  imageSrc="https://upload.wikimedia.org/wikipedia/commons/7/7a/The_Great_Gatsby_Cover_1925_Retouched.jpg"
+                />
+              </Col>
+              <Col xs={2}>
+                <BookCard
+                  title="Hestelivet"
+                  description="Hester liker gulerot, cavalos gostam de cenouras"
+                  imageSrc="https://upload.wikimedia.org/wikipedia/commons/7/7a/The_Great_Gatsby_Cover_1925_Retouched.jpg"
+                />
+              </Col>
+              <Col xs={2}>
+                <BookCard
+                  title="Hestelivet"
+                  description="Hester liker gulerot, cavalos gostam de cenouras"
+                  imageSrc="https://upload.wikimedia.org/wikipedia/commons/7/7a/The_Great_Gatsby_Cover_1925_Retouched.jpg"
+                />
+              </Col>
+            </Row>
+          </Carousel.Item>
+          <Carousel.Item style={{ padding: '1rem' }}>
+            <Row>
+              <Col xs={2}>
+                <BookCard
+                  title="Hestelivet"
+                  description="Hester liker gulerot, cavalos gostam de cenouras"
+                  imageSrc="https://upload.wikimedia.org/wikipedia/commons/7/7a/The_Great_Gatsby_Cover_1925_Retouched.jpg"
+                />
+              </Col>
+              <Col xs={2}>
+                <BookCard
+                  title="Hestelivet"
+                  description="Hester liker gulerot, cavalos gostam de cenouras"
+                  imageSrc="https://upload.wikimedia.org/wikipedia/commons/7/7a/The_Great_Gatsby_Cover_1925_Retouched.jpg"
+                />
+              </Col>
+              <Col xs={2}>
+                <BookCard
+                  title="Hestelivet"
+                  description="Hester liker gulerot, cavalos gostam de cenouras"
+                  imageSrc="https://upload.wikimedia.org/wikipedia/commons/7/7a/The_Great_Gatsby_Cover_1925_Retouched.jpg"
+                />
+              </Col>
+              <Col xs={2}>
+                <BookCard
+                  title="Hestelivet"
+                  description="Hester liker gulerot, cavalos gostam de cenouras"
+                  imageSrc="https://upload.wikimedia.org/wikipedia/commons/7/7a/The_Great_Gatsby_Cover_1925_Retouched.jpg"
+                />
+              </Col>
+              <Col xs={2}>
+                <BookCard
+                  title="Hestelivet"
+                  description="Hester liker gulerot, cavalos gostam de cenouras"
+                  imageSrc="https://upload.wikimedia.org/wikipedia/commons/7/7a/The_Great_Gatsby_Cover_1925_Retouched.jpg"
+                />
+              </Col>
+              <Col xs={2}>
+                <BookCard
+                  title="Hestelivet"
+                  description="Hester liker gulerot, cavalos gostam de cenouras"
+                  imageSrc="https://upload.wikimedia.org/wikipedia/commons/7/7a/The_Great_Gatsby_Cover_1925_Retouched.jpg"
+                />
+              </Col>
+            </Row>
+          </Carousel.Item>
+          <Carousel.Item style={{ padding: '1rem' }}>
+            <Row>
+              <Col xs={2}>
+                <BookCard
+                  title="Hestelivet"
+                  description="Hester liker gulerot, cavalos gostam de cenouras"
+                  imageSrc="https://upload.wikimedia.org/wikipedia/commons/7/7a/The_Great_Gatsby_Cover_1925_Retouched.jpg"
+                />
+              </Col>
+              <Col xs={2}>
+                <BookCard
+                  title="Hestelivet"
+                  description="Hester liker gulerot, cavalos gostam de cenouras"
+                  imageSrc="https://upload.wikimedia.org/wikipedia/commons/7/7a/The_Great_Gatsby_Cover_1925_Retouched.jpg"
+                />
+              </Col>
+              <Col xs={2}>
+                <BookCard
+                  title="Hestelivet"
+                  description="Hester liker gulerot, cavalos gostam de cenouras"
+                  imageSrc="https://upload.wikimedia.org/wikipedia/commons/7/7a/The_Great_Gatsby_Cover_1925_Retouched.jpg"
+                />
+              </Col>
+              <Col xs={2}>
+                <BookCard
+                  title="Hestelivet"
+                  description="Hester liker gulerot, cavalos gostam de cenouras"
+                  imageSrc="https://upload.wikimedia.org/wikipedia/commons/7/7a/The_Great_Gatsby_Cover_1925_Retouched.jpg"
+                />
+              </Col>
+              <Col xs={2}>
+                <BookCard
+                  title="Hestelivet"
+                  description="Hester liker gulerot, cavalos gostam de cenouras"
+                  imageSrc="https://upload.wikimedia.org/wikipedia/commons/7/7a/The_Great_Gatsby_Cover_1925_Retouched.jpg"
+                />
+              </Col>
+              <Col xs={2}>
+                <BookCard
+                  title="Hestelivet"
+                  description="Hester liker gulerot, cavalos gostam de cenouras"
+                  imageSrc="https://upload.wikimedia.org/wikipedia/commons/7/7a/The_Great_Gatsby_Cover_1925_Retouched.jpg"
+                />
+              </Col>
+            </Row>
+          </Carousel.Item>
+        </Carousel>
       </Container>
     );
   }

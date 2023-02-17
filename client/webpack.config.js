@@ -10,7 +10,7 @@
 const path = require('path');
 var webpack = require('webpack');
 
-process.env.IMAGES_CAROUSEL = './img/old.jpeg'; 
+process.env.IMAGES_CAROUSEL = './img/old.jpeg';
 
 module.exports = {
   plugins: [
