@@ -6,13 +6,15 @@ import { HashRouter, NavLink, Route } from 'react-router-dom';
 import { Carousel, Card, Container, Row, Col } from 'react-bootstrap';
 import { BookAdd, BookList, BookDetails, BookEdit, BookCard } from './book-components';
 import { UserDetails, UserLogIn, RegisterUser } from './user-components';
+
 import { Menu } from './menu';
 
 class Home extends Component {
   mounted() {}
   render() {
     return (
-      <Container fluid>
+      <Container fluid style={{ margin: 0 }}>
+        <h3 style={{ marginLeft: '20px', marginTop: '5px', marginBottom: '0px' }}>TopListe</h3>
         <Carousel interval={null}>
           <Carousel.Item style={{ padding: '1rem' }}>
             <Row>
@@ -153,6 +155,7 @@ class Home extends Component {
             </Row>
           </Carousel.Item>
         </Carousel>
+        <h3 style={{ marginLeft: '20px', marginTop: '5px', marginBottom: '0px' }}>TopListe</h3>
         <Carousel interval={null}>
           <Carousel.Item style={{ padding: '1rem' }}>
             <Row>
@@ -293,6 +296,7 @@ class Home extends Component {
             </Row>
           </Carousel.Item>
         </Carousel>
+        <h3 style={{ marginLeft: '20px', marginTop: '5px', marginBottom: '0px' }}>TopListe</h3>
         <Carousel interval={null}>
           <Carousel.Item style={{ padding: '1rem' }}>
             <Row>

@@ -17,7 +17,7 @@ export class Menu extends Component {
         <Container>
           {/* Container to wrap elements of navbar within given margin of page end and start */}
 
-          <Navbar.Brand href="">
+          <Navbar.Brand href="/">
             <h3 style={{ color: 'rgb(73 15 224)' }}>ReadRate</h3>
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
