@@ -1,8 +1,14 @@
 {
   "dependencies": {
+<<<<<<< HEAD
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
     "@mui/material": "^5.11.9",
     "react-rating-stars-component": "^2.2.0"
+=======
+    "@fortawesome/fontawesome-svg-core": "^6.3.0",
+    "@fortawesome/free-solid-svg-icons": "^6.3.0",
+    "@fortawesome/react-fontawesome": "^0.2.0"
+>>>>>>> main
   }
 }
