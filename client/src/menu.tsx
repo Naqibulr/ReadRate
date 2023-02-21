@@ -1,8 +1,8 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+//import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
 import { Button, Container, Dropdown, Form, InputGroup, Nav, Navbar } from 'react-bootstrap';
 import { Component } from 'react-simplified';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
+//import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
 export class Menu extends Component {
   render() {
@@ -44,7 +44,7 @@ export class Menu extends Component {
                 />
 
                 <Button variant="light" id="button-addon2">
-                  <FontAwesomeIcon icon={faSearch} />
+                  Search
                 </Button>
               </InputGroup>
 
@@ -61,6 +61,8 @@ export class Menu extends Component {
           </Navbar.Collapse>
         </Container>
       </Navbar>
+
+      
     );
   }
 }

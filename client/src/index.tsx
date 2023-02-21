@@ -4,7 +4,7 @@ import { Alert } from './widgets';
 import { Component } from 'react-simplified';
 import { HashRouter, NavLink, Route } from 'react-router-dom';
 import { Carousel, Card, Container } from 'react-bootstrap';
-import { BookAdd, BookList, BookDetails, BookEdit } from './book-components';
+import { BookAdd, BookDetails, BookList, BookEdit } from './book-components';
 import { UserDetails, UserLogIn, RegisterUser } from './user-components';
 import { Menu } from './menu';
 
@@ -65,13 +65,13 @@ ReactDOM.render(
     <div>
       <Alert />
       <Menu />
-      <Route exact path="/" component={Home} />
+      <Route exact path="/" component={BookDetails} />
       <Route exact path="/books" component={BookList} />
       <Route exact path="/books/add" component={BookAdd} />
       <Route exact path="/books/login" component={UserLogIn} />
       <Route exact path="/books/register" component={RegisterUser} />
       <Route exact path="/books/user" component={UserDetails} />
-      <Route exact path="/books/:book_id(\d+)" component={BookDetails} />
+      {/* <Route exact path="/books/:book_id(\d+)" component={BookDetails} /> */}
       <Route exact path="/books/:id(\d+)/edit" component={BookEdit} />
     </div>
   </HashRouter>,
