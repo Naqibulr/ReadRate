@@ -1,11 +1,13 @@
 import React from 'react';
 import { Component } from 'react-simplified';
-import { Alert, Column } from './widgets';
-import { NavLink } from 'react-router-dom';
+import { Alert } from './widgets';
+
 import { Button, Form, Card, Row, Col, Container } from 'react-bootstrap';
 import { createHashHistory } from 'history';
-import { loggedIn, currentUser } from './user-components';
+
 import bookService, { Book } from './book-service';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faStar } from '@fortawesome/free-solid-svg-icons';
 
 // REMEMBER TO ADD IMPORTS FROM SERVICE
 
@@ -67,6 +69,7 @@ export class BookDetails extends Component<{ match: { params: { book_id: number 
 
 export class BookAdd extends Component {
   book: Book = {
+    id: '',
     title: '',
     ISBN: '',
     author: '',
@@ -76,6 +79,7 @@ export class BookAdd extends Component {
     description: '',
     genre: [],
     imagePath: '',
+    rating: 0,
   };
 
   ischecked: boolean = false;
@@ -89,12 +93,6 @@ export class BookAdd extends Component {
     }
   };
 
-  log() {
-    console.log(this.book);
-  }
-
-  createBook() {}
-
   addBook() {
     bookService.addBook(
       this.book.title,
@@ -107,14 +105,7 @@ export class BookAdd extends Component {
       this.book.genre,
       this.book.imagePath
     );
-  }
-
-  getBooks() {
-    bookService.getBooks();
-  }
-
-  getBook(ISBN: string) {
-    bookService.getBook(ISBN);
+    Alert.success('The book has been added');
   }
 
   render() {
@@ -346,21 +337,38 @@ export class BookEdit extends Component<{ match: { params: { id: number } } }> {
 }
 interface BookCardProps {
   title: string;
-  description: string;
+  author: string;
   imageSrc: string;
+  rating: number;
 }
 
 export class BookCard extends Component<BookCardProps> {
   render() {
-    const { title, description, imageSrc } = this.props;
+    const { title, author, imageSrc, rating } = this.props;
 
     return (
       <Card className="shadow bg-white rounded" style={{ width: '14.5rem', margin: '2px' }}>
         <Card.Img variant="top" src={imageSrc} style={{ width: '100', height: '200px' }} />
         <Card.Body>
-          <Card.Title>{title}</Card.Title>
-          <Card.Text>{description}</Card.Text>
-          <Button variant="success">Read more</Button>
+          <Card.Title className="text-truncate">{title}</Card.Title>
+          <Card.Text>{author}</Card.Text>
+
+          <Row>
+            <Col className="col-8">
+              <Button variant="success">Read more</Button>
+            </Col>
+            <Col className="col-4">
+              <div
+                className="d-flex align-items-center justify-content-end"
+                style={{ fontSize: '1.2rem', fontWeight: 'bold' }}
+              >
+                <span style={{ color: '#FFA500', marginRight: '5px' }}>
+                  <FontAwesomeIcon icon={faStar} />
+                </span>
+                <span>{rating}</span>
+              </div>
+            </Col>
+          </Row>
         </Card.Body>
       </Card>
     );

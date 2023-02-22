@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { Component } from 'react-simplified';
-import { Alert, Column } from './widgets';
+import { Alert } from './widgets';
 import { Button, Form, Card, Row, Col, Container } from 'react-bootstrap';
-import { NavLink } from 'react-router-dom';
 import userService, { User } from './user-service';
 import { createHashHistory } from 'history';
 
@@ -17,7 +16,7 @@ export let currentUser: User = {
   admin: false,
 };
 
-const history = createHashHistory(); // Use history.push(...) 
+const history = createHashHistory(); // Use history.push(...)
 
 export class UserLogIn extends Component {
   email: string = '';
@@ -271,8 +270,8 @@ export class RegisterUser extends Component {
       .then((response) => {
         if (response.length > 0) {
         } else {
-          console.log(response.status)
-          console.log(response.data)
+          console.log(response.status);
+          console.log(response.data);
           loggedIn = true;
           history.push('/books/login');
         }
@@ -281,7 +280,14 @@ export class RegisterUser extends Component {
   }
 
   clearInput() {
-    this.user = { user_id: 0, email: '', first_name: '', last_name: '', password: '', admin: false };
+    this.user = {
+      user_id: 0,
+      email: '',
+      first_name: '',
+      last_name: '',
+      password: '',
+      admin: false,
+    };
     this.confirm_password = '';
   }
 }
@@ -297,7 +303,7 @@ export class UserDetails extends Component {
             textAlign: 'center',
             marginLeft: 'auto',
             marginRight: 'auto',
-            height: "85vh"
+            height: '85vh',
           }}
         >
           {/* Page for all relevant user info for logged in user */}
@@ -309,12 +315,13 @@ export class UserDetails extends Component {
           </Row>
           <Row style={{ fontSize: '17px' }}>
             <Card.Text>
-              You are {currentUser.admin ? "registered as an Admin user" : "registered as an ordinary user"}
+              You are{' '}
+              {currentUser.admin ? 'registered as an Admin user' : 'registered as an ordinary user'}
             </Card.Text>
           </Row>
           <Row>
             <Button
-              variant='outline-success'
+              variant="outline-success"
               onClick={() => this.requestAdmin()}
               style={{
                 width: '15rem',
@@ -334,7 +341,9 @@ export class UserDetails extends Component {
               Book title 1 <br />
               4 / 5
               <Form.Range />
-              <Form.Control as="textarea" rows={12}
+              <Form.Control
+                as="textarea"
+                rows={12}
                 value="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer bibendum convallis ornare. Aliquam id iaculis leo. In malesuada mi sed mauris euismod, vitae pretium leo feugiat. Sed at nisl blandit, volutpat arcu at, dignissim enim. Donec vel massa nulla. Maecenas eget sollicitudin nisl. Morbi et ex id elit vehicula fringilla at vel velit. Maecenas at quam odio. Donec id consectetur purus, sit amet lacinia dolor. Vivamus gravida leo ut nisl sollicitudin, ac sagittis lectus consectetur. Nulla iaculis vel lectus ac sodales. Maecenas at sapien pretium, vehicula sapien eget, feugiat ligula. Nulla egestas ligula non tempus commodo. Quisque tristique urna dui, non finibus nisi bibendum non. Mauris pulvinar sed lacus vitae convallis. Sed dictum efficitur nibh eget condimentum."
               ></Form.Control>
             </Col>
@@ -342,7 +351,9 @@ export class UserDetails extends Component {
               Book title 2 <br />
               2 / 5
               <Form.Range />
-              <Form.Control as="textarea" rows={12}
+              <Form.Control
+                as="textarea"
+                rows={12}
                 value="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer bibendum convallis ornare. Aliquam id iaculis leo. In malesuada mi sed mauris euismod, vitae pretium leo feugiat. Sed at nisl blandit, volutpat arcu at, dignissim enim. Donec vel massa nulla. Maecenas eget sollicitudin nisl. Morbi et ex id elit vehicula fringilla at vel velit. Maecenas at quam odio. Donec id consectetur purus, sit amet lacinia dolor. Vivamus gravida leo ut nisl sollicitudin, ac sagittis lectus consectetur. Nulla iaculis vel lectus ac sodales. Maecenas at sapien pretium, vehicula sapien eget, feugiat ligula. Nulla egestas ligula non tempus commodo. Quisque tristique urna dui, non finibus nisi bibendum non. Mauris pulvinar sed lacus vitae convallis. Sed dictum efficitur nibh eget condimentum."
               ></Form.Control>
             </Col>
@@ -350,7 +361,9 @@ export class UserDetails extends Component {
               Book title 3 <br />
               3 / 5
               <Form.Range />
-              <Form.Control as="textarea" rows={12}
+              <Form.Control
+                as="textarea"
+                rows={12}
                 value="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer bibendum convallis ornare. Aliquam id iaculis leo. In malesuada mi sed mauris euismod, vitae pretium leo feugiat. Sed at nisl blandit, volutpat arcu at, dignissim enim. Donec vel massa nulla. Maecenas eget sollicitudin nisl. Morbi et ex id elit vehicula fringilla at vel velit. Maecenas at quam odio. Donec id consectetur purus, sit amet lacinia dolor. Vivamus gravida leo ut nisl sollicitudin, ac sagittis lectus consectetur. Nulla iaculis vel lectus ac sodales. Maecenas at sapien pretium, vehicula sapien eget, feugiat ligula. Nulla egestas ligula non tempus commodo. Quisque tristique urna dui, non finibus nisi bibendum non. Mauris pulvinar sed lacus vitae convallis. Sed dictum efficitur nibh eget condimentum."
               ></Form.Control>
             </Col>
@@ -358,7 +371,9 @@ export class UserDetails extends Component {
               Book title 4 <br />
               3 / 5
               <Form.Range />
-              <Form.Control as="textarea" rows={12}
+              <Form.Control
+                as="textarea"
+                rows={12}
                 value="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer bibendum convallis ornare. Aliquam id iaculis leo. In malesuada mi sed mauris euismod, vitae pretium leo feugiat. Sed at nisl blandit, volutpat arcu at, dignissim enim. Donec vel massa nulla. Maecenas eget sollicitudin nisl. Morbi et ex id elit vehicula fringilla at vel velit. Maecenas at quam odio. Donec id consectetur purus, sit amet lacinia dolor. Vivamus gravida leo ut nisl sollicitudin, ac sagittis lectus consectetur. Nulla iaculis vel lectus ac sodales. Maecenas at sapien pretium, vehicula sapien eget, feugiat ligula. Nulla egestas ligula non tempus commodo. Quisque tristique urna dui, non finibus nisi bibendum non. Mauris pulvinar sed lacus vitae convallis. Sed dictum efficitur nibh eget condimentum."
               ></Form.Control>
             </Col>
@@ -366,22 +381,16 @@ export class UserDetails extends Component {
           <Row>
             <Card.Text style={{ fontWeight: 'bold' }}>Your Lists:</Card.Text>
             <Col xs={3}>
-              <Card>
-                List 1
-              </Card>
+              <Card>List 1</Card>
             </Col>
             <Col xs={3}>
-              <Card>
-                List 2
-              </Card>
+              <Card>List 2</Card>
             </Col>
             <Col xs={3}>
-              <Card>
-                List 3
-              </Card>
+              <Card>List 3</Card>
             </Col>
           </Row>
-          <Row style={{ padding: "10vh" }}>
+          <Row style={{ padding: '10vh' }}>
             <Button
               variant="outline-danger"
               onClick={() => this.logOut()}
@@ -410,10 +419,15 @@ export class UserDetails extends Component {
   logOut() {
     loggedIn = false;
     history.push('/books');
-    currentUser = { user_id: 0, email: '', first_name: '', last_name: '', password: '', admin: false };
+    currentUser = {
+      user_id: 0,
+      email: '',
+      first_name: '',
+      last_name: '',
+      password: '',
+      admin: false,
+    };
   }
 
-  requestAdmin() {
-
-  }
+  requestAdmin() {}
 }
