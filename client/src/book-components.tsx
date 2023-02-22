@@ -12,16 +12,16 @@ import StarRatings from 'react-star-ratings';
 
 const history = createHashHistory(); // Use history.push(...) to programmatically change path
 
-function StarRating() {
-  const [rating, setRating] = useState(0);
+function StarRating( props: { rating: number }) {
+  const [rating, setRating] = useState(4.8);
 
   return (
     <div>
       <StarRatings
-        reting={rating}
-        starRatedColor="blue"
-        changeRating={setRating}
-        numberOfStars={5}
+        rating={props.rating}
+        starRatedColor="orange"
+        //changeRating={setRating}
+        numberOfStars={6}
         starDimension="30px"
         starSpacing="5px"
       />
@@ -63,46 +63,41 @@ export class BookList extends Component {
 
 }
 
-export class BookDetails extends Component<{
-  /* match: { params: { book_id: number } } */
+export class BookDetails extends Component<{ 
+  match: {
+    title: string; 
+    params: { book_id: number, title: string } 
+}
 }> {
   render() {
+    
+    
+
     return (
-      <Container >
+      <Container className='p-3' >
         <Row xs={'auto'}>
-          <Col>
-            <button className="btn btn-light">Back</button>
-          </Col>
+            <Button className="btn btn-light">Back</Button>
         </Row>
         <Row>
-          <Col sm={3}></Col>
-          <Col sm={6}>
-            <h3>Of mice and men</h3>
-          </Col>
-          <Col sm={3}>
-            <StarRating></StarRating>
-          </Col>
-        </Row>
-        <Row>
-          <Col sm={3}> 
-          
-          </Col>
-          <Col sm={9}>
-            <h5>By John Steinbeck</h5>
-          </Col>
-        </Row>
-        <Row>
-          <Col sm={3}>
-            <img
+        
+          <Col sm={3} className= "pt-4 " > 
+            <Row className='m-3'><img
               src="https://upload.wikimedia.org/wikipedia/commons/a/a8/Of_Mice_and_Men_%281937_1st_ed_dust_jacket%29.jpg"
-              className="img-fluid shadow"
+              className="img-fluid shadow "
               width={175}
               height={250}
               alt="..."
-            />
+            /></Row>
+            <Row className='m-3 '><Button type="button" className='btn btn-success mt-3'>Want to read</Button>
+            </Row>
+            <Row className='m-3 '><Button type="button" className='btn btn-success mt-3'>Have read</Button>
+            </Row>
           </Col>
-          <Col sm={9} className="overflow-auto" style={{ height: '40vh' }}>
-            <p>
+          <Col sm={8} >
+            <Row className='mt-3'><h3>{this.props.match.title} Of mice and men</h3></Row>
+            <Row className='mt-1'><h5>By John Steinbeck</h5></Row>
+            <Row className='mt-1'><StarRating rating={5}></StarRating></Row>
+            <Row className="overflow-auto mt-4" style={{ height: '40vh' }}><p>
               They are an unlikely pair: George is "small and quick and dark of face"; Lennie, a man
               of tremendous size, has the mind of a young child. Yet they have formed a "family,"
               clinging together in the face of loneliness and alienation. Laborers in California's
@@ -123,54 +118,38 @@ export class BookDetails extends Component<{
               timeless classic due to its remarkable success as a novel, a Broadway play, and three
               acclaimed films.
             </p>
-          </Col>
-          <Row>
-            <Col sm={3}>
+            </Row>
+            <Row className='mt-3'>
+              <Col sm={1} style={{ fontWeight: 'bold', color:"rgb(77, 77, 77)" }}><p> Genres:</p></Col>
+              <Col sm={1} ><a href="#genres">Tragedy</a></Col>
+              <Col sm={1}>
+                <a href="#genres">Novel</a>
+              </Col>
+            </Row>
+            <Row>
+              <Col sm={1}>
+                <small style={{ fontWeight: 'bold', color:"rgb(77, 77, 77)" }}>Pages:</small>
+              </Col>
+              <Col sm={8}>
+                <small>170 </small>
+              </Col>
+            </Row>
+            <Row>
+              <Col sm={1}>
+                <small style={{ fontWeight: 'bold', color:"rgb(77, 77, 77)" }}>Published:    </small>
+              </Col>
+              <Col sm={8}>
+                <small>1937, by Covici Friede</small>
+              </Col>
+            </Row>
+            <Row><Col sm={1}>
+            <small style={{ fontWeight: 'bold', color:"rgb(77, 77, 77)" }}>ISBN:</small>
             </Col>
-            <Col sm={1}>
-              <p style={{color: 'lightGray'}}> Genres</p>
-            </Col>
-            <Col sm={1}>
-             <a href="#genres">Genre1</a>
-            </Col>
-            <Col sm={1}>
-             <a href="#genres">Genre1</a>
-            </Col>
-            <Col sm={6}>
-            </Col>
-          </Row>
-        </Row>
-        <Row>
-          <Col sm={2}>
-          <div className="d-grid">
-           <button type="button" className='btn btn-primary'>Want to read</button>
-          </div>
-          </Col>
-          <Col sm={1}>
-          </Col>
-          <Col sm={2}>
-            <p> <small>Format:</small></p>
-          </Col>
-          <Col sm={7}>
-            <p> <small>170 pages</small></p>
-          </Col>
-        </Row>
-        <Row>
-        <Col sm={3}></Col>
-          <Col sm={1}>
-            <p> <small>Published:</small></p>
-          </Col>
-          <Col sm={8}>
-            <p> <small>1937, by Covici Friede</small></p>
-          </Col>
-        </Row>
-        <Row>
-        <Col sm={3}></Col>
-          <Col sm={1}>
-            <p> <small>ISBN:</small></p>
-          </Col>
-          <Col sm={8}>
-            <p> <small>9780141023571</small></p>
+            <Col sm={8}>
+               <small>9780141023571</small>
+            </Col></Row>
+            
+
           </Col>
         </Row>
       </Container>
