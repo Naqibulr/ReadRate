@@ -14,10 +14,10 @@ export class Menu extends Component {
         variant="dark"
         style={{ backgroundColor: 'rgb(251 238 193)', color: 'rgb(73 15 224)' }}
       >
-        <Container>
+        <Container className="d-flex justify-content-center align-items-center">
           {/* Container to wrap elements of navbar within given margin of page end and start */}
 
-          <Navbar.Brand href="">
+          <Navbar.Brand href="/">
             <h3 style={{ color: 'rgb(73 15 224)' }}>ReadRate</h3>
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
@@ -48,13 +48,17 @@ export class Menu extends Component {
                 </Button>
               </InputGroup>
 
-              <Nav.Link href="/#/books" style={{ color: 'rgb(73 15 224)' }}>
-                Lorem ipsum
+              <Nav.Link
+                href="/#/books"
+                style={{ color: 'rgb(73 15 224)', marginTop: '15px' }}
+              ></Nav.Link>
+              <Nav.Link
+                href="/#/books/add"
+                style={{ color: 'rgb(73 15 224)', marginTop: '15px', whiteSpace: 'nowrap' }}
+              >
+                add book
               </Nav.Link>
-              <Nav.Link href="/#/books/add" style={{ color: 'rgb(73 15 224)' }}>
-                Lorem ipsum
-              </Nav.Link>
-              <Nav.Link href="/#/books/user" style={{ color: 'rgb(73 15 224)' }}>
+              <Nav.Link href="/#/books/user" style={{ color: 'rgb(73 15 224)', marginTop: '15px' }}>
                 Login
               </Nav.Link>
             </Nav>
