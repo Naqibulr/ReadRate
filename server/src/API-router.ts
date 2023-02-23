@@ -17,6 +17,11 @@ router.get('/testData', (_request, response) => {
     .catch((error) => response.status(500).send(error));
 });
 
+////////////Test Data
+router.get('/review/:isbn', (_request, response) => {
+  response.send('3.2');
+});
+
 //////////////////////USER
 // Gets a user if the login is completed
 router.get('/users/login/:email/:password', (request, response) => {

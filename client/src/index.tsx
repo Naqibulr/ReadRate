@@ -45,13 +45,7 @@ function Home() {
           <Row>
             {topBooks.map((book: Book) => (
               <Col xs={2}>
-                <BookCard
-                  key={book.id}
-                  title={book.title}
-                  author={book.author}
-                  imageSrc={book.imagePath}
-                  rating={book.rating}
-                />
+                <BookCard book={book} />
               </Col>
             ))}
           </Row>
@@ -60,13 +54,7 @@ function Home() {
           <Row>
             {topBooks2.map((book: Book) => (
               <Col xs={2}>
-                <BookCard
-                  key={book.id}
-                  title={book.title}
-                  author={book.author}
-                  imageSrc={book.imagePath}
-                  rating={book.rating}
-                />
+                <BookCard book={book} />
               </Col>
             ))}
           </Row>
@@ -75,13 +63,7 @@ function Home() {
           <Row>
             {topBooks.map((book: Book) => (
               <Col xs={2}>
-                <BookCard
-                  key={book.id}
-                  title={book.title}
-                  author={book.author}
-                  imageSrc={book.imagePath}
-                  rating={book.rating}
-                />
+                <BookCard book={book} />
               </Col>
             ))}
           </Row>
@@ -93,13 +75,7 @@ function Home() {
           <Row>
             {books.map((book: Book) => (
               <Col xs={2}>
-                <BookCard
-                  key={book.id}
-                  title={book.title}
-                  author={book.author}
-                  imageSrc={book.imagePath}
-                  rating={book.rating}
-                />
+                <BookCard book={book} />
               </Col>
             ))}
           </Row>
@@ -108,13 +84,7 @@ function Home() {
           <Row>
             {books.map((book: Book) => (
               <Col xs={2}>
-                <BookCard
-                  key={book.id}
-                  title={book.title}
-                  author={book.author}
-                  imageSrc={book.imagePath}
-                  rating={book.rating}
-                />
+                <BookCard book={book} />
               </Col>
             ))}
           </Row>
@@ -123,13 +93,7 @@ function Home() {
           <Row>
             {books.map((book: Book) => (
               <Col xs={2}>
-                <BookCard
-                  key={book.id}
-                  title={book.title}
-                  author={book.author}
-                  imageSrc={book.imagePath}
-                  rating={book.rating}
-                />
+                <BookCard book={book} />
               </Col>
             ))}
           </Row>
@@ -150,7 +114,7 @@ ReactDOM.render(
       <Route exact path="/books/login" component={UserLogIn} />
       <Route exact path="/books/register" component={RegisterUser} />
       <Route exact path="/books/user" component={UserDetails} />
-      <Route exact path="/books/:book_id(\d+)" component={BookDetails} />
+      <Route exact path="/books/:book_id" component={BookDetails} />
       <Route exact path="/books/:id(\d+)/edit" component={BookEdit} />
     </div>
   </HashRouter>,
