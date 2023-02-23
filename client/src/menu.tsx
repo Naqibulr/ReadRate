@@ -1,8 +1,8 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React, { useState } from 'react';
+//import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React from 'react';
 import { Button, Container, Dropdown, Form, InputGroup, Nav, Navbar } from 'react-bootstrap';
 import { Component } from 'react-simplified';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
+//import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
 export class Menu extends Component {
   state = {
@@ -10,7 +10,6 @@ export class Menu extends Component {
   };
 
   handleInputChange = (event: any) => {
-    const { searchValue } = this.state;
     this.setState({ searchValue: event.target.value }); // Update the search input value when the user types into the field
   };
 
@@ -58,7 +57,7 @@ export class Menu extends Component {
                 />
 
                 <Button variant="light" id="button-addon2" onClick={this.handleSearch}>
-                  <FontAwesomeIcon icon={faSearch} />
+                  Search
                 </Button>
               </InputGroup>
 
@@ -79,6 +78,8 @@ export class Menu extends Component {
           </Navbar.Collapse>
         </Container>
       </Navbar>
+
+      
     );
   }
 }

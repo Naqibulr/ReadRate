@@ -1,17 +1,33 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Component } from 'react-simplified';
-import { Alert } from './widgets';
-
+import { Alert, Column } from './widgets';
 import { Button, Form, Card, Row, Col, Container } from 'react-bootstrap';
 import { createHashHistory } from 'history';
-
 import bookService, { Book } from './book-service';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
+import StarRatings from 'react-star-ratings';
 
 // REMEMBER TO ADD IMPORTS FROM SERVICE
 
 const history = createHashHistory(); // Use history.push(...) to programmatically change path
+
+function StarRating(props: { rating: number }) {
+  const [rating, setRating] = useState(4.8);
+
+  return (
+    <div>
+      <StarRatings
+        rating={props.rating}
+        starRatedColor="orange"
+        //changeRating={setRating}
+        numberOfStars={6}
+        starDimension="30px"
+        starSpacing="5px"
+      />
+    </div>
+  );
+}
 
 /**
  * Renders book list.
@@ -24,6 +40,7 @@ export class BookList extends Component {
       <>
         {/* Search bar for easy access to gicen book */}
         <Card style={{ border: 'none', padding: '15px' }}>
+          <Card.Title style={{ marginLeft: 'auto', marginRight: 'auto' }}>Example title</Card.Title>
           <Card.Title style={{ marginLeft: 'auto', marginRight: 'auto' }}>Example title</Card.Title>
 
           {this.testData}
@@ -43,28 +60,116 @@ export class BookList extends Component {
   search(input: string) {}
 }
 
-export class BookDetails extends Component<{ match: { params: { book_id: number } } }> {
+export class BookDetails extends Component<{
+  match: {
+    params: { book_id: string };
+  };
+}> {
+  book: Book = {
+    id: '',
+    rating: 0,
+    title: '',
+    ISBN: '',
+    author: '',
+    releaseYear: 0,
+    publisher: '',
+    pages: 0,
+    description: '',
+    genre: [],
+    imagePath: '',
+  };
+
   render() {
     return (
-      <>
-        <Container>
-          <Card
-            style={{
-              borderLeft: 'none',
-              borderRight: 'none',
-              borderTop: 'none',
-              paddingBottom: '3%',
-              borderRadius: '0px',
-              textAlign: 'center',
-            }}
-            title={''}
-          ></Card>
-        </Container>
-      </>
+      <Container className="p-3">
+        <Row xs={'auto'}>
+          <Button className="btn btn-light" onClick={() => history.push('/')}>
+            Back
+          </Button>
+        </Row>
+        <Row>
+          <Col sm={3} className="pt-4 ">
+            <Row className="m-3">
+              <img
+                src={this.book.imagePath}
+                className="img-fluid shadow "
+                width={175}
+                height={250}
+                alt="..."
+              />
+            </Row>
+            <Row className="m-3 ">
+              <Button type="button" className="btn btn-success mt-3">
+                Want to read
+              </Button>
+            </Row>
+            <Row className="m-3 ">
+              <Button type="button" className="btn btn-success mt-3">
+                Have read
+              </Button>
+            </Row>
+          </Col>
+          <Col sm={8}>
+            <Row className="mt-3">
+              <h3>{this.book.title} </h3>
+            </Row>
+            <Row className="mt-1">
+              <h5>By {this.book.author}</h5>
+            </Row>
+            <Row className="mt-1">
+              <StarRating rating={this.book.rating}></StarRating>
+            </Row>
+            <Row className="overflow-auto mt-4" style={{ height: '40vh' }}>
+              <p>{this.book.description}</p>
+            </Row>
+            <Row className="mt-3">
+              <Col sm={1} style={{ fontWeight: 'bold', color: 'rgb(77, 77, 77)' }}>
+                <p> Genres:</p>
+              </Col>
+              {this.book.genre.map((genre) => (
+                <Col sm={1}>
+                  <a>{genre}</a>
+                </Col>
+              ))}
+            </Row>
+            <Row>
+              <Col sm={1}>
+                <small style={{ fontWeight: 'bold', color: 'rgb(77, 77, 77)' }}>Pages:</small>
+              </Col>
+              <Col sm={8}>
+                <small>{this.book.pages}</small>
+              </Col>
+            </Row>
+            <Row>
+              <Col sm={1}>
+                <small style={{ fontWeight: 'bold', color: 'rgb(77, 77, 77)' }}>Published: </small>
+              </Col>
+              <Col sm={8}>
+                <small>
+                  {this.book.releaseYear}, by {this.book.publisher}
+                </small>
+              </Col>
+            </Row>
+            <Row>
+              <Col sm={1}>
+                <small style={{ fontWeight: 'bold', color: 'rgb(77, 77, 77)' }}>ISBN:</small>
+              </Col>
+              <Col sm={8}>
+                <small>{this.book.ISBN}</small>
+              </Col>
+            </Row>
+          </Col>
+        </Row>
+      </Container>
     );
   }
 
-  mounted() {}
+  mounted() {
+    bookService
+      .getBook(this.props.match.params.book_id)
+      .then((book) => (this.book = book))
+      .catch((error) => Alert.danger('Error getting recipe details: ' + error.message));
+  }
 }
 
 export class BookAdd extends Component {
@@ -335,42 +440,38 @@ export class BookEdit extends Component<{ match: { params: { id: number } } }> {
 
   mounted() {}
 }
-interface BookCardProps {
-  title: string;
-  author: string;
-  imageSrc: string;
-  rating: number;
-}
 
-export class BookCard extends Component<BookCardProps> {
-  render() {
-    const { title, author, imageSrc, rating } = this.props;
+export function BookCard(props: { book: Book }) {
+  return (
+    <Card className="shadow bg-white rounded" style={{ width: '14.5rem', margin: '2px' }}>
+      <Card.Img
+        variant="top"
+        src={props.book.imagePath}
+        style={{ width: '100', height: '200px' }}
+      />
+      <Card.Body>
+        <Card.Title className="text-truncate">{props.book.title}</Card.Title>
+        <Card.Text>{props.book.author}</Card.Text>
 
-    return (
-      <Card className="shadow bg-white rounded" style={{ width: '14.5rem', margin: '2px' }}>
-        <Card.Img variant="top" src={imageSrc} style={{ width: '100%', height: '200px' }} />
-        <Card.Body>
-          <Card.Title className="text-truncate">{title}</Card.Title>
-          <Card.Text>{author}</Card.Text>
-
-          <Row>
-            <Col className="col-8">
-              <Button variant="success">Read more</Button>
-            </Col>
-            <Col className="col-4">
-              <div
-                className="d-flex align-items-center justify-content-end"
-                style={{ fontSize: '1.2rem', fontWeight: 'bold' }}
-              >
-                <span style={{ color: '#FFA500', marginRight: '5px' }}>
-                  <FontAwesomeIcon icon={faStar} />
-                </span>
-                <span>{rating}</span>
-              </div>
-            </Col>
-          </Row>
-        </Card.Body>
-      </Card>
-    );
-  }
+        <Row>
+          <Col className="col-8">
+            <Button variant="success" onClick={() => history.push(`/books/${props.book.ISBN}`)}>
+              Read more
+            </Button>
+          </Col>
+          <Col className="col-4">
+            <div
+              className="d-flex align-items-center justify-content-end"
+              style={{ fontSize: '1.2rem', fontWeight: 'bold' }}
+            >
+              <span style={{ color: '#FFA500', marginRight: '5px' }}>
+                <FontAwesomeIcon icon={faStar} />
+              </span>
+              <span>{props.book.rating}</span>
+            </div>
+          </Col>
+        </Row>
+      </Card.Body>
+    </Card>
+  );
 }

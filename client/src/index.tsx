@@ -45,14 +45,8 @@ function Home() {
         <Carousel.Item style={{ padding: '1rem' }}>
           <Row>
             {topBooks.map((book: Book) => (
-              <Col xs={2} key={book.id}>
-                <BookCard
-                  key={book.id}
-                  title={book.title}
-                  author={book.author}
-                  imageSrc={book.imagePath}
-                  rating={book.rating}
-                />
+              <Col xs={2}>
+                <BookCard book={book} />
               </Col>
             ))}
           </Row>
@@ -60,14 +54,8 @@ function Home() {
         <Carousel.Item style={{ padding: '1rem' }}>
           <Row>
             {topBooks2.map((book: Book) => (
-              <Col xs={2} key={book.id}>
-                <BookCard
-                  key={book.id}
-                  title={book.title}
-                  author={book.author}
-                  imageSrc={book.imagePath}
-                  rating={book.rating}
-                />
+              <Col xs={2}>
+                <BookCard book={book} />
               </Col>
             ))}
           </Row>
@@ -75,14 +63,8 @@ function Home() {
         <Carousel.Item style={{ padding: '1rem' }}>
           <Row>
             {topBooks.map((book: Book) => (
-              <Col xs={2} key={book.id}>
-                <BookCard
-                  key={book.id}
-                  title={book.title}
-                  author={book.author}
-                  imageSrc={book.imagePath}
-                  rating={book.rating}
-                />
+              <Col xs={2}>
+                <BookCard book={book} />
               </Col>
             ))}
           </Row>
@@ -93,14 +75,8 @@ function Home() {
         <Carousel.Item style={{ padding: '1rem' }}>
           <Row>
             {books.map((book: Book) => (
-              <Col xs={2} key={book.id}>
-                <BookCard
-                  key={book.id}
-                  title={book.title}
-                  author={book.author}
-                  imageSrc={book.imagePath}
-                  rating={book.rating}
-                />
+              <Col xs={2}>
+                <BookCard book={book} />
               </Col>
             ))}
           </Row>
@@ -108,14 +84,8 @@ function Home() {
         <Carousel.Item style={{ padding: '1rem' }}>
           <Row>
             {books.map((book: Book) => (
-              <Col xs={2} key={book.id}>
-                <BookCard
-                  key={book.id}
-                  title={book.title}
-                  author={book.author}
-                  imageSrc={book.imagePath}
-                  rating={book.rating}
-                />
+              <Col xs={2}>
+                <BookCard book={book} />
               </Col>
             ))}
           </Row>
@@ -123,14 +93,8 @@ function Home() {
         <Carousel.Item style={{ padding: '1rem' }}>
           <Row>
             {books.map((book: Book) => (
-              <Col xs={2} key={book.id}>
-                <BookCard
-                  key={book.id}
-                  title={book.title}
-                  author={book.author}
-                  imageSrc={book.imagePath}
-                  rating={book.rating}
-                />
+              <Col xs={2}>
+                <BookCard book={book} />
               </Col>
             ))}
           </Row>
@@ -151,7 +115,7 @@ ReactDOM.render(
       <Route exact path="/books/login" component={UserLogIn} />
       <Route exact path="/books/register" component={RegisterUser} />
       <Route exact path="/books/user" component={UserDetails} />
-      <Route exact path="/books/:book_id(\d+)" component={BookDetails} />
+      <Route exact path="/books/:book_id" component={BookDetails} />
       <Route exact path="/books/:id(\d+)/edit" component={BookEdit} />
       <Route exact path="/books/search/:searchTerm" component={BookSearch} />
     </div>

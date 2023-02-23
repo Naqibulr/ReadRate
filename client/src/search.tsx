@@ -28,13 +28,7 @@ export function BookSearch() {
             {books.map((book: Book) => {
               return (
                 <Col xs={2} key={book.id}>
-                  <BookCard
-                    key={book.id}
-                    title={book.title}
-                    author={book.author}
-                    imageSrc={book.imagePath}
-                    rating={book.rating}
-                  />
+                  <BookCard book={book} />
                 </Col>
               );
             })}
