@@ -8,6 +8,7 @@ import { UserDetails, UserLogIn, RegisterUser } from './user-components';
 import { Menu } from './menu';
 import bookService, { Book } from './book-service';
 import { useEffect, useState } from 'react';
+import { BookSearch } from './search';
 
 function Home() {
   const [books, setBooks] = useState<Book[]>([]);
@@ -44,7 +45,7 @@ function Home() {
         <Carousel.Item style={{ padding: '1rem' }}>
           <Row>
             {topBooks.map((book: Book) => (
-              <Col xs={2}>
+              <Col xs={2} key={book.id}>
                 <BookCard
                   key={book.id}
                   title={book.title}
@@ -59,7 +60,7 @@ function Home() {
         <Carousel.Item style={{ padding: '1rem' }}>
           <Row>
             {topBooks2.map((book: Book) => (
-              <Col xs={2}>
+              <Col xs={2} key={book.id}>
                 <BookCard
                   key={book.id}
                   title={book.title}
@@ -74,7 +75,7 @@ function Home() {
         <Carousel.Item style={{ padding: '1rem' }}>
           <Row>
             {topBooks.map((book: Book) => (
-              <Col xs={2}>
+              <Col xs={2} key={book.id}>
                 <BookCard
                   key={book.id}
                   title={book.title}
@@ -92,7 +93,7 @@ function Home() {
         <Carousel.Item style={{ padding: '1rem' }}>
           <Row>
             {books.map((book: Book) => (
-              <Col xs={2}>
+              <Col xs={2} key={book.id}>
                 <BookCard
                   key={book.id}
                   title={book.title}
@@ -107,7 +108,7 @@ function Home() {
         <Carousel.Item style={{ padding: '1rem' }}>
           <Row>
             {books.map((book: Book) => (
-              <Col xs={2}>
+              <Col xs={2} key={book.id}>
                 <BookCard
                   key={book.id}
                   title={book.title}
@@ -122,7 +123,7 @@ function Home() {
         <Carousel.Item style={{ padding: '1rem' }}>
           <Row>
             {books.map((book: Book) => (
-              <Col xs={2}>
+              <Col xs={2} key={book.id}>
                 <BookCard
                   key={book.id}
                   title={book.title}
@@ -152,6 +153,7 @@ ReactDOM.render(
       <Route exact path="/books/user" component={UserDetails} />
       <Route exact path="/books/:book_id(\d+)" component={BookDetails} />
       <Route exact path="/books/:id(\d+)/edit" component={BookEdit} />
+      <Route exact path="/books/search/:searchTerm" component={BookSearch} />
     </div>
   </HashRouter>,
   document.getElementById('root')

@@ -45,10 +45,11 @@ class BookService {
           releaseYear: bookData.releaseYear,
           genre: bookData.genre,
           description: bookData.description,
-          picture: bookData.imagePath,
+          imagePath: bookData.imagePath,
           publisher: bookData.publisher,
           pages: bookData.pages,
           reviewArray: [],
+          rating: bookData.rating,
         };
         return book;
       });

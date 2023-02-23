@@ -25,6 +25,11 @@ class BookService {
     return axios.get<String>('/testData').then((response) => response.data);
   }
 
+  async getFilteredBooks(searchTerm: string) {
+    const response = await axios.get<Array<Book>>('/books/search/' + searchTerm);
+    return response.data;
+  }
+
   colRef = collection(firestore, 'books');
 
   addBook(

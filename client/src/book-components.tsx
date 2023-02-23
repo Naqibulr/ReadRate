@@ -348,7 +348,7 @@ export class BookCard extends Component<BookCardProps> {
 
     return (
       <Card className="shadow bg-white rounded" style={{ width: '14.5rem', margin: '2px' }}>
-        <Card.Img variant="top" src={imageSrc} style={{ width: '100', height: '200px' }} />
+        <Card.Img variant="top" src={imageSrc} style={{ width: '100%', height: '200px' }} />
         <Card.Body>
           <Card.Title className="text-truncate">{title}</Card.Title>
           <Card.Text>{author}</Card.Text>

@@ -9,8 +9,9 @@ export class Book {
   reviewArray: Review[];
   pages: number;
   description: string;
-  picture: string;
+  imagePath: string;
   id: string;
+  rating: number;
 
   constructor(
     id: string,
@@ -23,7 +24,8 @@ export class Book {
     reviewArray: Review[],
     pages: number,
     description: string,
-    picture: string
+    imagePath: string,
+    rating: number
   ) {
     this.id = id;
     this.title = title;
@@ -35,7 +37,8 @@ export class Book {
     this.reviewArray = reviewArray;
     this.pages = pages;
     this.description = description;
-    this.picture = picture;
+    this.imagePath = imagePath;
+    this.rating = rating;
   }
 
   toString(): String {
