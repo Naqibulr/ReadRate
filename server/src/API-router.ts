@@ -45,6 +45,19 @@ router.get('/users/login/:email/:password', (request, response) => {
   }
 });
 
+router.get('/books/search/:searchTerm', (request, response) => {
+  const searchTerm = String(request.params.searchTerm);
+
+  bookService
+    .getFilteredBooks(searchTerm)
+    .then((books) => {
+      response.send(books);
+    })
+    .catch((error) => {
+      response.status(500);
+    });
+});
+
 //Register a new user
 router.post('/users/register', (request, response) => {
   const data = request.body;

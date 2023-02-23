@@ -1,10 +1,20 @@
 import type { RowDataPacket, ResultSetHeader, OkPacket } from 'mysql2';
 import * as testData from './test.json';
 import { firestore } from './firebase';
-import { collection, query, where, doc, setDoc, getDoc, getDocs, addDoc } from 'firebase/firestore';
+import {
+  collection,
+  query,
+  where,
+  doc,
+  setDoc,
+  getDoc,
+  getDocs,
+  addDoc,
+  Query,
+} from 'firebase/firestore';
 
-export type Book = {
-  bookId: number;
+/*export type Book = {
+  bookId: string;
   title: string;
   ISBN: string;
   author: string;
@@ -14,7 +24,7 @@ export type Book = {
   description: string;
   genre: Array<string>;
   imagePath: string;
-};
+};*/
 class BookService {
   getAll() {
     return new Promise<String>((resolve, reject) => {
@@ -22,7 +32,34 @@ class BookService {
     });
   }
 
-  addBook(
+  getFilteredBooks(searchTerm: string) {
+    return new Promise<Book[]>(async (resolve, reject) => {
+      const snapshot = await getDocs(query(collection(firestore, 'books')));
+      const books = snapshot.docs.map((doc) => {
+        const bookData = doc.data();
+        const book: Book = {
+          id: doc.id,
+          title: bookData.title,
+          ISBN: bookData.ISBN,
+          author: bookData.author,
+          releaseYear: bookData.releaseYear,
+          genre: bookData.genre,
+          description: bookData.description,
+          picture: bookData.imagePath,
+          publisher: bookData.publisher,
+          pages: bookData.pages,
+          reviewArray: [],
+        };
+        return book;
+      });
+      let bookList: List = new List('All books', books);
+      let filteredBooks: Book[] = bookList.search(searchTerm);
+      if (filteredBooks) resolve(filteredBooks);
+      else reject('No book');
+    });
+  }
+
+  /*  addBook(
     title: string,
     ISBN: string,
     author: string,
@@ -35,7 +72,7 @@ class BookService {
   ) {
     return new Promise<Book>(async (resolve, reject) => {
       let newBook: Book = {
-        bookId: 0,
+        bookId: '0',
         title: title,
         ISBN: ISBN,
         author: author,
@@ -67,8 +104,10 @@ class BookService {
       });
       resolve(newBook as Book);
     });
-  }
+  }*/
 }
+import { Book } from './book';
+import { List } from './list';
 
 const bookService = new BookService();
 export default bookService;
