@@ -115,7 +115,7 @@ ReactDOM.render(
       <Route exact path="/books/login" component={UserLogIn} />
       <Route exact path="/books/register" component={RegisterUser} />
       <Route exact path="/books/user" component={UserDetails} />
-      <Route exact path="/books/:book_id" component={BookDetails} />
+      <Route exact path="/books/:book_id(\d+)" component={BookDetails} />
       <Route exact path="/books/:id(\d+)/edit" component={BookEdit} />
       <Route exact path="/books/search/:searchTerm" component={BookSearch} />
     </div>
