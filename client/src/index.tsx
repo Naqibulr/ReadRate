@@ -12,92 +12,64 @@ import { useEffect, useState } from 'react';
 function Home() {
   const [books, setBooks] = useState<Book[]>([]);
   const [topBooks, setTopBooks] = useState<Book[]>([]);
-  const [topBooks2, setTopBooks2] = useState<Book[]>([]);
 
   useEffect(() => {
     const fetchBooks = async () => {
       const booksData = await bookService.getBooksByGenre('Fiction');
-      const books = booksData.slice(0, 6);
-      setBooks(books);
+      setBooks(booksData);
     };
     fetchBooks();
-    console.log(books);
   }, []);
   useEffect(() => {
     const fetchBooks = async () => {
       const booksData = await bookService.getBooks();
       const sortedBooks = booksData.sort((a, b) => b.rating - a.rating);
-      const books = sortedBooks.slice(0, 6);
-      const books2 = sortedBooks.slice(7, 12);
-
-      setTopBooks(books);
-      setTopBooks2(books2);
+      setTopBooks(sortedBooks);
     };
     fetchBooks();
-    console.log(books);
   }, []);
 
   return (
     <Container fluid style={{ margin: 0 }}>
       <h3 style={{ marginLeft: '20px', marginTop: '5px', marginBottom: '0px' }}>Highest rated</h3>
       <Carousel interval={null}>
-        <Carousel.Item style={{ padding: '1rem' }}>
-          <Row>
-            {topBooks.map((book: Book) => (
-              <Col xs={2}>
-                <BookCard book={book} />
-              </Col>
-            ))}
-          </Row>
-        </Carousel.Item>
-        <Carousel.Item style={{ padding: '1rem' }}>
-          <Row>
-            {topBooks2.map((book: Book) => (
-              <Col xs={2}>
-                <BookCard book={book} />
-              </Col>
-            ))}
-          </Row>
-        </Carousel.Item>
-        <Carousel.Item style={{ padding: '1rem' }}>
-          <Row>
-            {topBooks.map((book: Book) => (
-              <Col xs={2}>
-                <BookCard book={book} />
-              </Col>
-            ))}
-          </Row>
-        </Carousel.Item>
+        {topBooks.map((book, index) => {
+          // Check if the item index is a multiple of 6 to create a new carousel item
+          if (index % 6 === 0) {
+            return (
+              <Carousel.Item key={index} style={{ padding: '1rem' }}>
+                <Row>
+                  {topBooks.slice(index, index + 6).map((book, index) => (
+                    <Col md={2} key={index}>
+                      <BookCard book={book} />
+                    </Col>
+                  ))}
+                </Row>
+              </Carousel.Item>
+            );
+          }
+          return null;
+        })}
       </Carousel>
       <h3 style={{ marginLeft: '20px', marginTop: '5px', marginBottom: '0px' }}>Fiction</h3>
       <Carousel interval={null}>
-        <Carousel.Item style={{ padding: '1rem' }}>
-          <Row>
-            {books.map((book: Book) => (
-              <Col xs={2}>
-                <BookCard book={book} />
-              </Col>
-            ))}
-          </Row>
-        </Carousel.Item>
-        <Carousel.Item style={{ padding: '1rem' }}>
-          <Row>
-            {books.map((book: Book) => (
-              <Col xs={2}>
-                <BookCard book={book} />
-              </Col>
-            ))}
-          </Row>
-        </Carousel.Item>
-        <Carousel.Item style={{ padding: '1rem' }}>
-          <Row>
-            {books.map((book: Book) => (
-              <Col xs={2}>
-                <BookCard book={book} />
-              </Col>
-            ))}
-          </Row>
-        </Carousel.Item>
+        {books.map((book, index) => {
+          // Check if the item index is a multiple of 6 to create a new carousel item
+          if (index % 6 === 0) {
+            return (
+              <Carousel.Item key={index} style={{ padding: '1rem' }}>
+                <Row>
+                  {books.slice(index, index + 6).map((book, index) => (
+                    <Col md={2} key={index}>
+                      <BookCard book={book} />
+                    </Col>
+                  ))}
+                </Row>
+              </Carousel.Item>
+            );
+          }
+          return null;
+        })}
       </Carousel>
     </Container>
   );
