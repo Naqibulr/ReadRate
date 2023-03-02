@@ -1,16 +1,110 @@
 import React, { useState } from 'react';
 import { Component } from 'react-simplified';
 import { Alert, Column } from './widgets';
-import { Button, Form, Card, Row, Col, Container } from 'react-bootstrap';
+import {
+  Button,
+  Form,
+  Card,
+  Row,
+  Col,
+  Modal,
+  Container,
+  FormGroup,
+  FormLabel,
+  FormControl,
+} from 'react-bootstrap';
 import { createHashHistory } from 'history';
 import bookService, { Book } from './book-service';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
 import StarRatings from 'react-star-ratings';
 
-// REMEMBER TO ADD IMPORTS FROM SERVICE
-
 const history = createHashHistory(); // Use history.push(...) to programmatically change path
+
+interface ReviewFormData {
+  name: string;
+  rating: number;
+  comment: string;
+}
+
+export const WriteReviewPage = (props: { book: Book }) => {
+  const [formData, setFormData] = useState<ReviewFormData>({
+    name: '',
+    rating: 0,
+    comment: '',
+  });
+
+  //const { book_id } = props.match.params;
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    // Here you can save the review to your database or do other logic
+    // Once done, navigate the user back to the book details page or homepage
+    history.goBack(); //history.push(`/books/${props.book.ISBN}`); //book-details
+  };
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = event.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleRatingChange = (newRating: number) => {
+    // @ts-ignore
+    StarRating(newRating);
+  };
+
+  return (
+    <div>
+      <h1>Write a Review</h1>
+      <Form onSubmit={handleSubmit}>
+        <Form.Group controlId="name">
+          <Form.Label>Name</Form.Label>
+          <Form.Control
+            type="text"
+            name="name"
+            value={formData.name}
+            onChange={handleInputChange}
+          />
+        </Form.Group>
+
+        <FormGroup controlId="rating">
+          <FormLabel>Rating</FormLabel>
+          <FormControl
+            as="select"
+            name="rating"
+            value={formData.rating}
+            onChange={handleInputChange}
+            required
+          >
+            <option value="">Select a rating...</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+          </FormControl>
+        </FormGroup>
+
+        <Form.Group controlId="comment">
+          <Form.Label>Review</Form.Label>
+          <Form.Control
+            as="textarea"
+            rows={3}
+            name="comment"
+            value={formData.comment}
+            onChange={handleInputChange}
+          />
+        </Form.Group>
+
+        <Button variant="primary" type="submit">
+          Submit
+        </Button>
+      </Form>
+    </div>
+  );
+};
+
+// REMEMBER TO ADD IMPORTS FROM SERVICE
 
 function StarRating(props: { rating: number }) {
   const [rating, setRating] = useState(4.8);
@@ -106,6 +200,15 @@ export class BookDetails extends Component<{
             <Row className="m-3 ">
               <Button type="button" className="btn btn-success mt-3">
                 Have read
+              </Button>
+            </Row>
+            <Row className="m-3 ">
+              <Button
+                type="button"
+                className="btn btn-success mt-3"
+                onClick={() => history.push(`/books/${this.book.ISBN}/review`)}
+              >
+                Write review
               </Button>
             </Row>
           </Col>
