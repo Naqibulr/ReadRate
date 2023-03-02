@@ -4,7 +4,7 @@ import { firestore } from './firebase';
 import { collection, query, where, doc, setDoc, getDoc, getDocs, addDoc } from 'firebase/firestore';
 
 export type Book = {
-  bookId: number;
+  bookId: string;
   title: string;
   ISBN: string;
   author: string;
@@ -19,11 +19,11 @@ export type Book = {
 };
 
 class BookService {
-  getAll() {
+  /* getBooks() {
     return new Promise<String>((resolve, reject) => {
       resolve(testData.test1.toString());
     });
-  }
+  } */
 
   colRef = collection(firestore, 'books');
 
@@ -31,21 +31,29 @@ class BookService {
     console.log('book-service', book);
     return new Promise<void>(async (resolve, reject) => {
       addDoc(this.colRef, {
+        id: '',
         title: book.title,
+        releaseYear: book.releaseYear,
+        author: book.author,
+        genre: book.genre,
+        publisher: book.publisher,
+        ISBN: book.ISBN,
+        review: [],
+        pages: book.pages,
+        rating: [],
+        description: book.description,
+        imagePath: book.imagePath,
       });
 
       resolve();
     });
   }
-
-  /*
-
   async getBooks() {
     const snapshot = await getDocs(this.colRef);
     const books = snapshot.docs.map((doc) => {
       const bookData = doc.data();
       const book: Book = {
-        id: doc.id,
+        bookId: bookData.bookId,
         title: bookData.title,
         ISBN: bookData.ISBN,
         author: bookData.author,
@@ -56,11 +64,48 @@ class BookService {
         publisher: bookData.publisher,
         pages: bookData.pages,
         rating: bookData.rating,
+        review: bookData.review,
       };
       return book;
     });
     return books;
   }
+  async getBooksByGenre(genre: string) {
+    const allBooks = await this.getBooks();
+    const genreBooks = allBooks.filter((book) => book.genre.includes(genre));
+    return genreBooks.map((bookData) => {
+      const {
+        bookId,
+        title,
+        ISBN,
+        author,
+        releaseYear,
+        genre,
+        description,
+        imagePath,
+        publisher,
+        pages,
+        rating,
+      } = bookData;
+      return {
+        bookId,
+        title,
+        ISBN,
+        author,
+        releaseYear,
+        genre,
+        description,
+        imagePath,
+        publisher,
+        pages,
+        rating,
+      };
+    });
+  }
+
+  /*
+
+  
 
   getBook(ISBN: string) {
     return new Promise<Book>(async (resolve, reject) => {
@@ -78,38 +123,7 @@ class BookService {
       }
     });
   }
-  async getBooksByGenre(genre: string) {
-    const allBooks = await this.getBooks();
-    const genreBooks = allBooks.filter((book) => book.genre.includes(genre));
-    return genreBooks.map((bookData) => {
-      const {
-        id,
-        title,
-        ISBN,
-        author,
-        releaseYear,
-        genre,
-        description,
-        imagePath,
-        publisher,
-        pages,
-        rating,
-      } = bookData;
-      return {
-        id,
-        title,
-        ISBN,
-        author,
-        releaseYear,
-        genre,
-        description,
-        imagePath,
-        publisher,
-        pages,
-        rating,
-      };
-    });
-  }
+  
   */
 }
 

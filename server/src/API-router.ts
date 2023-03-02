@@ -14,7 +14,7 @@ export const salt = bcrypt.genSaltSync(10); // this is an encryption algorithm f
 ////////////Test Data
 router.get('/testData', (_request, response) => {
   bookService
-    .getAll()
+    .getBooks()
     .then((rows) => response.send(rows))
     .catch((error) => response.status(500).send(error));
 });
@@ -32,6 +32,13 @@ router.post('/books', (request, response) => {
   bookService
     .addBook(book)
     .then(() => response.status(200).send())
+    .catch((error) => response.status(500).send(error));
+});
+router.get('/books', (_request, response) => {
+  const data = request.body;
+  bookService
+    .getBooks()
+    .then((books) => response.send(books))
     .catch((error) => response.status(500).send(error));
 });
 

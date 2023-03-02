@@ -51,13 +51,13 @@ export class BookList extends Component {
 
   mounted() {
     //retrieving testdata
-    bookService
+    /* bookService
       .getAll()
       .then((recievedData) => (this.testData = recievedData))
-      .catch((error) => Alert.danger('Error getting books: ' + error.message));
+      .catch((error) => Alert.danger('Error getting books: ' + error.message)); */
   }
 
-  search(input: string) { }
+  search(input: string) {}
 }
 
 export class BookDetails extends Component<{
@@ -165,12 +165,7 @@ export class BookDetails extends Component<{
     );
   }
 
-  mounted() {
-    // bookService
-    //   .getBook(this.props.match.params.book_id)
-    //   .then((book) => (this.book = book))
-    //   .catch((error) => Alert.danger('Error getting recipe details: ' + error.message));
-  }
+  mounted() {}
 }
 
 export class BookAdd extends Component {
@@ -200,7 +195,7 @@ export class BookAdd extends Component {
   };
 
   addBook() {
-    console.log('book-components', this.book)
+    console.log('book-components', this.book);
     bookService.addBook(this.book);
     Alert.success('The book has been added');
   }
@@ -414,7 +409,7 @@ export class BookAdd extends Component {
       </Card>
     );
   }
-  mounted() { }
+  mounted() {}
 }
 
 export class BookEdit extends Component<{ match: { params: { id: number } } }> {
@@ -430,7 +425,7 @@ export class BookEdit extends Component<{ match: { params: { id: number } } }> {
     );
   }
 
-  mounted() { }
+  mounted() {}
 }
 
 export function BookCard(props: { book: Book }) {
