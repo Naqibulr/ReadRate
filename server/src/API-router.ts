@@ -2,6 +2,7 @@ import express, { request, response } from 'express';
 import bookService from './book-service';
 import bcrypt from 'bcryptjs';
 import userService from './user-service';
+import authorService from './author-service';
 
 /**
  * Express router containing task methods.
@@ -57,6 +58,19 @@ router.get('/books/search/:searchTerm', (request, response) => {
     .getFilteredBooks(searchTerm)
     .then((books) => {
       response.send(books);
+    })
+    .catch((error) => {
+      response.status(500);
+    });
+});
+
+router.get('/authors/search/:searchTerm', (request, response) => {
+  const searchTerm = String(request.params.searchTerm);
+
+  authorService
+    .getFilteredAuthors(searchTerm)
+    .then((authors) => {
+      response.send(authors);
     })
     .catch((error) => {
       response.status(500);

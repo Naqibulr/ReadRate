@@ -3,22 +3,25 @@ const book = require('./book');
 
 import { Book } from '../src/book';
 export class Author {
+  id: string;
   name: string;
   country: string;
-  books: Book[];
+  books: string[];
   birthDate: string;
   deathDate: string;
-  reviews: Review[];
+  reviews: string[];
   description: string;
   constructor(
+    id: string,
     name: string,
     country: string,
-    books: Book[],
+    books: string[],
     birthDate: string,
     deathDate: string,
-    reviews: Review[],
+    reviews: string[],
     description: string
   ) {
+    this.id = id;
     this.name = name;
     this.country = country;
     this.books = books;
@@ -28,7 +31,7 @@ export class Author {
     this.description = description;
   }
 
-  tostring(): string {
+  toString(): string {
     return 'Author object: ' + this.name;
   }
 }
