@@ -8,6 +8,7 @@ import { UserDetails, UserLogIn, RegisterUser } from './user-components';
 import { Menu } from './menu';
 import bookService, { Book } from './book-service';
 import { useEffect, useState } from 'react';
+import { BookSearch } from './search';
 
 function Home() {
   const [books, setBooks] = useState<Book[]>([]);
@@ -88,6 +89,7 @@ ReactDOM.render(
       <Route exact path="/books/user" component={UserDetails} />
       <Route exact path="/books/:book_id(\d+)" component={BookDetails} />
       <Route exact path="/books/:id(\d+)/edit" component={BookEdit} />
+      <Route exact path="/books/search/:searchTerm" component={BookSearch} />
     </div>
   </HashRouter>,
   document.getElementById('root')

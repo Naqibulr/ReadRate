@@ -5,6 +5,18 @@ import { Component } from 'react-simplified';
 //import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
 export class Menu extends Component {
+  state = {
+    searchValue: '',
+  };
+
+  handleInputChange = (event: any) => {
+    this.setState({ searchValue: event.target.value }); // Update the search input value when the user types into the field
+  };
+
+  handleSearch = () => {
+    window.location.href = `http://localhost:3000/#/books/search/${this.state.searchValue}`; // Navigate to the search URL with the search input value
+  };
+
   render() {
     return (
       /*Renders navbar using components from React-Bootstrap library */
@@ -25,7 +37,7 @@ export class Menu extends Component {
             <Nav className="me-auto"></Nav>
             <Nav>
               <InputGroup className="p-3">
-                <Dropdown id="dropdown">
+                {/* <Dropdown id="dropdown">
                   <Dropdown.Toggle variant="light" id="dropdown-basic">
                     Filter
                   </Dropdown.Toggle>
@@ -35,15 +47,16 @@ export class Menu extends Component {
                     <Dropdown.Item href="#/action-2">Author</Dropdown.Item>
                     <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
                   </Dropdown.Menu>
-                </Dropdown>
+                </Dropdown> */}
 
                 <Form.Control
                   placeholder="Search"
                   aria-label="Search"
                   aria-describedby="Search field"
+                  onChange={this.handleInputChange}
                 />
 
-                <Button variant="light" id="button-addon2">
+                <Button variant="light" id="button-addon2" onClick={this.handleSearch}>
                   Search
                 </Button>
               </InputGroup>

@@ -1,7 +1,18 @@
 import type { RowDataPacket, ResultSetHeader, OkPacket } from 'mysql2';
 import * as testData from './test.json';
 import { firestore } from './firebase';
-import { collection, query, where, doc, setDoc, getDoc, getDocs, addDoc } from 'firebase/firestore';
+import {
+  collection,
+  query,
+  where,
+  doc,
+  setDoc,
+  getDoc,
+  getDocs,
+  addDoc,
+  Query,
+} from 'firebase/firestore';
+import { List } from './list';
 
 export type Book = {
   bookId: string;
@@ -19,13 +30,35 @@ export type Book = {
 };
 
 class BookService {
-  /* getBooks() {
-    return new Promise<String>((resolve, reject) => {
-      resolve(testData.test1.toString());
-    });
-  } */
-
   colRef = collection(firestore, 'books');
+
+  getFilteredBooks(searchTerm: string) {
+    return new Promise<Book[]>(async (resolve, reject) => {
+      const snapshot = await getDocs(query(collection(firestore, 'books')));
+      const books = snapshot.docs.map((doc) => {
+        const bookData = doc.data();
+        const book: Book = {
+          bookId: doc.id,
+          title: bookData.title,
+          ISBN: bookData.ISBN,
+          author: bookData.author,
+          releaseYear: bookData.releaseYear,
+          genre: bookData.genre,
+          description: bookData.description,
+          imagePath: bookData.imagePath,
+          publisher: bookData.publisher,
+          pages: bookData.pages,
+          review: bookData.review,
+          rating: bookData.rating,
+        };
+        return book;
+      });
+      let bookList: List = new List('All books', books);
+      let filteredBooks: Book[] = bookList.search(searchTerm);
+      if (filteredBooks) resolve(filteredBooks);
+      else reject('No book');
+    });
+  }
 
   addBook(book: Book) {
     console.log('book-service', book);
@@ -102,29 +135,6 @@ class BookService {
       };
     });
   }
-
-  /*
-
-  
-
-  getBook(ISBN: string) {
-    return new Promise<Book>(async (resolve, reject) => {
-      const q = query(this.colRef, where('ISBN', '==', ISBN));
-      let book;
-      const qs = await getDocs(q);
-      qs.forEach((doc) => {
-        book = doc.data();
-        console.log(book);
-      });
-      if (book) {
-        resolve(book as Book);
-      } else {
-        reject('No book was found');
-      }
-    });
-  }
-  
-  */
 }
 
 const bookService = new BookService();

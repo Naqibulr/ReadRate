@@ -164,8 +164,12 @@ export class BookDetails extends Component<{
       </Container>
     );
   }
-
-  mounted() {}
+  mounted() {
+    bookService
+      .getBook(this.props.match.params.book_id)
+      .then((book) => (this.book = book))
+      .catch((error) => Alert.danger('Error getting recipe details: ' + error.message));
+  }
 }
 
 export class BookAdd extends Component {

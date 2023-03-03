@@ -3,6 +3,7 @@ import bookService from './book-service';
 import { Book } from './book-service';
 import bcrypt from 'bcryptjs';
 import userService from './user-service';
+import authorService from './author-service';
 
 /**
  * Express router containing task methods.
@@ -68,6 +69,32 @@ router.get('/users/login/:email/:password', (request, response) => {
   } else {
     response.status(469).send('Please fill all the fields');
   }
+});
+
+router.get('/books/search/:searchTerm', (request, response) => {
+  const searchTerm = String(request.params.searchTerm);
+
+  bookService
+    .getFilteredBooks(searchTerm)
+    .then((books) => {
+      response.send(books);
+    })
+    .catch((error) => {
+      response.status(500);
+    });
+});
+
+router.get('/authors/search/:searchTerm', (request, response) => {
+  const searchTerm = String(request.params.searchTerm);
+
+  authorService
+    .getFilteredAuthors(searchTerm)
+    .then((authors) => {
+      response.send(authors);
+    })
+    .catch((error) => {
+      response.status(500);
+    });
 });
 
 //Register a new user

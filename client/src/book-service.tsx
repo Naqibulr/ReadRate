@@ -31,6 +31,10 @@ class BookService {
       }
     });
   }
+  async getFilteredBooks(searchTerm: string) {
+    const response = await axios.get<Array<Book>>('/books/search/' + searchTerm);
+    return response.data;
+  }
 
   getBooksByGenre(genre: string) {
     return axios.get('/books').then((response) => {
@@ -47,6 +51,35 @@ class BookService {
   addBook(book: Book) {
     console.log('book-service', book);
     return axios.post('/books', { book }).then((response) => response.data);
+  }
+
+  /* getBook(ISBN: string) {
+    return axios.get('/books').then((response) => {
+      const data = response.data;
+      if (Array.isArray(data)) {
+        
+        const filteredData = data.filter((book) => book.ISBN === ISBN);
+        return filteredData;
+      } else {
+        throw new Error('Invalid response data: not an array');
+      }
+    });
+  } */
+
+  getBook(ISBN: string) {
+    return axios.get('/books').then((response) => {
+      const data = response.data;
+      if (Array.isArray(data)) {
+        const filteredData = data.find((book) => book.ISBN === ISBN);
+        if (filteredData) {
+          return filteredData;
+        } else {
+          throw new Error(`Book with ISBN ${ISBN} not found`);
+        }
+      } else {
+        throw new Error('Invalid response data: not an array');
+      }
+    });
   }
 }
 const bookService = new BookService();
