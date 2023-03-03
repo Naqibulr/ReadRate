@@ -51,10 +51,10 @@ export class BookList extends Component {
 
   mounted() {
     //retrieving testdata
-    bookService
+    /* bookService
       .getAll()
       .then((recievedData) => (this.testData = recievedData))
-      .catch((error) => Alert.danger('Error getting books: ' + error.message));
+      .catch((error) => Alert.danger('Error getting books: ' + error.message)); */
   }
 
   search(input: string) {}
@@ -67,7 +67,7 @@ export class BookDetails extends Component<{
 }> {
   book: Book = {
     id: '',
-    rating: 0,
+    rating: [],
     title: '',
     ISBN: '',
     author: '',
@@ -117,7 +117,8 @@ export class BookDetails extends Component<{
               <h5>By {this.book.author}</h5>
             </Row>
             <Row className="mt-1">
-              <StarRating rating={this.book.rating}></StarRating>
+              {/* MIDLERTIDIG LØSNING UNDER FIKS SENERE */}
+              <StarRating rating={1}></StarRating>
             </Row>
             <Row className="overflow-auto mt-4" style={{ height: '40vh' }}>
               <p>{this.book.description}</p>
@@ -163,7 +164,6 @@ export class BookDetails extends Component<{
       </Container>
     );
   }
-
   mounted() {
     bookService
       .getBook(this.props.match.params.book_id)
@@ -183,8 +183,8 @@ export class BookAdd extends Component {
     pages: 0,
     description: '',
     genre: [],
+    rating: [],
     imagePath: '',
-    rating: 0,
   };
 
   ischecked: boolean = false;
@@ -199,17 +199,8 @@ export class BookAdd extends Component {
   };
 
   addBook() {
-    bookService.addBook(
-      this.book.title,
-      this.book.ISBN,
-      this.book.author,
-      this.book.releaseYear,
-      this.book.publisher,
-      this.book.pages,
-      this.book.description,
-      this.book.genre,
-      this.book.imagePath
-    );
+    console.log('book-components', this.book);
+    bookService.addBook(this.book);
     Alert.success('The book has been added');
   }
 

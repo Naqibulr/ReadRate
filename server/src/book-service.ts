@@ -12,25 +12,25 @@ import {
   addDoc,
   Query,
 } from 'firebase/firestore';
+import { List } from './list';
 
-/*export type Book = {
+export type Book = {
   bookId: string;
   title: string;
   ISBN: string;
   author: string;
   releaseYear: number;
   publisher: string;
+  rating: Array<number>;
+  review: Array<string>;
   pages: number;
   description: string;
   genre: Array<string>;
   imagePath: string;
-};*/
+};
+
 class BookService {
-  getAll() {
-    return new Promise<String>((resolve, reject) => {
-      resolve(testData.test1.toString());
-    });
-  }
+  colRef = collection(firestore, 'books');
 
   getFilteredBooks(searchTerm: string) {
     return new Promise<Book[]>(async (resolve, reject) => {
@@ -38,7 +38,7 @@ class BookService {
       const books = snapshot.docs.map((doc) => {
         const bookData = doc.data();
         const book: Book = {
-          id: doc.id,
+          bookId: doc.id,
           title: bookData.title,
           ISBN: bookData.ISBN,
           author: bookData.author,
@@ -48,7 +48,7 @@ class BookService {
           imagePath: bookData.imagePath,
           publisher: bookData.publisher,
           pages: bookData.pages,
-          reviewArray: [],
+          review: bookData.review,
           rating: bookData.rating,
         };
         return book;
@@ -60,55 +60,82 @@ class BookService {
     });
   }
 
-  /*  addBook(
-    title: string,
-    ISBN: string,
-    author: string,
-    releaseYear: number,
-    publisher: string,
-    pages: number,
-    description: string,
-    genre: Array<string>,
-    imagePath: string
-  ) {
-    return new Promise<Book>(async (resolve, reject) => {
-      let newBook: Book = {
-        bookId: '0',
-        title: title,
-        ISBN: ISBN,
-        author: author,
-        releaseYear: releaseYear,
-        publisher: publisher,
-        pages: pages,
-        description: description,
-        genre: genre,
-        imagePath: imagePath,
-      };
-      const count = (await getDoc(doc(firestore, 'Books', 'count'))).data();
-      //@ts-ignore
-      const newCount = count + 1;
-
-      setDoc(doc(firestore, 'Books', 'count'), {
-        count: newCount,
+  addBook(book: Book) {
+    console.log('book-service', book);
+    return new Promise<void>(async (resolve, reject) => {
+      addDoc(this.colRef, {
+        id: '',
+        title: book.title,
+        releaseYear: book.releaseYear,
+        author: book.author,
+        genre: book.genre,
+        publisher: book.publisher,
+        ISBN: book.ISBN,
+        review: [],
+        pages: book.pages,
+        rating: [],
+        description: book.description,
+        imagePath: book.imagePath,
       });
 
-      setDoc(doc(firestore, 'Books', newCount.toString()), {
-        title: newBook.title,
-        ISBN: newBook.ISBN,
-        author: newBook.author,
-        releaseYear: newBook.releaseYear,
-        publisher: newBook.publisher,
-        pages: newBook.pages,
-        description: newBook.description,
-        genre: newBook.genre,
-        imagePath: newBook.imagePath,
-      });
-      resolve(newBook as Book);
+      resolve();
     });
-  }*/
+  }
+  async getBooks() {
+    const snapshot = await getDocs(this.colRef);
+    const books = snapshot.docs.map((doc) => {
+      const bookData = doc.data();
+      const book: Book = {
+        bookId: bookData.bookId,
+        title: bookData.title,
+        ISBN: bookData.ISBN,
+        author: bookData.author,
+        releaseYear: bookData.releaseYear,
+        genre: bookData.genre,
+        description: bookData.description,
+        imagePath: bookData.imagePath,
+        publisher: bookData.publisher,
+        pages: bookData.pages,
+        rating: bookData.rating,
+        review: bookData.review,
+      };
+      return book;
+    });
+    return books;
+  }
+  async getBooksByGenre(genre: string) {
+    const allBooks = await this.getBooks();
+    const genreBooks = allBooks.filter((book) => book.genre.includes(genre));
+    return genreBooks.map((bookData) => {
+      const {
+        bookId,
+        title,
+        ISBN,
+        author,
+        releaseYear,
+        genre,
+        description,
+        imagePath,
+        publisher,
+        pages,
+        rating,
+      } = bookData;
+      return {
+        bookId,
+        title,
+        ISBN,
+        author,
+        releaseYear,
+        genre,
+        description,
+        imagePath,
+        publisher,
+        pages,
+        rating,
+      };
+    });
+  }
 }
-import { Book } from './book';
-import { List } from './list';
 
 const bookService = new BookService();
 export default bookService;
