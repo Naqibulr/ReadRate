@@ -40,6 +40,7 @@ class AuthorService {
           deathDate: authorData.deathDate,
           reviews: authorData.reviews,
           description: authorData.description,
+          imagePath: authorData.imagePath,
         };
         return author;
       });

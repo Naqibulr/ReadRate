@@ -4,11 +4,12 @@ import { Alert } from './widgets';
 import { HashRouter, Route } from 'react-router-dom';
 import { Carousel, Container, Row, Col } from 'react-bootstrap';
 import { BookAdd, BookDetails, BookEdit, BookCard } from './book-components';
+import { AuthorAdd, AuthorDetails, AuthorEdit, AuthorCard } from './author-components';
 import { UserDetails, UserLogIn, RegisterUser } from './user-components';
 import { Menu } from './menu';
 import bookService, { Book } from './book-service';
 import { useEffect, useState } from 'react';
-import { BookSearch } from './search';
+import { BookSearch, AuthorSearch } from './search';
 
 function Home() {
   const [books, setBooks] = useState<Book[]>([]);
@@ -118,6 +119,10 @@ ReactDOM.render(
       <Route exact path="/books/:book_id(\d+)" component={BookDetails} />
       <Route exact path="/books/:id(\d+)/edit" component={BookEdit} />
       <Route exact path="/books/search/:searchTerm" component={BookSearch} />
+      <Route exact path="/authors/search/:searchTerm" component={AuthorSearch} />
+      <Route exact path="/authors/:author_id" component={AuthorDetails} />
+      <Route exact path="/authors/:id/edit" component={AuthorEdit} />
+      <Route exact path="/addauthors/" component={AuthorAdd} />
     </div>
   </HashRouter>,
   document.getElementById('root')
