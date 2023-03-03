@@ -122,7 +122,7 @@ ReactDOM.render(
       <Route exact path="/authors/search/:searchTerm" component={AuthorSearch} />
       <Route exact path="/authors/:author_id" component={AuthorDetails} />
       <Route exact path="/authors/:id/edit" component={AuthorEdit} />
-      <Route exact path="/authors/add" component={AuthorAdd} />
+      <Route exact path="/addauthors/" component={AuthorAdd} />
     </div>
   </HashRouter>,
   document.getElementById('root')

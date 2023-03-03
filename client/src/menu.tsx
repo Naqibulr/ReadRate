@@ -79,6 +79,12 @@ export class Menu extends Component {
               >
                 Add book
               </Nav.Link>
+              <Nav.Link
+                href="/#/addauthors/"
+                style={{ color: 'rgb(73 15 224)', marginTop: '15px', whiteSpace: 'nowrap' }}
+              >
+                Add author
+              </Nav.Link>
               <Nav.Link href="/#/books/user" style={{ color: 'rgb(73 15 224)', marginTop: '15px' }}>
                 Login
               </Nav.Link>
