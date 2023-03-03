@@ -11,6 +11,7 @@ export class Author {
   deathDate: string;
   reviews: string[];
   description: string;
+  imagePath: string;
   constructor(
     id: string,
     name: string,
@@ -19,7 +20,8 @@ export class Author {
     birthDate: string,
     deathDate: string,
     reviews: string[],
-    description: string
+    description: string,
+    imagePath: string
   ) {
     this.id = id;
     this.name = name;
@@ -29,6 +31,7 @@ export class Author {
     this.deathDate = deathDate;
     this.reviews = reviews;
     this.description = description;
+    this.imagePath = imagePath;
   }
 
   toString(): string {
