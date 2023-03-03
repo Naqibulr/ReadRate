@@ -1,6 +1,6 @@
-import type { RowDataPacket, ResultSetHeader, OkPacket } from 'mysql2';
-import * as testData from './test.json';
 import { firestore } from './firebase';
+import { Author } from '../src/author';
+import { List } from '../src/list';
 import {
   collection,
   query,
@@ -25,38 +25,28 @@ import {
   genre: Array<string>;
   imagePath: string;
 };*/
-class BookService {
-  getAll() {
-    return new Promise<String>((resolve, reject) => {
-      resolve(testData.test1.toString());
-    });
-  }
-
-  getFilteredBooks(searchTerm: string) {
-    return new Promise<Book[]>(async (resolve, reject) => {
-      const snapshot = await getDocs(query(collection(firestore, 'books')));
-      const books = snapshot.docs.map((doc) => {
-        const bookData = doc.data();
-        const book: Book = {
+class AuthorService {
+  getFilteredAuthors(searchTerm: string) {
+    return new Promise<Author[]>(async (resolve, reject) => {
+      const snapshot = await getDocs(query(collection(firestore, 'authors')));
+      const authors = snapshot.docs.map((doc) => {
+        const authorData = doc.data();
+        const author: Author = {
           id: doc.id,
-          title: bookData.title,
-          ISBN: bookData.ISBN,
-          author: bookData.author,
-          releaseYear: bookData.releaseYear,
-          genre: bookData.genre,
-          description: bookData.description,
-          imagePath: bookData.imagePath,
-          publisher: bookData.publisher,
-          pages: bookData.pages,
-          reviewArray: [],
-          rating: bookData.rating,
+          name: authorData.name,
+          country: authorData.country,
+          books: authorData.books,
+          birthDate: authorData.birthDate,
+          deathDate: authorData.deathDate,
+          reviews: authorData.reviews,
+          description: authorData.description,
         };
-        return book;
+        return author;
       });
-      let bookList: List = new List('All books', books);
-      let filteredBooks: Book[] = bookList.search(searchTerm);
-      if (filteredBooks) resolve(filteredBooks);
-      else reject('No book');
+      let authorList: List = new List('All authors', authors);
+      let filteredAuthors: Author[] = authorList.search(searchTerm);
+      if (filteredAuthors) resolve(filteredAuthors);
+      else reject('No author');
     });
   }
 
@@ -107,8 +97,6 @@ class BookService {
     });
   }*/
 }
-import { Book } from './book';
-import { List } from './list';
 
-const bookService = new BookService();
-export default bookService;
+const authorService = new AuthorService();
+export default authorService;
