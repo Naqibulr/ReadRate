@@ -3,6 +3,8 @@ import { useParams } from 'react-router-dom';
 import { Carousel, Container, Row, Col } from 'react-bootstrap';
 import { BookCard } from './book-components';
 import bookService, { Book } from './book-service';
+import { AuthorCard } from './author-components';
+import authorService, { Author } from './author-service';
 import { useEffect, useState } from 'react';
 
 export function BookSearch() {
@@ -29,6 +31,40 @@ export function BookSearch() {
               return (
                 <Col xs={2} key={book.id}>
                   <BookCard book={book} />
+                </Col>
+              );
+            })}
+          </Row>
+        </Carousel.Item>
+      </Carousel>
+    </Container>
+  );
+}
+
+export function AuthorSearch() {
+  const [authors, setAuthors] = useState<Author[]>([]);
+  const { searchTerm } = useParams<{ searchTerm: string }>();
+
+  useEffect(() => {
+    const fetchAuthors = async () => {
+      const authorsData = await authorService.getFilteredAuthors(searchTerm);
+      const authors = authorsData.slice(0, 6);
+      setAuthors(authors);
+    };
+    fetchAuthors();
+    console.log(authors);
+  }, []);
+
+  return (
+    <Container fluid style={{ margin: 0 }}>
+      <h3 style={{ marginLeft: '20px', marginTop: '5px', marginBottom: '0px' }}>{searchTerm}</h3>
+      <Carousel interval={null}>
+        <Carousel.Item style={{ padding: '1rem' }}>
+          <Row>
+            {authors.map((author: Author) => {
+              return (
+                <Col xs={2} key={author.id}>
+                  <AuthorCard author={author} />
                 </Col>
               );
             })}
