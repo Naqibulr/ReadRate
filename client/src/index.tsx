@@ -13,13 +13,21 @@ import { BookSearch, AuthorSearch } from './search';
 import { computeAverage } from './average';
 
 function Home() {
-  const [books, setBooks] = useState<Book[]>([]);
+  const [fiction, setFiction] = useState<Book[]>([]);
   const [topBooks, setTopBooks] = useState<Book[]>([]);
+  const [crime, setCrime] = useState<Book[]>([]);
 
   useEffect(() => {
     const fetchBooks = async () => {
       const booksData = await bookService.getBooksByGenre('Fiction');
-      setBooks(booksData);
+      setFiction(booksData);
+    };
+    fetchBooks();
+  }, []);
+  useEffect(() => {
+    const fetchBooks = async () => {
+      const booksData = await bookService.getBooksByGenre('Crime');
+      setCrime(booksData);
     };
     fetchBooks();
   }, []);
@@ -58,13 +66,33 @@ function Home() {
       </Carousel>
       <h3 style={{ marginLeft: '20px', marginTop: '5px', marginBottom: '0px' }}>Fiction</h3>
       <Carousel interval={null}>
-        {books.map((book, index) => {
+        {fiction.map((book, index) => {
           // Check if the item index is a multiple of 6 to create a new carousel item
           if (index % 6 === 0) {
             return (
               <Carousel.Item key={index} style={{ padding: '1rem' }}>
                 <Row>
-                  {books.slice(index, index + 6).map((book, index) => (
+                  {fiction.slice(index, index + 6).map((book, index) => (
+                    <Col md={2} key={index}>
+                      <BookCard book={book} />
+                    </Col>
+                  ))}
+                </Row>
+              </Carousel.Item>
+            );
+          }
+          return null;
+        })}
+      </Carousel>
+      <h3 style={{ marginLeft: '20px', marginTop: '5px', marginBottom: '0px' }}>Crime</h3>
+      <Carousel interval={null}>
+        {crime.map((book, index) => {
+          // Check if the item index is a multiple of 6 to create a new carousel item
+          if (index % 6 === 0) {
+            return (
+              <Carousel.Item key={index} style={{ padding: '1rem' }}>
+                <Row>
+                  {crime.slice(index, index + 6).map((book, index) => (
                     <Col md={2} key={index}>
                       <BookCard book={book} />
                     </Col>

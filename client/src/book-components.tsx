@@ -95,7 +95,7 @@ export class BookDetails extends Component<{
         </Row>
         <Row>
           <Col sm={3} className="pt-4 ">
-            <Row className="m-3">
+            <Row className="m-3 p-0">
               <img
                 src={this.book.imagePath}
                 className="img-fluid shadow "
@@ -123,7 +123,6 @@ export class BookDetails extends Component<{
               <h5>By {this.book.author}</h5>
             </Row>
             <Row className="mt-1">
-              {/* MIDLERTIDIG LØSNING UNDER FIKS SENERE */}
               <StarRating rating={computeAverage(this.book.rating)}></StarRating>
             </Row>
             <Row className="overflow-auto mt-4" style={{ height: '40vh' }}>
@@ -461,7 +460,12 @@ export function BookCard(props: { book: Book }) {
       />
       <Card.Body>
         <Card.Title className="text-truncate">{props.book.title}</Card.Title>
-        <Card.Text>{props.book.author}</Card.Text>
+        <Card.Text
+          className="text-truncate"
+          style={{ color: 'rgb(128,128,128)', cursor: 'pointer' }}
+        >
+          {props.book.author}
+        </Card.Text>
 
         <Row>
           <Col className="col-8">
