@@ -53,19 +53,6 @@ class BookService {
     return axios.post('/books', { book }).then((response) => response.data);
   }
 
-  /* getBook(ISBN: string) {
-    return axios.get('/books').then((response) => {
-      const data = response.data;
-      if (Array.isArray(data)) {
-        
-        const filteredData = data.filter((book) => book.ISBN === ISBN);
-        return filteredData;
-      } else {
-        throw new Error('Invalid response data: not an array');
-      }
-    });
-  } */
-
   getBook(ISBN: string) {
     return axios.get('/books').then((response) => {
       const data = response.data;

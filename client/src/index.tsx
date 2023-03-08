@@ -3,13 +3,14 @@ import * as React from 'react';
 import { Alert } from './widgets';
 import { HashRouter, Route } from 'react-router-dom';
 import { Carousel, Container, Row, Col } from 'react-bootstrap';
-import { BookAdd, BookDetails, BookEdit, BookCard } from './book-components';
+import { BookAdd, BookDetails, BookEdit, BookCard, BookList } from './book-components';
 import { AuthorAdd, AuthorDetails, AuthorEdit, AuthorCard } from './author-components';
 import { UserDetails, UserLogIn, RegisterUser } from './user-components';
 import { Menu } from './menu';
 import bookService, { Book } from './book-service';
 import { useEffect, useState } from 'react';
 import { BookSearch, AuthorSearch } from './search';
+import { computeAverage } from './average';
 
 function Home() {
   const [books, setBooks] = useState<Book[]>([]);
@@ -25,7 +26,9 @@ function Home() {
   useEffect(() => {
     const fetchBooks = async () => {
       const booksData = await bookService.getBooks();
-      const sortedBooks = booksData.sort((a, b) => b.rating - a.rating);
+      const sortedBooks = booksData.sort(
+        (a, b) => computeAverage(b.rating) - computeAverage(a.rating)
+      );
       setTopBooks(sortedBooks);
     };
     fetchBooks();
@@ -83,7 +86,7 @@ ReactDOM.render(
       <Alert />
       <Menu />
       <Route exact path="/" component={Home} />
-      {/* <Route exact path="/books" component={} /> */}
+      <Route exact path="/books/genres/:genre" component={BookList} />
       <Route exact path="/books/add" component={BookAdd} />
       <Route exact path="/books/login" component={UserLogIn} />
       <Route exact path="/books/register" component={RegisterUser} />
