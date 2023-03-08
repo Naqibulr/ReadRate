@@ -1,17 +1,7 @@
 import type { RowDataPacket, ResultSetHeader, OkPacket } from 'mysql2';
 import * as testData from './test.json';
 import { firestore } from './firebase';
-import {
-  collection,
-  query,
-  where,
-  doc,
-  setDoc,
-  getDoc,
-  getDocs,
-  addDoc,
-  Query,
-} from 'firebase/firestore';
+import { collection, query, getDocs, addDoc } from 'firebase/firestore';
 import { List } from './list';
 
 export type Book = {
@@ -26,6 +16,7 @@ export type Book = {
   pages: number;
   description: string;
   genre: Array<string>;
+  addedDate: Date;
   imagePath: string;
 };
 
@@ -47,6 +38,7 @@ class BookService {
           description: bookData.description,
           imagePath: bookData.imagePath,
           publisher: bookData.publisher,
+          addedDate: bookData.addedDate,
           pages: bookData.pages,
           review: bookData.review,
           rating: bookData.rating,
@@ -74,6 +66,7 @@ class BookService {
         review: [],
         pages: book.pages,
         rating: [],
+        addedDate: new Date(),
         description: book.description,
         imagePath: book.imagePath,
       });
@@ -96,6 +89,7 @@ class BookService {
         imagePath: bookData.imagePath,
         publisher: bookData.publisher,
         pages: bookData.pages,
+        addedDate: new Date(bookData.addedDate.seconds * 1000),
         rating: bookData.rating,
         review: bookData.review,
       };
@@ -119,6 +113,7 @@ class BookService {
         publisher,
         pages,
         rating,
+        addedDate,
       } = bookData;
       return {
         bookId,
@@ -132,6 +127,7 @@ class BookService {
         publisher,
         pages,
         rating,
+        addedDate,
       };
     });
   }

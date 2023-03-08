@@ -15,6 +15,7 @@ export type Book = {
   description: string;
   genre: Array<string>;
   rating: Array<number>;
+  addedDate: Date;
   imagePath: string;
 };
 class BookService {

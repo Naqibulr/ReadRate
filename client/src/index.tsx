@@ -15,7 +15,7 @@ import { computeAverage } from './average';
 function Home() {
   const [fiction, setFiction] = useState<Book[]>([]);
   const [topBooks, setTopBooks] = useState<Book[]>([]);
-  const [crime, setCrime] = useState<Book[]>([]);
+  const [mostRecent, setMotRecent] = useState<Book[]>([]);
 
   useEffect(() => {
     const fetchBooks = async () => {
@@ -24,13 +24,7 @@ function Home() {
     };
     fetchBooks();
   }, []);
-  useEffect(() => {
-    const fetchBooks = async () => {
-      const booksData = await bookService.getBooksByGenre('Crime');
-      setCrime(booksData);
-    };
-    fetchBooks();
-  }, []);
+
   useEffect(() => {
     const fetchBooks = async () => {
       const booksData = await bookService.getBooks();
@@ -38,6 +32,18 @@ function Home() {
         (a, b) => computeAverage(b.rating) - computeAverage(a.rating)
       );
       setTopBooks(sortedBooks);
+    };
+    fetchBooks();
+  }, []);
+
+  useEffect(() => {
+    const fetchBooks = async () => {
+      const booksData = await bookService.getBooks();
+      const sortedBooks = booksData.sort(
+        (a: Book, b: Book) => new Date(b.addedDate).getTime() - new Date(a.addedDate).getTime()
+      );
+      setMotRecent(sortedBooks);
+      console.log(sortedBooks);
     };
     fetchBooks();
   }, []);
@@ -64,15 +70,15 @@ function Home() {
           return null;
         })}
       </Carousel>
-      <h3 style={{ marginLeft: '20px', marginTop: '5px', marginBottom: '0px' }}>Fiction</h3>
+      <h3 style={{ marginLeft: '20px', marginTop: '5px', marginBottom: '0px' }}>Most recent</h3>
       <Carousel interval={null}>
-        {fiction.map((book, index) => {
+        {mostRecent.map((book, index) => {
           // Check if the item index is a multiple of 6 to create a new carousel item
           if (index % 6 === 0) {
             return (
               <Carousel.Item key={index} style={{ padding: '1rem' }}>
                 <Row>
-                  {fiction.slice(index, index + 6).map((book, index) => (
+                  {mostRecent.slice(index, index + 6).map((book, index) => (
                     <Col md={2} key={index}>
                       <BookCard book={book} />
                     </Col>
@@ -84,15 +90,15 @@ function Home() {
           return null;
         })}
       </Carousel>
-      <h3 style={{ marginLeft: '20px', marginTop: '5px', marginBottom: '0px' }}>Crime</h3>
+      <h3 style={{ marginLeft: '20px', marginTop: '5px', marginBottom: '0px' }}>Fiction</h3>
       <Carousel interval={null}>
-        {crime.map((book, index) => {
+        {fiction.map((book, index) => {
           // Check if the item index is a multiple of 6 to create a new carousel item
           if (index % 6 === 0) {
             return (
               <Carousel.Item key={index} style={{ padding: '1rem' }}>
                 <Row>
-                  {crime.slice(index, index + 6).map((book, index) => (
+                  {fiction.slice(index, index + 6).map((book, index) => (
                     <Col md={2} key={index}>
                       <BookCard book={book} />
                     </Col>

@@ -82,6 +82,7 @@ export class BookDetails extends Component<{
     pages: 0,
     description: '',
     genre: [],
+    addedDate: new Date(),
     imagePath: '',
   };
 
@@ -200,6 +201,7 @@ export class BookAdd extends Component {
     description: '',
     genre: [],
     rating: [],
+    addedDate: new Date(),
     imagePath: '',
   };
 
