@@ -14,10 +14,11 @@ import {
   FormControl,
 } from 'react-bootstrap';
 import { createHashHistory } from 'history';
-import bookService, { Book } from './book-service';
+import bookService, { Book, Review, addReview } from './book-service';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
 import StarRatings from 'react-star-ratings';
+import { loggedIn } from './user-components';
 
 const history = createHashHistory(); // Use history.push(...) to programmatically change path
 
@@ -27,6 +28,21 @@ interface ReviewFormData {
   comment: string;
 }
 
+export function handleWriteReviewButtonPress() {
+  if (loggedIn) {
+    //@ts-ignorets-ignore
+    history.push(`/books/${this.book.ISBN}/review`);
+  } else {
+    // //@ts-ignorets-ignore
+    // history.push(`/books/${this.book.ISBN}/review`);
+    Alert.info(`You need to log in to be able to write a review`);
+  }
+}
+
+export function displayAlert() {
+  return;
+}
+
 export const WriteReviewPage = (props: { book: Book }) => {
   const [formData, setFormData] = useState<ReviewFormData>({
     name: '',
@@ -34,11 +50,21 @@ export const WriteReviewPage = (props: { book: Book }) => {
     comment: '',
   });
 
+  let review: Review = {
+    email: '', //getcookievalue("email")
+    ISBN: props.book.ISBN,
+    rating: 0,
+    text: '',
+  };
+
   //const { book_id } = props.match.params;
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     // Here you can save the review to your database or do other logic
+    console.log('book-components', review);
+    addReview(review);
+    Alert.success('The review has been added');
     // Once done, navigate the user back to the book details page or homepage
     history.goBack(); //history.push(`/books/${props.book.ISBN}`); //book-details
   };
@@ -54,7 +80,7 @@ export const WriteReviewPage = (props: { book: Book }) => {
   };
 
   return (
-    <div>
+    <Container className="p-3">
       <h1>Write a Review</h1>
       <Form onSubmit={handleSubmit}>
         <Form.Group controlId="name">
@@ -73,7 +99,7 @@ export const WriteReviewPage = (props: { book: Book }) => {
             as="select"
             name="rating"
             value={formData.rating}
-            onChange={handleInputChange}
+            onChange={(event) => (review.rating = parseInt(event.currentTarget.value))}
             required
           >
             <option value="">Select a rating...</option>
@@ -92,15 +118,15 @@ export const WriteReviewPage = (props: { book: Book }) => {
             rows={3}
             name="comment"
             value={formData.comment}
-            onChange={handleInputChange}
+            onChange={(event) => (review.text = event.currentTarget.value)}
           />
         </Form.Group>
 
-        <Button variant="primary" type="submit">
+        <Button variant="primary" type="submit" className="btn btn-success mt-3">
           Submit
         </Button>
       </Form>
-    </div>
+    </Container>
   );
 };
 
@@ -206,7 +232,7 @@ export class BookDetails extends Component<{
               <Button
                 type="button"
                 className="btn btn-success mt-3"
-                onClick={() => history.push(`/books/${this.book.ISBN}/review`)}
+                onClick={() => history.push(`/books/${this.book.ISBN}/review`)} //handleWriteReviewButtonPress()
               >
                 Write review
               </Button>
@@ -220,7 +246,7 @@ export class BookDetails extends Component<{
               <h5>By {this.book.author}</h5>
             </Row>
             <Row className="mt-1">
-              <StarRating rating={this.book.rating}></StarRating>
+              <StarRating rating={1}></StarRating>
             </Row>
             <Row className="overflow-auto mt-4" style={{ height: '40vh' }}>
               <p>{this.book.description}</p>

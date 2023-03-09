@@ -1,8 +1,16 @@
 import axios from 'axios';
 import { firestore } from './firebase';
 import { collection, query, where, getDocs, addDoc } from 'firebase/firestore';
+import { User } from './user-service';
 
 axios.defaults.baseURL = 'http://localhost:3000/api/v2';
+
+export type Review = {
+  email: string; //getcookievalue("email")
+  ISBN: string;
+  rating: number;
+  text: string;
+};
 
 export type Book = {
   id: string;
@@ -17,6 +25,12 @@ export type Book = {
   genre: Array<string>;
   imagePath: string;
 };
+
+export function addReview(review: Review) {
+  console.log('book-service', review);
+  return axios.post('/reviews', { review }).then((response) => response.data);
+}
+
 class BookService {
   /**
    * Get all testdata.
