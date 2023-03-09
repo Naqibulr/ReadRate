@@ -2,6 +2,8 @@ import axios from 'axios';
 
 axios.defaults.baseURL = 'http://localhost:3000/api/v2';
 
+export type List = {}
+
 export type User = {
   user_id: number;
   email: string;
@@ -9,6 +11,7 @@ export type User = {
   last_name: string;
   password: string;
   admin: boolean;
+  lists: Map<string, Array<string>>;
 };
 
 class UserService {
@@ -20,7 +23,7 @@ class UserService {
     first_name: string,
     last_name: string,
     password: string,
-    password2: string
+    password2: string,
   ) {
     return axios
       .post('/users/register', {
@@ -39,7 +42,7 @@ class UserService {
   logIn(email: string, password: string) {
     return axios
       .get<User>('/users/login/' + email + '/' + password)
-      .then((response) => response.data);
+      .then((response) => response.data as User);
   }
 }
 

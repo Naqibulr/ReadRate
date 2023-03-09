@@ -28,7 +28,6 @@ class BookService {
   colRef = collection(firestore, 'books');
 
   addBook(book: Book) {
-    console.log('book-service', book);
     return new Promise<void>(async (resolve, reject) => {
       addDoc(this.colRef, {
         id: '',
@@ -103,9 +102,13 @@ class BookService {
     });
   }
 
-  /*
-
-  
+  // //@ts-ignore
+  // getBooksList({ userIds }) {
+  //   //@ts-ignore
+  //   const refs = userIds.map((id) => this.firestore.doc(`users/${id}`));
+  //   //@ts-ignore
+  //   this.firestore.getAll(...refs).then((users) => console.log(users.map((doc) => doc.data())));
+  // }
 
   getBook(ISBN: string) {
     return new Promise<Book>(async (resolve, reject) => {
@@ -114,7 +117,6 @@ class BookService {
       const qs = await getDocs(q);
       qs.forEach((doc) => {
         book = doc.data();
-        console.log(book);
       });
       if (book) {
         resolve(book as Book);
@@ -123,8 +125,6 @@ class BookService {
       }
     });
   }
-  
-  */
 }
 
 const bookService = new BookService();

@@ -8,6 +8,7 @@ export type User = {
   first_name: string;
   last_name: string;
   password: string;
+  lists: Map<string, Array<string>>;
 };
 
 class UserService {
@@ -22,6 +23,7 @@ class UserService {
         first_name: first_name,
         last_name: last_name,
         password: password,
+        lists: new Map(),
       };
 
       //get count of users
@@ -42,6 +44,10 @@ class UserService {
         last_name: newUser.last_name,
         password: newUser.password,
         admin: false,
+        lists: {
+          list1: [],
+          list2: [],
+        },
       });
 
       resolve(newUser as User);

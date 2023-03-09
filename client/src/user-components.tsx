@@ -1,9 +1,11 @@
 import * as React from 'react';
 import { Component } from 'react-simplified';
-import { Alert} from './widgets';
-import { Button, Form, Card, Row, Col, Container } from 'react-bootstrap';
+import { Alert } from './widgets';
+import { Carousel, Button, Form, Card, Row, Col, Container, ListGroup, ListGroupItem } from 'react-bootstrap';
 import userService, { User } from './user-service';
+import { BookCard } from './book-components';
 import { createHashHistory } from 'history';
+import bookService, { Book } from './book-service';
 
 //false as default
 export let loggedIn: boolean = false;
@@ -14,7 +16,8 @@ export let currentUser: User = {
   last_name: '',
   password: '',
   admin: false,
-};
+  lists: new Map() as Map<string, Array<string>>
+}
 
 const history = createHashHistory(); // Use history.push(...)
 
@@ -114,6 +117,7 @@ export class UserLogIn extends Component {
         .then((user) => {
           currentUser = user;
           loggedIn = true;
+
           Alert.success('Logged in as ' + currentUser.email);
           history.push('/books/user');
         })
@@ -134,7 +138,7 @@ export class UserLogIn extends Component {
 }
 
 export class RegisterUser extends Component {
-  user: User = { user_id: 0, email: '', first_name: '', last_name: '', password: '', admin: false };
+  user: User = { user_id: 0, email: '', first_name: '', last_name: '', password: '', admin: false, lists: new Map() as Map<string, Array<string>>, };
   confirm_password: string = '';
 
   render() {
@@ -287,7 +291,9 @@ export class RegisterUser extends Component {
       last_name: '',
       password: '',
       admin: false,
-    };
+      lists: new Map()
+    } as User;
+
     this.confirm_password = '';
   }
 }
@@ -334,7 +340,7 @@ export class UserDetails extends Component {
             </Button>
           </Row>
           <Row style={{ fontSize: '17px' }}>
-            <Card.Text style={{ fontWeight: 'bold' }}>Your reviews:</Card.Text>
+            {/* <Card.Text style={{ fontWeight: 'bold' }}>Your reviews:</Card.Text>
           </Row>
           <Row>
             <Col xs={3}>
@@ -376,19 +382,13 @@ export class UserDetails extends Component {
                 rows={12}
                 value="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer bibendum convallis ornare. Aliquam id iaculis leo. In malesuada mi sed mauris euismod, vitae pretium leo feugiat. Sed at nisl blandit, volutpat arcu at, dignissim enim. Donec vel massa nulla. Maecenas eget sollicitudin nisl. Morbi et ex id elit vehicula fringilla at vel velit. Maecenas at quam odio. Donec id consectetur purus, sit amet lacinia dolor. Vivamus gravida leo ut nisl sollicitudin, ac sagittis lectus consectetur. Nulla iaculis vel lectus ac sodales. Maecenas at sapien pretium, vehicula sapien eget, feugiat ligula. Nulla egestas ligula non tempus commodo. Quisque tristique urna dui, non finibus nisi bibendum non. Mauris pulvinar sed lacus vitae convallis. Sed dictum efficitur nibh eget condimentum."
               ></Form.Control>
-            </Col>
+            </Col> */}
           </Row>
           <Row>
             <Card.Text style={{ fontWeight: 'bold' }}>Your Lists:</Card.Text>
-            <Col xs={3}>
-              <Card>List 1</Card>
-            </Col>
-            <Col xs={3}>
-              <Card>List 2</Card>
-            </Col>
-            <Col xs={3}>
-              <Card>List 3</Card>
-            </Col>
+          </Row>
+          <Row>
+            {this.createLists()}
           </Row>
           <Row style={{ padding: '10vh' }}>
             <Button
@@ -416,6 +416,50 @@ export class UserDetails extends Component {
     }
   }
 
+  createLists() {
+    //Recieve and store lists
+
+    var books: Array<Book> = []
+    var listItems = [];
+
+    for (let x in currentUser.lists) {
+      //@ts-ignore
+      for (let y in currentUser.lists[x]) {
+        //@ts-ignore
+        bookService.getBook(currentUser.lists[x][y].toString()).then((book: Book) => books.push(book))
+        //@ts-ignore
+      }
+      var aList = (
+        <>
+          <h3 style={{ marginLeft: '20px', marginTop: '5px', marginBottom: '0px' }}>{x}</h3>
+          <Carousel interval={null}>
+            {books.map((book, index) => {
+              if (index % 6 === 0) {
+                console.log(books)
+                return (
+                  <Carousel.Item key={index} style={{ padding: '1rem' }}>
+                    <Row>
+                      {books.slice(index, index + 6).map((book, index) => (
+                        <Col md={2} key={index}>
+                          <BookCard book={book} />
+                        </Col>
+                      ))}
+                    </Row>
+                  </Carousel.Item>
+                );
+              }
+              return null;
+            })}
+          </Carousel>
+        </>
+      )
+      listItems.push(aList)
+    }
+    console.log(books)
+
+    return listItems
+  }
+
   logOut() {
     loggedIn = false;
     history.push('/books');
@@ -426,8 +470,9 @@ export class UserDetails extends Component {
       last_name: '',
       password: '',
       admin: false,
-    };
+      lists: new Map() as Map<string, Array<string>>,
+    } as User;
   }
 
-  requestAdmin() {}
+  requestAdmin() { }
 }
