@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Component } from 'react-simplified';
 import { Alert, Column } from './widgets';
-import { Button, Form, Card, Row, Col, Container } from 'react-bootstrap';
+import { Button, Form, Card, Row, Col, Container, ThemeProvider } from 'react-bootstrap';
 import { createHashHistory } from 'history';
 import bookService, { Book } from './book-service';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
 import StarRatings from 'react-star-ratings';
+import { computeAverage } from './average';
+import { Link } from 'react-router-dom';
 
 // REMEMBER TO ADD IMPORTS FROM SERVICE
 
@@ -29,35 +31,39 @@ function StarRating(props: { rating: number }) {
   );
 }
 
-/**
- * Renders book list.
- */
-export class BookList extends Component {
-  testData: String = '';
+interface BookListProps {
+  match: {
+    params: {
+      genre: string;
+    };
+  };
+}
 
-  render() {
-    return (
-      <>
-        {/* Search bar for easy access to gicen book */}
-        <Card style={{ border: 'none', padding: '15px' }}>
-          <Card.Title style={{ marginLeft: 'auto', marginRight: 'auto' }}>Example title</Card.Title>
-          <Card.Title style={{ marginLeft: 'auto', marginRight: 'auto' }}>Example title</Card.Title>
+export function BookList(props: BookListProps) {
+  const [books, setBooks] = useState<Book[]>([]);
+  const genre = props.match.params.genre;
 
-          {this.testData}
-        </Card>
-      </>
-    );
-  }
+  useEffect(() => {
+    bookService
+      .getBooksByGenre(genre)
+      .then((books) => setBooks(books))
+      .catch((error) => Alert.danger('Error getting recipe details: ' + error.message));
+  }, []);
 
-  mounted() {
-    //retrieving testdata
-    /* bookService
-      .getAll()
-      .then((recievedData) => (this.testData = recievedData))
-      .catch((error) => Alert.danger('Error getting books: ' + error.message)); */
-  }
-
-  search(input: string) {}
+  return (
+    <div className="p-4 pt-1">
+      <Row style={{ marginTop: '10px' }}>
+        <h3>{props.match.params.genre}</h3>
+      </Row>
+      <Row>
+        {books.map((book) => (
+          <Col className="mb-3" key={book.id} md={2}>
+            <BookCard book={book} />
+          </Col>
+        ))}
+      </Row>
+    </div>
+  );
 }
 
 export class BookDetails extends Component<{
@@ -76,6 +82,7 @@ export class BookDetails extends Component<{
     pages: 0,
     description: '',
     genre: [],
+    addedDate: new Date(),
     imagePath: '',
   };
 
@@ -89,7 +96,7 @@ export class BookDetails extends Component<{
         </Row>
         <Row>
           <Col sm={3} className="pt-4 ">
-            <Row className="m-3">
+            <Row className="m-3 p-0">
               <img
                 src={this.book.imagePath}
                 className="img-fluid shadow "
@@ -117,8 +124,7 @@ export class BookDetails extends Component<{
               <h5>By {this.book.author}</h5>
             </Row>
             <Row className="mt-1">
-              {/* MIDLERTIDIG LØSNING UNDER FIKS SENERE */}
-              <StarRating rating={1}></StarRating>
+              <StarRating rating={computeAverage(this.book.rating)}></StarRating>
             </Row>
             <Row className="overflow-auto mt-4" style={{ height: '40vh' }}>
               <p>{this.book.description}</p>
@@ -129,7 +135,18 @@ export class BookDetails extends Component<{
               </Col>
               {this.book.genre.map((genre) => (
                 <Col sm={1}>
-                  <a>{genre}</a>
+                  {/* <Button onClick={() => history.push(`/books/genres/${genre}`)}>{genre}</Button> */}
+                  <Link
+                    to={`/books/genres/${genre}`}
+                    style={{
+                      color: 'rgb(128, 128, 128)',
+                      textDecoration: 'none',
+                      borderBottom: '2px solid green',
+                      fontWeight: 'bold',
+                    }}
+                  >
+                    {genre}
+                  </Link>
                 </Col>
               ))}
             </Row>
@@ -184,6 +201,7 @@ export class BookAdd extends Component {
     description: '',
     genre: [],
     rating: [],
+    addedDate: new Date(),
     imagePath: '',
   };
 
@@ -206,211 +224,213 @@ export class BookAdd extends Component {
 
   render() {
     return (
-      <Card
-        style={{
-          border: '0',
-          textAlign: 'center',
-          margin: '10%',
-          marginTop: '3%',
-        }}
-      >
-        <Card.Title>Details:</Card.Title>
-        <Form>
-          <Row>
-            <Col>
-              <Form.Group className="mb-3" controlId="title">
-                <Form.Label>Title</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Enter title"
-                  onChange={(event) => (this.book.title = event.currentTarget.value)}
+      <ThemeProvider dark>
+        <Card
+          style={{
+            border: '0',
+            textAlign: 'center',
+            margin: '10%',
+            marginTop: '3%',
+          }}
+        >
+          <Card.Title>Details:</Card.Title>
+          <Form>
+            <Row>
+              <Col>
+                <Form.Group className="mb-3" controlId="title">
+                  <Form.Label>Title</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Enter title"
+                    onChange={(event) => (this.book.title = event.currentTarget.value)}
+                  />
+                </Form.Group>
+              </Col>
+              <Col>
+                <Form.Group className="mb-3" controlId="isbn">
+                  <Form.Label>ISBN</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Enter ISBN"
+                    onChange={(event) => (this.book.ISBN = event.currentTarget.value)}
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <Form.Group className="mb-3" controlId="author">
+                  <Form.Label>Author</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Enter author name"
+                    onChange={(event) => (this.book.author = event.currentTarget.value)}
+                  />
+                </Form.Group>
+              </Col>
+              <Col>
+                <Form.Group className="mb-3" controlId="releaseYear">
+                  <Form.Label>Release year</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Enter Release year"
+                    onChange={(event) =>
+                      (this.book.releaseYear = parseInt(event.currentTarget.value))
+                    }
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <Form.Group className="mb-3" controlId="publisher">
+                  <Form.Label>Publisher</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Enter publisher name"
+                    onChange={(event) => (this.book.publisher = event.currentTarget.value)}
+                  />
+                </Form.Group>
+              </Col>
+              <Col>
+                <Form.Group className="mb-3" controlId="pages">
+                  <Form.Label>Number of pages</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Enter number of pages"
+                    onChange={(event) => (this.book.pages = parseInt(event.currentTarget.value))}
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <Form.Group className="mb-3" controlId="description">
+                  <Form.Label>Description</Form.Label>
+                  <Form.Control
+                    type="text"
+                    as="textarea"
+                    placeholder="Enter description"
+                    rows={1}
+                    onChange={(event) => (this.book.description = event.currentTarget.value)}
+                  />
+                </Form.Group>
+              </Col>
+              <Col>
+                <Form.Group className="mb-3" controlId="image">
+                  <Form.Label>Image</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Enter image URL"
+                    onChange={(event) => (this.book.imagePath = event.currentTarget.value)}
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row>
+              <Form.Label>Choose Genre</Form.Label>
+              <Form.Group className="mb-3" controlId="formBasicCheckbox">
+                <Form.Check
+                  inline
+                  type="checkbox"
+                  label="Fantasy"
+                  value="Fantasy"
+                  onChange={(event) => this.handleCheckboxChange(event)}
+                />
+                <Form.Check
+                  inline
+                  type="checkbox"
+                  label="Humour"
+                  value="Humor"
+                  onChange={(event) => this.handleCheckboxChange(event)}
+                />
+                <Form.Check
+                  inline
+                  type="checkbox"
+                  label="History"
+                  value="History"
+                  onChange={(event) => this.handleCheckboxChange(event)}
+                />
+                <Form.Check
+                  inline
+                  type="checkbox"
+                  label="Novel"
+                  value="Novel"
+                  onChange={(event) => this.handleCheckboxChange(event)}
+                />
+                <Form.Check
+                  inline
+                  type="checkbox"
+                  label="Children's"
+                  value="Children's"
+                  onChange={(event) => this.handleCheckboxChange(event)}
+                />
+                <Form.Check
+                  inline
+                  type="checkbox"
+                  label="Crime"
+                  value="Crime"
+                  onChange={(event) => this.handleCheckboxChange(event)}
+                />
+                <Form.Check
+                  inline
+                  type="checkbox"
+                  label="Drama"
+                  value="Drama"
+                  onChange={(event) => this.handleCheckboxChange(event)}
+                />
+                <Form.Check
+                  inline
+                  type="checkbox"
+                  label="Horror"
+                  value="Horror"
+                  onChange={(event) => this.handleCheckboxChange(event)}
+                />
+                <Form.Check
+                  inline
+                  type="checkbox"
+                  label="Poetry"
+                  value="Poetry"
+                  onChange={(event) => this.handleCheckboxChange(event)}
+                />
+                <Form.Check
+                  inline
+                  type="checkbox"
+                  label="Science"
+                  value="Science"
+                  onChange={(event) => this.handleCheckboxChange(event)}
+                />
+                <Form.Check
+                  inline
+                  type="checkbox"
+                  label="Tragedy"
+                  value="Tragedy"
+                  onChange={(event) => this.handleCheckboxChange(event)}
+                />
+                <Form.Check
+                  inline
+                  type="checkbox"
+                  label="Fiction"
+                  value="Fiction"
+                  onChange={(event) => this.handleCheckboxChange(event)}
                 />
               </Form.Group>
-            </Col>
-            <Col>
-              <Form.Group className="mb-3" controlId="isbn">
-                <Form.Label>ISBN</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Enter ISBN"
-                  onChange={(event) => (this.book.ISBN = event.currentTarget.value)}
-                />
-              </Form.Group>
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <Form.Group className="mb-3" controlId="author">
-                <Form.Label>Author</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Enter author name"
-                  onChange={(event) => (this.book.author = event.currentTarget.value)}
-                />
-              </Form.Group>
-            </Col>
-            <Col>
-              <Form.Group className="mb-3" controlId="releaseYear">
-                <Form.Label>Release year</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Enter Release year"
-                  onChange={(event) =>
-                    (this.book.releaseYear = parseInt(event.currentTarget.value))
-                  }
-                />
-              </Form.Group>
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <Form.Group className="mb-3" controlId="publisher">
-                <Form.Label>Publisher</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Enter publisher name"
-                  onChange={(event) => (this.book.publisher = event.currentTarget.value)}
-                />
-              </Form.Group>
-            </Col>
-            <Col>
-              <Form.Group className="mb-3" controlId="pages">
-                <Form.Label>Number of pages</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Enter number of pages"
-                  onChange={(event) => (this.book.pages = parseInt(event.currentTarget.value))}
-                />
-              </Form.Group>
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <Form.Group className="mb-3" controlId="description">
-                <Form.Label>Description</Form.Label>
-                <Form.Control
-                  type="text"
-                  as="textarea"
-                  placeholder="Enter description"
-                  rows={1}
-                  onChange={(event) => (this.book.description = event.currentTarget.value)}
-                />
-              </Form.Group>
-            </Col>
-            <Col>
-              <Form.Group className="mb-3" controlId="image">
-                <Form.Label>Image</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Enter image URL"
-                  onChange={(event) => (this.book.imagePath = event.currentTarget.value)}
-                />
-              </Form.Group>
-            </Col>
-          </Row>
-          <Row>
-            <Form.Label>Choose Genre</Form.Label>
-            <Form.Group className="mb-3" controlId="formBasicCheckbox">
-              <Form.Check
-                inline
-                type="checkbox"
-                label="Fantasy"
-                value="Fantasy"
-                onChange={(event) => this.handleCheckboxChange(event)}
-              />
-              <Form.Check
-                inline
-                type="checkbox"
-                label="Humour"
-                value="Humor"
-                onChange={(event) => this.handleCheckboxChange(event)}
-              />
-              <Form.Check
-                inline
-                type="checkbox"
-                label="History"
-                value="History"
-                onChange={(event) => this.handleCheckboxChange(event)}
-              />
-              <Form.Check
-                inline
-                type="checkbox"
-                label="Novel"
-                value="Novel"
-                onChange={(event) => this.handleCheckboxChange(event)}
-              />
-              <Form.Check
-                inline
-                type="checkbox"
-                label="Children's"
-                value="Children's"
-                onChange={(event) => this.handleCheckboxChange(event)}
-              />
-              <Form.Check
-                inline
-                type="checkbox"
-                label="Crime"
-                value="Crime"
-                onChange={(event) => this.handleCheckboxChange(event)}
-              />
-              <Form.Check
-                inline
-                type="checkbox"
-                label="Drama"
-                value="Drama"
-                onChange={(event) => this.handleCheckboxChange(event)}
-              />
-              <Form.Check
-                inline
-                type="checkbox"
-                label="Horror"
-                value="Horror"
-                onChange={(event) => this.handleCheckboxChange(event)}
-              />
-              <Form.Check
-                inline
-                type="checkbox"
-                label="Poetry"
-                value="Poetry"
-                onChange={(event) => this.handleCheckboxChange(event)}
-              />
-              <Form.Check
-                inline
-                type="checkbox"
-                label="Science"
-                value="Science"
-                onChange={(event) => this.handleCheckboxChange(event)}
-              />
-              <Form.Check
-                inline
-                type="checkbox"
-                label="Tragedy"
-                value="Tragedy"
-                onChange={(event) => this.handleCheckboxChange(event)}
-              />
-              <Form.Check
-                inline
-                type="checkbox"
-                label="Fiction"
-                value="Fiction"
-                onChange={(event) => this.handleCheckboxChange(event)}
-              />
-            </Form.Group>
-          </Row>
-          <Row>
-            <Button
-              onClick={() => this.addBook()}
-              variant="lg bg-success"
-              style={{
-                width: '50rem',
-                margin: 'auto',
-              }}
-            >
-              Submit
-            </Button>
-          </Row>
-        </Form>
-      </Card>
+            </Row>
+            <Row>
+              <Button
+                onClick={() => this.addBook()}
+                variant="lg bg-success"
+                style={{
+                  width: '50rem',
+                  margin: 'auto',
+                }}
+              >
+                Submit
+              </Button>
+            </Row>
+          </Form>
+        </Card>
+      </ThemeProvider>
     );
   }
   mounted() {}
@@ -442,7 +462,12 @@ export function BookCard(props: { book: Book }) {
       />
       <Card.Body>
         <Card.Title className="text-truncate">{props.book.title}</Card.Title>
-        <Card.Text>{props.book.author}</Card.Text>
+        <Card.Text
+          className="text-truncate"
+          style={{ color: 'rgb(128,128,128)', cursor: 'pointer' }}
+        >
+          {props.book.author}
+        </Card.Text>
 
         <Row>
           <Col className="col-8">
@@ -458,7 +483,7 @@ export function BookCard(props: { book: Book }) {
               <span style={{ color: '#FFA500', marginRight: '5px' }}>
                 <FontAwesomeIcon icon={faStar} />
               </span>
-              <span>{props.book.rating}</span>
+              <span>{computeAverage(props.book.rating)}</span>
             </div>
           </Col>
         </Row>
