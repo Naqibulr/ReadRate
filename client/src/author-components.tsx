@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { Component } from 'react-simplified';
 import { Alert, Column } from './widgets';
-import { Button, Form, Card, Row, Col, Container } from 'react-bootstrap';
+import { Button, Form, Card, Row, Col, Container, Carousel } from 'react-bootstrap';
 import { createHashHistory } from 'history';
 import authorService, { Author } from './author-service';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
 import StarRatings from 'react-star-ratings';
+import bookService, { Book } from './book-service';
+import { BookCard } from './book-components';
 
 // REMEMBER TO ADD IMPORTS FROM SERVICE
 
@@ -77,6 +79,8 @@ export class AuthorDetails extends Component<{
     imagePath: '',
   };
 
+  books: Array<Book> = [];
+
   render() {
     return (
       <Container className="p-3">
@@ -101,6 +105,9 @@ export class AuthorDetails extends Component<{
             <Row className="mt-3">
               <h3>{this.author.name} </h3>
             </Row>
+            <Row className="mt-3">
+              <StarRating rating={4}></StarRating>
+            </Row>
             <Row className="overflow-auto mt-4" style={{ height: '40vh' }}>
               <p>{this.author.description}</p>
             </Row>
@@ -123,6 +130,28 @@ export class AuthorDetails extends Component<{
             </Row>
           </Col>
         </Row>
+        <Row className="mt-5">
+          <h3 style={{ marginLeft: '20px', marginTop: '5px', marginBottom: '0px' }}>Books</h3>
+          <Carousel interval={null}>
+            {this.books.map((book, index) => {
+              // Check if the item index is a multiple of 6 to create a new carousel item
+              if (index % 4 === 0) {
+                return (
+                  <Carousel.Item key={index} style={{ padding: '1rem' }}>
+                    <Row>
+                      {this.books.slice(index, index + 4).map((book, index) => (
+                        <Col className="m-1" key={index}>
+                          <BookCard book={book} />
+                        </Col>
+                      ))}
+                    </Row>
+                  </Carousel.Item>
+                );
+              }
+              return null;
+            })}
+          </Carousel>
+        </Row>
       </Container>
     );
   }
@@ -130,7 +159,13 @@ export class AuthorDetails extends Component<{
   mounted() {
     authorService
       .getAuthor(this.props.match.params.author_id)
-      .then((author) => (this.author = author))
+      .then((author) => {
+        this.author = author;
+        bookService.getBookByAuthor(this.author.name).then((books) => {
+          this.books = books;
+          console.log(this.books);
+        });
+      })
       .catch((error) => Alert.danger('Error getting recipe details: ' + error.message));
   }
 }
@@ -161,6 +196,10 @@ export class AuthorAdd extends Component {
       this.author.imagePath
     );
     Alert.success('The book has been added');
+  }
+
+  getBookByAuthor(author: string) {
+    console.log(bookService.getBookByAuthor(author));
   }
 
   render() {
@@ -257,7 +296,7 @@ export class AuthorAdd extends Component {
           </Row>
           <Row>
             <Button
-              onClick={() => this.addAuthor()}
+              onClick={() => this.getBookByAuthor('J.R.R.Tolkein')}
               variant="lg bg-success"
               style={{
                 width: '50rem',
