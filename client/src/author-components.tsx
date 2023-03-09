@@ -9,6 +9,7 @@ import { faStar } from '@fortawesome/free-solid-svg-icons';
 import StarRatings from 'react-star-ratings';
 import bookService, { Book } from './book-service';
 import { BookCard } from './book-components';
+import { computeAuthorRating } from './average';
 
 // REMEMBER TO ADD IMPORTS FROM SERVICE
 
@@ -106,7 +107,7 @@ export class AuthorDetails extends Component<{
               <h3>{this.author.name} </h3>
             </Row>
             <Row className="mt-3">
-              <StarRating rating={4}></StarRating>
+              <StarRating rating={computeAuthorRating(this.books)}></StarRating>
             </Row>
             <Row className="overflow-auto mt-4" style={{ height: '40vh' }}>
               <p>{this.author.description}</p>

@@ -15,7 +15,7 @@ export function computeAverage(numbers: number[]): number {
   return Number(average.toFixed(1));
 }
 
-/* export function computeAuthorRating(books: Book[]): number {
+export function computeAuthorRating(books: Book[]): number {
   let totalRating: number = 0;
   let numRatings: number = 0;
   books.forEach((book) => {
@@ -25,4 +25,4 @@ export function computeAverage(numbers: number[]): number {
     });
   });
   return numRatings > 0 ? totalRating / numRatings : 0;
-} */
+}
