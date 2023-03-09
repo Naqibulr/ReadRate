@@ -10,6 +10,8 @@ export class Menu extends Component {
     filterValue: 'Book',
   };
 
+  isAdmin = document.cookie.includes('admin=true');
+
   handleInputChange = (event: any) => {
     this.setState({ searchValue: event.target.value }); // Update the search input value when the user types into the field
   };
@@ -73,18 +75,22 @@ export class Menu extends Component {
                 href="/#/books"
                 style={{ color: 'rgb(73 15 224)', marginTop: '15px' }}
               ></Nav.Link>
-              <Nav.Link
-                href="/#/books/add"
-                style={{ color: 'rgb(73 15 224)', marginTop: '15px', whiteSpace: 'nowrap' }}
-              >
-                Add book
-              </Nav.Link>
-              <Nav.Link
-                href="/#/addauthors/"
-                style={{ color: 'rgb(73 15 224)', marginTop: '15px', whiteSpace: 'nowrap' }}
-              >
-                Add author
-              </Nav.Link>
+              {this.isAdmin ? (
+                <Nav.Link
+                  href="/#/books/add"
+                  style={{ color: 'rgb(73 15 224)', marginTop: '15px', whiteSpace: 'nowrap' }}
+                >
+                  Add book
+                </Nav.Link>
+              ) : null}
+              {this.isAdmin ? (
+                <Nav.Link
+                  href="/#/addauthors/"
+                  style={{ color: 'rgb(73 15 224)', marginTop: '15px', whiteSpace: 'nowrap' }}
+                >
+                  Add author
+                </Nav.Link>
+              ) : null}
               <Nav.Link href="/#/books/user" style={{ color: 'rgb(73 15 224)', marginTop: '15px' }}>
                 Login
               </Nav.Link>
