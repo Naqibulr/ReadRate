@@ -34,11 +34,13 @@ export class List {
             const valinside = val[key];
             return (
               typeof valinside === 'string' &&
-              valinside.toLowerCase().includes(searchTerm.toLowerCase())
+              valinside.toLowerCase().includes(searchTerm.trim().toLowerCase())
             );
           });
         }
-        return typeof val === 'string' && val.toLowerCase().includes(searchTerm.toLowerCase());
+        return (
+          typeof val === 'string' && val.toLowerCase().includes(searchTerm.trim().toLowerCase())
+        );
       });
     });
   }
