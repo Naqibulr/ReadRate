@@ -27,6 +27,10 @@ export type Book = {
   imagePath: string;
 };
 
+<<<<<<< HEAD
+=======
+//definer en type review
+>>>>>>> origin/main
 class BookService {
   /**
    * Get all testdata.
@@ -63,6 +67,7 @@ class BookService {
         throw new Error('Invalid response data: not an array');
       }
     });
+    //lag en ny metode for addreview, 
   }
 
   addBook(book: Book) {
@@ -83,6 +88,19 @@ class BookService {
       } else {
         throw new Error('Invalid response data: not an array');
       }
+    });
+  }
+  getBookByAuthor(author: string) {
+    return axios.get('/books').then((response) => {
+      const data = response.data;
+      let books: Array<Book> = [];
+      if (Array.isArray(data)) {
+        const filteredData = data.filter((book) => book.author === author);
+        books = filteredData;
+      } else {
+        throw new Error('Invalid response data: not an array');
+      }
+      return books;
     });
   }
 }

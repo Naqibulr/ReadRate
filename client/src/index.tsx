@@ -134,12 +134,12 @@ ReactDOM.render(
       <Route exact path="/books/user" component={UserDetails} />
       <Route exact path="/books/:book_id(\d+)" component={BookDetails} />
       <Route exact path="/books/:id(\d+)/edit" component={BookEdit} />
-      <Route exact path="/books/:book_id(\d+)/review" component={WriteReviewPage} />
       <Route exact path="/books/search/:searchTerm" component={BookSearch} />
       <Route exact path="/authors/search/:searchTerm" component={AuthorSearch} />
       <Route exact path="/authors/:author_id" component={AuthorDetails} />
       <Route exact path="/authors/:id/edit" component={AuthorEdit} />
       <Route exact path="/addauthors/" component={AuthorAdd} />
+      <Route exact path="/books/:book_id(\d+)/review" component={WriteReviewPage} />
     </div>
   </HashRouter>,
   document.getElementById('root')

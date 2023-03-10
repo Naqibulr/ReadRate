@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { Button, Container, Dropdown, Form, InputGroup, Nav, Navbar } from 'react-bootstrap';
 import { Component } from 'react-simplified';
+import Logo from './Logo.png';
 //import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
 export class Menu extends Component {
@@ -24,6 +25,7 @@ export class Menu extends Component {
     if (this.state.filterValue == 'Book')
       window.location.href = `http://localhost:3000/#/books/search/${this.state.searchValue}`; // Navigate to the search URL with the search input value
     else window.location.href = `http://localhost:3000/#/authors/search/${this.state.searchValue}`;
+    window.location.reload;
   };
 
   render() {
@@ -35,12 +37,16 @@ export class Menu extends Component {
         variant="dark"
         style={{ backgroundColor: 'rgb(251 238 193)', color: 'rgb(73 15 224)' }}
       >
+        <Navbar.Brand href="/">
+          <img
+            src={Logo}
+            alt="logo"
+            style={{ width: '250px', height: 'auto', marginLeft: '20px' }}
+          />
+        </Navbar.Brand>
         <Container className="d-flex justify-content-center align-items-center">
           {/* Container to wrap elements of navbar within given margin of page end and start */}
 
-          <Navbar.Brand href="/">
-            <h3 style={{ color: 'rgb(73 15 224)' }}>ReadRate</h3>
-          </Navbar.Brand>
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
           <Navbar.Collapse id="responsive-navbar-nav">
             <Nav className="me-auto"></Nav>

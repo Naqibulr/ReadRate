@@ -1,3 +1,5 @@
+import { Book } from './book-service';
+
 export function computeAverage(numbers: number[]): number {
   let sum = 0;
 
@@ -11,4 +13,16 @@ export function computeAverage(numbers: number[]): number {
   const average = sum / numbers.length;
 
   return Number(average.toFixed(1));
+}
+
+export function computeAuthorRating(books: Book[]): number {
+  let totalRating: number = 0;
+  let numRatings: number = 0;
+  books.forEach((book) => {
+    book.rating.forEach((rating) => {
+      totalRating += rating;
+      numRatings++;
+    });
+  });
+  return numRatings > 0 ? totalRating / numRatings : 0;
 }

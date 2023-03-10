@@ -53,7 +53,12 @@ class BookService {
         return book;
       });
       let bookList: List = new List('All books', books);
-      let filteredBooks: Book[] = bookList.search(searchTerm);
+      let searchTermArray: string[] = searchTerm.split('&');
+      let filteredBooks: Book[];
+      searchTermArray.forEach((element) => {
+        bookList = new List('temporary list', bookList.search(element));
+      });
+      filteredBooks = bookList.objectList;
       if (filteredBooks) resolve(filteredBooks);
       else reject('No book');
     });
