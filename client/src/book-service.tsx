@@ -26,11 +26,6 @@ export type Book = {
   imagePath: string;
 };
 
-export function addReview(review: Review) {
-  console.log('book-service', review);
-  return axios.post('/reviews', { review }).then((response) => response.data);
-}
-
 class BookService {
   /**
    * Get all testdata.
@@ -40,6 +35,11 @@ class BookService {
   }
 
   colRef = collection(firestore, 'books');
+
+  addReview(review: Review) {
+    console.log('book-service', review);
+    return axios.post('/reviews', { review }).then((response) => response.data);
+  }
 
   addBook(
     title: string,

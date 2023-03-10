@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Component } from 'react-simplified';
-import { Alert} from './widgets';
+import { Alert } from './widgets';
 import { Button, Form, Card, Row, Col, Container } from 'react-bootstrap';
 import userService, { User } from './user-service';
 import { createHashHistory } from 'history';

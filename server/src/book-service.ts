@@ -15,11 +15,35 @@ export type Book = {
   genre: Array<string>;
   imagePath: string;
 };
+
+export type Review = {
+  email: string;
+  ISBN: string;
+  rating: number;
+  text: string;
+};
+
 class BookService {
   getAll() {
     return new Promise<String>((resolve, reject) => {
       resolve(testData.test1.toString());
     });
+  }
+
+  async addReview(review: Review): Promise<void> {
+    try {
+      const revRef = collection(firestore, 'Reviews'); // assuming the Firestore collection is named 'reviews'
+      await addDoc(revRef, {
+        email: review.email, //getCookieValue("email"), // assuming there's a function called getCookieValue that returns the email value from cookies
+        ISBN: review.ISBN,
+        rating: review.rating,
+        text: review.text,
+      });
+      //Alert.success('The review has been added');
+      console.log('Review added successfully!');
+    } catch (error) {
+      console.error('Error adding review:', error);
+    }
   }
 
   addBook(
