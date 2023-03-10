@@ -1,28 +1,33 @@
 import { Author } from '../src/author';
 export class Book {
-  title: String;
-  releaseYear: Number;
+  title: string;
+  releaseYear: number;
   author: Author;
-  genre: String[];
-  publisher: String;
-  ISBN: String;
+  genre: string[];
+  publisher: string;
+  ISBN: string;
   reviewArray: Review[];
-  pages: Number;
-  description: String;
-  picture: String;
+  pages: number;
+  description: string;
+  imagePath: string;
+  id: string;
+  rating: number;
 
   constructor(
-    title: String,
-    releaseYear: Number,
+    id: string,
+    title: string,
+    releaseYear: number,
     author: Author,
-    genre: String[],
-    publisher: String,
-    ISBN: String,
+    genre: string[],
+    publisher: string,
+    ISBN: string,
     reviewArray: Review[],
-    pages: Number,
-    description: String,
-    picture: String
+    pages: number,
+    description: string,
+    imagePath: string,
+    rating: number
   ) {
+    this.id = id;
     this.title = title;
     this.releaseYear = releaseYear;
     this.author = author;
@@ -32,7 +37,8 @@ export class Book {
     this.reviewArray = reviewArray;
     this.pages = pages;
     this.description = description;
-    this.picture = picture;
+    this.imagePath = imagePath;
+    this.rating = rating;
   }
 
   toString(): String {
