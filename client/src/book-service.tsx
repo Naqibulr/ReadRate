@@ -17,6 +17,8 @@ export type Book = {
   genre: Array<string>;
   imagePath: string;
 };
+
+//definer en type review
 class BookService {
   /**
    * Get all testdata.
@@ -26,6 +28,7 @@ class BookService {
   }
 
   colRef = collection(firestore, 'books');
+  //legg til en ny en med reviews som over, ellers la stå
 
   addBook(
     title: string,
@@ -52,6 +55,7 @@ class BookService {
       description: description,
       imagePath: imagePath,
     });
+    //lag en ny metode for addreview, 
   }
 
   async getBooks() {

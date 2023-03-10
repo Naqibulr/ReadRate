@@ -34,10 +34,23 @@ module.exports = {
   module: {
     rules: [
       {
+        test: /\.(ts|tsx)$/,
+        use: 'ts-loader',
+        exclude: /node_modules/,
+      },
+      {
         // Use babel to parse .tsx files in the src folder
-        test: /\.tsx$/,
-        include: path.resolve(__dirname, 'src'),
-        use: ['babel-loader'],
+        test: /\.(png|jpe?g|gif)$/i,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              name: '[name].[ext]',
+              outputPath: 'images/',
+              publicPath: 'images/',
+            },
+          },
+        ],
       },
     ],
   },
