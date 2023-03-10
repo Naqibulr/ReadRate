@@ -3,7 +3,7 @@ import * as React from 'react';
 import { Alert } from './widgets';
 import { HashRouter, Route } from 'react-router-dom';
 import { Carousel, Container, Row, Col } from 'react-bootstrap';
-import { BookAdd, BookDetails, BookEdit, BookCard, BookList } from './book-components';
+import { BookAdd, BookDetails, BookEdit, BookCard, BookList, WriteReviewPage } from './book-components';
 import { AuthorAdd, AuthorDetails, AuthorEdit, AuthorCard } from './author-components';
 import { UserDetails, UserLogIn, RegisterUser } from './user-components';
 import { Menu } from './menu';
@@ -11,6 +11,7 @@ import bookService, { Book } from './book-service';
 import { useEffect, useState } from 'react';
 import { BookSearch, AuthorSearch } from './search';
 import { computeAverage } from './average';
+
 
 function Home() {
   const [fiction, setFiction] = useState<Book[]>([]);
@@ -132,6 +133,7 @@ ReactDOM.render(
       <Route exact path="/authors/:author_id" component={AuthorDetails} />
       <Route exact path="/authors/:id/edit" component={AuthorEdit} />
       <Route exact path="/addauthors/" component={AuthorAdd} />
+      <Route exact path="/books/:book_id(\d+)/review" component={WriteReviewPage} />
     </div>
   </HashRouter>,
   document.getElementById('root')

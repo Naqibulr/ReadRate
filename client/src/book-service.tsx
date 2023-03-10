@@ -18,6 +18,8 @@ export type Book = {
   addedDate: Date;
   imagePath: string;
 };
+
+//definer en type review
 class BookService {
   /**
    * Get all testdata.
@@ -47,6 +49,7 @@ class BookService {
         throw new Error('Invalid response data: not an array');
       }
     });
+    //lag en ny metode for addreview, 
   }
 
   addBook(book: Book) {
