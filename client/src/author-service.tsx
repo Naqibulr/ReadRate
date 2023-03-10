@@ -84,9 +84,7 @@ class AuthorService {
       const docRef = doc(firestore, 'authors', id);
       const docSnap = await getDoc(docRef);
       let author = docSnap.data();
-      console.log(author);
       if (docSnap.exists()) {
-        console.log('Document data:', docSnap.data());
         resolve(author as Author);
       } else {
         // doc.data() will be undefined in this case

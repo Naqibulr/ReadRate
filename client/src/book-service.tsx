@@ -72,6 +72,19 @@ class BookService {
       }
     });
   }
+  getBookByAuthor(author: string) {
+    return axios.get('/books').then((response) => {
+      const data = response.data;
+      let books: Array<Book> = [];
+      if (Array.isArray(data)) {
+        const filteredData = data.filter((book) => book.author === author);
+        books = filteredData;
+      } else {
+        throw new Error('Invalid response data: not an array');
+      }
+      return books;
+    });
+  }
 }
 const bookService = new BookService();
 export default bookService;
