@@ -1,10 +1,31 @@
 //import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React from 'react';
+import React, { useState } from 'react';
 import { Button, Container, Dropdown, Form, InputGroup, Nav, Navbar } from 'react-bootstrap';
 import { Component } from 'react-simplified';
 //import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
 export class Menu extends Component {
+  state = {
+    searchValue: '',
+    filterValue: 'Book',
+  };
+
+  isAdmin = document.cookie.includes('admin=true');
+
+  handleInputChange = (event: any) => {
+    this.setState({ searchValue: event.target.value }); // Update the search input value when the user types into the field
+  };
+
+  handleItemClick(text: string) {
+    this.setState({ filterValue: text });
+  }
+
+  handleSearch = () => {
+    if (this.state.filterValue == 'Book')
+      window.location.href = `http://localhost:3000/#/books/search/${this.state.searchValue}`; // Navigate to the search URL with the search input value
+    else window.location.href = `http://localhost:3000/#/authors/search/${this.state.searchValue}`;
+  };
+
   render() {
     return (
       /*Renders navbar using components from React-Bootstrap library */
@@ -27,13 +48,14 @@ export class Menu extends Component {
               <InputGroup className="p-3">
                 <Dropdown id="dropdown">
                   <Dropdown.Toggle variant="light" id="dropdown-basic">
-                    Filter
+                    {this.state.filterValue}
                   </Dropdown.Toggle>
 
                   <Dropdown.Menu>
-                    <Dropdown.Item href="#/action-1">Genre</Dropdown.Item>
-                    <Dropdown.Item href="#/action-2">Author</Dropdown.Item>
-                    <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
+                    <Dropdown.Item onClick={() => this.handleItemClick('Book')}>Book</Dropdown.Item>
+                    <Dropdown.Item onClick={() => this.handleItemClick('Author')}>
+                      Author
+                    </Dropdown.Item>
                   </Dropdown.Menu>
                 </Dropdown>
 
@@ -41,9 +63,10 @@ export class Menu extends Component {
                   placeholder="Search"
                   aria-label="Search"
                   aria-describedby="Search field"
+                  onChange={this.handleInputChange}
                 />
 
-                <Button variant="light" id="button-addon2">
+                <Button variant="light" id="button-addon2" onClick={this.handleSearch}>
                   Search
                 </Button>
               </InputGroup>
@@ -52,12 +75,22 @@ export class Menu extends Component {
                 href="/#/books"
                 style={{ color: 'rgb(73 15 224)', marginTop: '15px' }}
               ></Nav.Link>
-              <Nav.Link
-                href="/#/books/add"
-                style={{ color: 'rgb(73 15 224)', marginTop: '15px', whiteSpace: 'nowrap' }}
-              >
-                add book
-              </Nav.Link>
+              {this.isAdmin ? (
+                <Nav.Link
+                  href="/#/books/add"
+                  style={{ color: 'rgb(73 15 224)', marginTop: '15px', whiteSpace: 'nowrap' }}
+                >
+                  Add book
+                </Nav.Link>
+              ) : null}
+              {this.isAdmin ? (
+                <Nav.Link
+                  href="/#/addauthors/"
+                  style={{ color: 'rgb(73 15 224)', marginTop: '15px', whiteSpace: 'nowrap' }}
+                >
+                  Add author
+                </Nav.Link>
+              ) : null}
               <Nav.Link href="/#/books/user" style={{ color: 'rgb(73 15 224)', marginTop: '15px' }}>
                 Login
               </Nav.Link>
@@ -65,8 +98,6 @@ export class Menu extends Component {
           </Navbar.Collapse>
         </Container>
       </Navbar>
-
-      
     );
   }
 }

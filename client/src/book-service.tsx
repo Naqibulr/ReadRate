@@ -14,7 +14,6 @@ export type Review = {
 
 export type Book = {
   id: string;
-  rating: number;
   title: string;
   ISBN: string;
   author: string;
@@ -23,6 +22,8 @@ export type Book = {
   pages: number;
   description: string;
   genre: Array<string>;
+  rating: Array<number>;
+  addedDate: Date;
   imagePath: string;
 };
 
@@ -30,8 +31,19 @@ class BookService {
   /**
    * Get all testdata.
    */
-  getAll() {
-    return axios.get<String>('/testData').then((response) => response.data);
+  getBooks() {
+    return axios.get('/books').then((response) => {
+      const data = response.data;
+      if (Array.isArray(data)) {
+        return data; // return the array if the response data is an array
+      } else {
+        throw new Error('Invalid response data: not an array');
+      }
+    });
+  }
+  async getFilteredBooks(searchTerm: string) {
+    const response = await axios.get<Array<Book>>('/books/search/' + searchTerm);
+    return response.data;
   }
 
   colRef = collection(firestore, 'books');
@@ -41,104 +53,38 @@ class BookService {
     return axios.post('/reviews', { review }).then((response) => response.data);
   }
 
-  addBook(
-    title: string,
-    ISBN: string,
-    author: string,
-    releaseYear: number,
-    publisher: string,
-    pages: number,
-    description: string,
-    genre: Array<string>,
-    imagePath: string
-  ) {
-    addDoc(this.colRef, {
-      id: '',
-      title: title,
-      releaseYear: releaseYear,
-      author: author,
-      genre: genre,
-      publisher: publisher,
-      ISBN: ISBN,
-      review: [],
-      pages: pages,
-      rating: 0,
-      description: description,
-      imagePath: imagePath,
-    });
-  }
-
-  async getBooks() {
-    const snapshot = await getDocs(this.colRef);
-    const books = snapshot.docs.map((doc) => {
-      const bookData = doc.data();
-      const book: Book = {
-        id: doc.id,
-        title: bookData.title,
-        ISBN: bookData.ISBN,
-        author: bookData.author,
-        releaseYear: bookData.releaseYear,
-        genre: bookData.genre,
-        description: bookData.description,
-        imagePath: bookData.imagePath,
-        publisher: bookData.publisher,
-        pages: bookData.pages,
-        rating: bookData.rating,
-      };
-      return book;
-    });
-    return books;
-  }
-
-  getBook(ISBN: string) {
-    return new Promise<Book>(async (resolve, reject) => {
-      const q = query(this.colRef, where('ISBN', '==', ISBN));
-      let book;
-      const qs = await getDocs(q);
-      qs.forEach((doc) => {
-        book = doc.data();
-        console.log(book);
-      });
-      if (book) {
-        resolve(book as Book);
+  getBooksByGenre(genre: string) {
+    return axios.get('/books').then((response) => {
+      const data = response.data;
+      if (Array.isArray(data)) {
+        const filteredData = data.filter((book) => book.genre.includes(genre));
+        return filteredData;
       } else {
-        reject('No book was found');
+        throw new Error('Invalid response data: not an array');
       }
     });
   }
-  async getBooksByGenre(genre: string) {
-    const allBooks = await this.getBooks();
-    const genreBooks = allBooks.filter((book) => book.genre.includes(genre));
-    return genreBooks.map((bookData) => {
-      const {
-        id,
-        title,
-        ISBN,
-        author,
-        releaseYear,
-        genre,
-        description,
-        imagePath,
-        publisher,
-        pages,
-        rating,
-      } = bookData;
-      return {
-        id,
-        title,
-        ISBN,
-        author,
-        releaseYear,
-        genre,
-        description,
-        imagePath,
-        publisher,
-        pages,
-        rating,
-      };
+
+  addBook(book: Book) {
+    console.log('book-service', book);
+    return axios.post('/books', { book }).then((response) => response.data);
+  }
+
+  getBook(ISBN: string) {
+    return axios.get('/books').then((response) => {
+      const data = response.data;
+      if (Array.isArray(data)) {
+        const filteredData = data.find((book) => book.ISBN === ISBN);
+        if (filteredData) {
+          return filteredData;
+        } else {
+          throw new Error(`Book with ISBN ${ISBN} not found`);
+        }
+      } else {
+        throw new Error('Invalid response data: not an array');
+      }
     });
   }
 }
-
 const bookService = new BookService();
 export default bookService;
