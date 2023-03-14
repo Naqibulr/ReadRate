@@ -5782,6 +5782,7 @@ fieldset:disabled .btn {
   margin-bottom: 1rem;
   margin-left: 15%;
   list-style: none;
+  opacity: 0;
 }
 .carousel-indicators [data-bs-target] {
   box-sizing: content-box;
@@ -5807,7 +5808,7 @@ fieldset:disabled .btn {
   }
 }
 .carousel-indicators .active {
-  opacity: 1;
+  opacity: 0;
 }
 .carousel-caption {
   position: absolute;

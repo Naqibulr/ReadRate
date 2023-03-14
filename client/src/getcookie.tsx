@@ -50,3 +50,14 @@ export function setLoginCookies(currentUser: any) {
   document.cookie = `last_name=${currentUser.last_name}; path=/`;
   document.cookie = `email=${currentUser.email}; path=/`;
 }
+
+export function setDarkModCookies(isDarkModeEnabled: boolean) {
+  document.cookie = `darkModeEnabled=${isDarkModeEnabled}; path=/`;
+}
+
+export function getDarkModeCookies() {
+  const cookie = document.cookie
+    .split(';')
+    .find((cookie) => cookie.trim().startsWith('darkModeEnabled='));
+  return cookie ? cookie.split('=')[1] === 'true' : false;
+}

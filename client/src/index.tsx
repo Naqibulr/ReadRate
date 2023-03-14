@@ -2,8 +2,15 @@ import ReactDOM from 'react-dom';
 import * as React from 'react';
 import { Alert } from './widgets';
 import { HashRouter, Route } from 'react-router-dom';
-import { Carousel, Container, Row, Col } from 'react-bootstrap';
-import { BookAdd, BookDetails, BookEdit, BookCard, BookList, WriteReviewPage } from './book-components';
+import { Carousel, Container, Row, Col, ThemeProvider } from 'react-bootstrap';
+import {
+  BookAdd,
+  BookDetails,
+  BookEdit,
+  BookCard,
+  BookList,
+  WriteReviewPage,
+} from './book-components';
 import { AuthorAdd, AuthorDetails, AuthorEdit, AuthorCard } from './author-components';
 import { UserDetails, UserLogIn, RegisterUser } from './user-components';
 import { Menu } from './menu';
@@ -11,12 +18,28 @@ import bookService, { Book } from './book-service';
 import { useEffect, useState } from 'react';
 import { BookSearch, AuthorSearch } from './search';
 import { computeAverage } from './average';
+import { getDarkModeCookies, setDarkModCookies } from './getcookie';
 
+const darkTheme = {
+  backgroundColor: '#000',
+  color: '#fff',
+};
+
+const lightTheme = {
+  backgroundColor: '#fff',
+  color: '#000',
+};
 
 function Home() {
   const [fiction, setFiction] = useState<Book[]>([]);
   const [topBooks, setTopBooks] = useState<Book[]>([]);
   const [mostRecent, setMotRecent] = useState<Book[]>([]);
+  const [isDarkModeEnabled, setIsDarkModeEnabled] = useState(getDarkModeCookies());
+  const handleToggleDarkMode = () => {
+    setIsDarkModeEnabled(!isDarkModeEnabled);
+    setDarkModCookies(!isDarkModeEnabled); // update cookies with the new value
+    window.location.reload();
+  };
 
   useEffect(() => {
     const fetchBooks = async () => {
@@ -50,8 +73,23 @@ function Home() {
   }, []);
 
   return (
-    <Container fluid style={{ margin: 0 }}>
-      <h3 style={{ marginLeft: '20px', marginTop: '5px', marginBottom: '0px' }}>Highest rated</h3>
+    <Container
+      fluid
+      style={{ marginTop: -5, background: getDarkModeCookies() ? '#192734' : 'white' }}
+    >
+      <h3
+        style={{
+          marginLeft: '20px',
+          marginTop: '5px',
+          marginBottom: '0px',
+          color: isDarkModeEnabled ? 'white' : 'black',
+        }}
+      >
+        Highest rated
+      </h3>
+      <button onClick={handleToggleDarkMode}>
+        {isDarkModeEnabled ? 'Disable' : 'Enable'} Dark Mode
+      </button>
       <Carousel interval={null}>
         {topBooks.map((book, index) => {
           // Check if the item index is a multiple of 6 to create a new carousel item

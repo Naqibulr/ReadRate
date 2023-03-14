@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { Button, Container, Dropdown, Form, InputGroup, Nav, Navbar } from 'react-bootstrap';
 import { Component } from 'react-simplified';
+import { getDarkModeCookies } from './getcookie';
 import Logo from './Logo.png';
 //import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
@@ -12,6 +13,7 @@ export class Menu extends Component {
   };
 
   isAdmin = document.cookie.includes('admin=true');
+  isdarkMode = getDarkModeCookies();
 
   handleInputChange = (event: any) => {
     this.setState({ searchValue: event.target.value }); // Update the search input value when the user types into the field
@@ -35,7 +37,10 @@ export class Menu extends Component {
         collapseOnSelect
         expand="lg"
         variant="dark"
-        style={{ backgroundColor: 'rgb(251 238 193)', color: 'rgb(73 15 224)' }}
+        style={{
+          background: this.isdarkMode ? '#192734' : 'rgb(251 238 193)',
+          color: 'rgb(73 15 224)',
+        }}
       >
         <Navbar.Brand href="/">
           <img

@@ -4,7 +4,7 @@ import { Alert } from './widgets';
 import { Button, Form, Card, Row, Col, Container } from 'react-bootstrap';
 import userService, { User } from './user-service';
 import { createHashHistory } from 'history';
-import { forgetLogin, getCookieValue, setLoginCookies } from './getcookie';
+import { forgetLogin, getCookieValue, getDarkModeCookies, setLoginCookies } from './getcookie';
 
 //false as default
 export let loggedIn: boolean = false;
@@ -22,6 +22,7 @@ const history = createHashHistory(); // Use history.push(...)
 export class UserLogIn extends Component {
   email: string = '';
   password: string = '';
+  darkModeEnabled = getDarkModeCookies();
 
   render() {
     return (
@@ -32,6 +33,7 @@ export class UserLogIn extends Component {
           textAlign: 'center',
           marginLeft: 'auto',
           marginRight: 'auto',
+          backgroundColor: this.darkModeEnabled ? '#000' : '#fff',
         }}
       >
         {/*Card forms in for log in screen */}

@@ -20,6 +20,7 @@ import { faStar } from '@fortawesome/free-solid-svg-icons';
 import StarRatings from 'react-star-ratings';
 import { computeAverage } from './average';
 import { Link } from 'react-router-dom';
+import { getDarkModeCookies } from './getcookie';
 
 const history = createHashHistory(); // Use history.push(...) to programmatically change path
 
@@ -554,14 +555,27 @@ export class BookEdit extends Component<{ match: { params: { id: number } } }> {
 }
 
 export function BookCard(props: { book: Book }) {
+  const [isDarkModeEnabled, setIsDarkModeEnabled] = useState(getDarkModeCookies());
   return (
-    <Card className="shadow bg-white rounded" style={{ width: '14.5rem', margin: '2px' }}>
+    <Card
+      className="shadow bg-white rounded"
+      style={{
+        width: '14.5rem',
+        margin: '2px',
+        border: 'none',
+      }}
+    >
       <Card.Img
         variant="top"
         src={props.book.imagePath}
         style={{ width: '100', height: '200px' }}
       />
-      <Card.Body>
+      <Card.Body
+        style={{
+          backgroundColor: isDarkModeEnabled ? '#1a1d21' : 'white',
+          color: isDarkModeEnabled ? 'white' : 'black',
+        }}
+      >
         <Card.Title className="text-truncate">{props.book.title}</Card.Title>
         <Card.Text
           className="text-truncate"
