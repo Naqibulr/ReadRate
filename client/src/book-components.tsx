@@ -12,6 +12,9 @@ import {
   FormLabel,
   FormControl,
   ThemeProvider,
+  ListGroup,
+  Badge,
+  ListGroupItem,
 } from 'react-bootstrap';
 import { createHashHistory } from 'history';
 import bookService, { Book, Review } from './book-service';
@@ -20,6 +23,7 @@ import { faStar } from '@fortawesome/free-solid-svg-icons';
 import StarRatings from 'react-star-ratings';
 import { computeAverage } from './average';
 import { Link } from 'react-router-dom';
+import { getCookieValue } from './getcookie';
 
 // REMEMBER TO ADD IMPORTS FROM SERVICE
 
@@ -41,14 +45,11 @@ function getIsbnFromUrl(): string | null {
   return null; // returns null if no match is found
 }
 
-export function handleWriteReviewButtonPress() {
-  if ('true') {
-    //getCookieValue("loggedIn") == "true"
+export function handleWriteReviewButtonPress(book: Book) {
+  if (getCookieValue('loggedIn') == 'true') {
     //@ts-ignorets-ignore
-    history.push(`/books/${this.book.ISBN}/review`);
+    history.push(`/books/${book.ISBN}/review`);
   } else {
-    // //@ts-ignorets-ignore
-    // history.push(`/books/${this.book.ISBN}/review`);
     Alert.info(`You need to log in to be able to write a review`);
   }
 }
@@ -67,7 +68,7 @@ export const WriteReviewPage = (props: { book: Book }) => {
   const isbn = getIsbnFromUrl();
 
   let review: Review = {
-    email: 'baretester', //getcookievalue("email")
+    email: getCookieValue('email'),
     //@ts-ignore
     ISBN: isbn, //props.book.ISBN
     rating: 0,
@@ -83,6 +84,7 @@ export const WriteReviewPage = (props: { book: Book }) => {
     bookService.addReview(review);
     // Once done, navigate the user back to the book details page or homepage
     history.goBack(); //history.push(`/books/${props.book.ISBN}`); //book-details
+    Alert.info(`Review added`);
   };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -200,6 +202,16 @@ export function BookList(props: BookListProps) {
   );
 }
 
+const reviews: Review[] = [
+  {
+    email: 'Jonatan@ermedlem.no',
+    ISBN: 'bokISBN',
+    //avatar: '',
+    text: 'bra bok',
+    rating: 3,
+  },
+];
+
 export class BookDetails extends Component<{
   match: {
     params: { book_id: string };
@@ -208,6 +220,7 @@ export class BookDetails extends Component<{
   book: Book = {
     id: '',
     rating: [],
+    review: [],
     title: '',
     ISBN: '',
     author: '',
@@ -253,7 +266,7 @@ export class BookDetails extends Component<{
               <Button
                 type="button"
                 className="btn btn-success mt-3"
-                onClick={() => history.push(`/books/${this.book.ISBN}/review`)} //handleWriteReviewButtonPress()
+                onClick={() => handleWriteReviewButtonPress(this.book)} // () => history.push(`/books/${this.book.ISBN}/review`)
               >
                 Write review
               </Button>
@@ -319,6 +332,22 @@ export class BookDetails extends Component<{
                 <small>{this.book.ISBN}</small>
               </Col>
             </Row>
+            <Row>
+              <Col>
+                <h2>Reviews</h2>
+                <ListGroup>
+                  {this.book.review.map((review) => (
+                    <ListGroupItem>
+                      <span className="user">{review.email}</span>
+                      <Badge bg="info" pill>
+                        {review.rating} stars
+                      </Badge>
+                      <p> {review.text} </p>
+                    </ListGroupItem>
+                  ))}
+                </ListGroup>
+              </Col>
+            </Row>
           </Col>
         </Row>
       </Container>
@@ -344,6 +373,7 @@ export class BookAdd extends Component {
     description: '',
     genre: [],
     rating: [],
+    review: [],
     addedDate: new Date(),
     imagePath: '',
   };

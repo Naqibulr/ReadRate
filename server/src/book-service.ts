@@ -1,8 +1,7 @@
-import type { RowDataPacket, ResultSetHeader, OkPacket } from 'mysql2';
-import * as testData from './test.json';
 import { firestore } from './firebase';
-import { collection, query, getDocs, addDoc } from 'firebase/firestore';
+import { collection, query, getDocs, addDoc, updateDoc, doc, arrayUnion } from 'firebase/firestore';
 import { List } from './list';
+import userService from './user-service';
 
 export type Book = {
   bookId: string;
@@ -28,7 +27,10 @@ export type Review = {
 };
 
 class BookService {
+  db = firestore;
   colRef = collection(firestore, 'books');
+  revRef = collection(firestore, 'Reviews');
+  userRef = collection(firestore, 'Users');
 
   getFilteredBooks(searchTerm: string) {
     return new Promise<Book[]>(async (resolve, reject) => {
@@ -66,19 +68,44 @@ class BookService {
 
   async addReview(review: Review): Promise<void> {
     try {
-      const revRef = collection(firestore, 'Reviews'); // assuming the Firestore collection is named 'reviews'
-      await addDoc(revRef, {
-        email: review.email, //getCookieValue("email"), // assuming there's a function called getCookieValue that returns the email value from cookies
+      await addDoc(this.revRef, {
+        email: review.email,
         ISBN: review.ISBN,
         rating: review.rating,
         text: review.text,
       });
-      //Alert.success('The review has been added');
-      console.log('Review added successfully!');
+      await this.addReviewToBook(review.ISBN, review);
     } catch (error) {
       console.error('Error adding review:', error);
     }
   }
+
+  //Venter på Joakim her
+
+  // async addReviewToUser(userEmail: string, review: Review) {
+  //   try {
+  //     const userID = (await userService.getUser(userEmail)).user_id;
+  //     const uRef = doc(this.userRef, userID);
+
+  //     await updateDoc(uRef, {
+  //       review: arrayUnion(review),
+  //     });
+  //   } catch (error) {}
+  // }
+
+  async addReviewToBook(bookISBN: string, review: Review) {
+    try {
+      const bookID = (await this.getBooksByISBN(bookISBN)).bookId;
+      const bookRef = doc(this.colRef, bookID);
+      await updateDoc(bookRef, {
+        review: arrayUnion(review),
+        rating: arrayUnion(review.rating),
+      });
+    } catch (error) {
+      console.error('Error adding review to the book:', error);
+    }
+  }
+
   addBook(book: Book) {
     console.log('book-service', book);
     return new Promise<void>(async (resolve, reject) => {
@@ -106,7 +133,7 @@ class BookService {
     const books = snapshot.docs.map((doc) => {
       const bookData = doc.data();
       const book: Book = {
-        bookId: bookData.bookId,
+        bookId: doc.id,
         title: bookData.title,
         ISBN: bookData.ISBN,
         author: bookData.author,
@@ -157,6 +184,10 @@ class BookService {
         addedDate,
       };
     });
+  }
+
+  async getBooksByISBN(ISBN: string) {
+    return (await this.getBooks()).filter((book) => book.ISBN == ISBN)[0];
   }
 }
 
