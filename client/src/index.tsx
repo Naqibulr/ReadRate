@@ -50,8 +50,8 @@ function Home() {
   }, []);
 
   return (
-    <Container fluid style={{ margin: 0 }}>
-      <h3 style={{ marginLeft: '20px', marginTop: '5px', marginBottom: '0px' }}>Highest rated</h3>
+    <Container fluid style={{ margin: 0 , backgroundColor: 'rgb(254, 252, 251)'}}>
+      <h3 style={{ marginLeft: '20px', marginTop: '5px', marginBottom: '0px', color: 'rgb(48, 45, 44)'}}>Highest rated</h3>
       <Carousel interval={null}>
         {topBooks.map((book, index) => {
           // Check if the item index is a multiple of 6 to create a new carousel item
@@ -71,7 +71,7 @@ function Home() {
           return null;
         })}
       </Carousel>
-      <h3 style={{ marginLeft: '20px', marginTop: '5px', marginBottom: '0px' }}>Most recent</h3>
+      <h3 style={{ marginLeft: '20px', marginTop: '5px', marginBottom: '0px', color: 'rgb(48, 45, 44)'}}>Most recent</h3>
       <Carousel interval={null}>
         {mostRecent.map((book, index) => {
           // Check if the item index is a multiple of 6 to create a new carousel item
@@ -91,7 +91,7 @@ function Home() {
           return null;
         })}
       </Carousel>
-      <h3 style={{ marginLeft: '20px', marginTop: '5px', marginBottom: '0px' }}>Fiction</h3>
+      <h3 style={{ marginLeft: '20px', marginTop: '5px', marginBottom: '0px', color: 'rgb(48, 45, 44)' }}>Fiction</h3>
       <Carousel interval={null}>
         {fiction.map((book, index) => {
           // Check if the item index is a multiple of 6 to create a new carousel item
