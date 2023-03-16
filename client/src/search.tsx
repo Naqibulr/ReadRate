@@ -87,7 +87,7 @@ export function BookSearch() {
           {' '}
           <InputGroup className="p-0">
             <Form.Control
-              placeholder="Fra år"
+              placeholder="From year"
               aria-label="Search"
               aria-describedby="Search field"
               onChange={handleChangeYearFrom}
@@ -99,7 +99,7 @@ export function BookSearch() {
           {' '}
           <InputGroup className="p-0">
             <Form.Control
-              placeholder="Til år"
+              placeholder="To year"
               aria-label="Search"
               aria-describedby="Search field"
               onChange={handleChangeYearTo}
