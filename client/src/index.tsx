@@ -18,6 +18,7 @@ import bookService, { Book } from './book-service';
 import { useEffect, useState } from 'react';
 import { BookSearch, AuthorSearch } from './search';
 import { computeAverage } from './average';
+import { getDarkModeCookies } from './getcookie';
 
 function Home() {
   const [fiction, setFiction] = useState<Book[]>([]);

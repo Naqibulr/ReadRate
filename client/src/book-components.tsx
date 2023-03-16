@@ -23,9 +23,10 @@ import { faStar } from '@fortawesome/free-solid-svg-icons';
 import StarRatings from 'react-star-ratings';
 import { computeAverage } from './average';
 import { Link } from 'react-router-dom';
-import { getDarkModeCookies } from './getcookie';
-import getBookRating from './google-books-rating';
 import { getCookieValue } from './getcookie';
+import { getDarkModeCookies } from './getcookie';
+
+import getBookRating from './google-books-rating';
 
 // REMEMBER TO ADD IMPORTS FROM SERVICE
 
