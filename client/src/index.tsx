@@ -3,7 +3,14 @@ import * as React from 'react';
 import { Alert } from './widgets';
 import { HashRouter, Route } from 'react-router-dom';
 import { Carousel, Container, Row, Col } from 'react-bootstrap';
-import { BookAdd, BookDetails, BookEdit, BookCard, BookList, WriteReviewPage } from './book-components';
+import {
+  BookAdd,
+  BookDetails,
+  BookEdit,
+  BookCard,
+  BookList,
+  WriteReviewPage,
+} from './book-components';
 import { AuthorAdd, AuthorDetails, AuthorEdit, AuthorCard } from './author-components';
 import { UserDetails, UserLogIn, RegisterUser } from './user-components';
 import { Menu } from './menu';
@@ -11,7 +18,6 @@ import bookService, { Book } from './book-service';
 import { useEffect, useState } from 'react';
 import { BookSearch, AuthorSearch } from './search';
 import { computeAverage } from './average';
-
 
 function Home() {
   const [fiction, setFiction] = useState<Book[]>([]);
