@@ -68,18 +68,17 @@ function Home() {
   }, []);
 
   return (
-    <Container fluid style={{ marginTop: -5, background: isDarkModeEnabled ? '#192734' : 'white' }}>
+    <Container fluid style={{ margin: 0, backgroundColor: 'rgb(254, 252, 251)' }}>
       <h3
         style={{
           marginLeft: '20px',
           marginTop: '5px',
           marginBottom: '0px',
-          color: isDarkModeEnabled ? 'white' : 'black',
+          color: 'rgb(48, 45, 44)',
         }}
       >
         Highest rated
       </h3>
-
       <Carousel interval={null}>
         {topBooks.map((book, index) => {
           // Check if the item index is a multiple of 6 to create a new carousel item
@@ -104,7 +103,7 @@ function Home() {
           marginLeft: '20px',
           marginTop: '5px',
           marginBottom: '0px',
-          color: isDarkModeEnabled ? 'white' : 'black',
+          color: 'rgb(48, 45, 44)',
         }}
       >
         Most recent
@@ -133,7 +132,7 @@ function Home() {
           marginLeft: '20px',
           marginTop: '5px',
           marginBottom: '0px',
-          color: isDarkModeEnabled ? 'white' : 'black',
+          color: 'rgb(48, 45, 44)',
         }}
       >
         Fiction

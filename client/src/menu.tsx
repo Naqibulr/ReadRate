@@ -1,4 +1,5 @@
 //import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faRightToBracket } from '@fortawesome/free-solid-svg-icons';
 import React, { useState } from 'react';
 import { Button, Container, Dropdown, Form, InputGroup, Nav, Navbar } from 'react-bootstrap';
 import { Component } from 'react-simplified';
@@ -46,10 +47,7 @@ export class Menu extends Component {
         collapseOnSelect
         expand="lg"
         variant="dark"
-        style={{
-          background: this.isDarkModeEnabled ? '#192734' : 'rgb(251 238 193)',
-          color: 'rgb(73 15 224)',
-        }}
+        style={{ backgroundColor: 'rgb(254, 252, 251)', color: 'rgb(73 15 224)' }}
       >
         <Navbar.Brand href="/">
           <img
@@ -65,19 +63,17 @@ export class Menu extends Component {
           <Navbar.Collapse id="responsive-navbar-nav">
             <Nav className="me-auto"></Nav>
             <Nav>
-              <InputGroup className="p-3" style={{ border: 'none' }}>
+              <InputGroup className="p-3">
                 <Dropdown id="dropdown">
                   <Dropdown.Toggle
                     variant="light"
+                    style={{ borderColor: 'rgb(223, 120, 97)', color: 'rgb(223, 120, 97)' }}
                     id="dropdown-basic"
-                    style={{ backgroundColor: this.isDarkModeEnabled ? 'grey' : 'darkcyan' }}
                   >
                     {this.state.filterValue}
                   </Dropdown.Toggle>
 
-                  <Dropdown.Menu
-                    style={{ backgroundColor: this.isDarkModeEnabled ? 'grey' : 'darkcyan' }}
-                  >
+                  <Dropdown.Menu>
                     <Dropdown.Item onClick={() => this.handleItemClick('Book')}>Book</Dropdown.Item>
                     <Dropdown.Item onClick={() => this.handleItemClick('Author')}>
                       Author
@@ -92,7 +88,12 @@ export class Menu extends Component {
                   onChange={this.handleInputChange}
                 />
 
-                <Button variant="light" id="button-addon2" onClick={this.handleSearch}>
+                <Button
+                  variant="light"
+                  id="button-addon2"
+                  onClick={this.handleSearch}
+                  style={{ backgroundColor: 'rgb(223, 120, 97)', color: 'rgb(254, 252, 251)' }}
+                >
                   Search
                 </Button>
               </InputGroup>
@@ -104,11 +105,7 @@ export class Menu extends Component {
               {this.isAdmin ? (
                 <Nav.Link
                   href="/#/books/add"
-                  style={{
-                    color: this.isDarkModeEnabled ? 'white' : 'rgb(73 15 224)',
-                    marginTop: '15px',
-                    whiteSpace: 'nowrap',
-                  }}
+                  style={{ color: 'rgb(34, 34, 34)', marginTop: '15px', whiteSpace: 'nowrap' }}
                 >
                   Add book
                 </Nav.Link>
@@ -116,21 +113,14 @@ export class Menu extends Component {
               {this.isAdmin ? (
                 <Nav.Link
                   href="/#/addauthors/"
-                  style={{
-                    color: this.isDarkModeEnabled ? 'white' : 'rgb(73 15 224)',
-                    marginTop: '15px',
-                    whiteSpace: 'nowrap',
-                  }}
+                  style={{ color: 'rgb(34, 34, 34)', marginTop: '15px', whiteSpace: 'nowrap' }}
                 >
                   Add author
                 </Nav.Link>
               ) : null}
               <Nav.Link
                 href="/#/books/user"
-                style={{
-                  color: this.isDarkModeEnabled ? 'white' : 'rgb(73 15 224)',
-                  marginTop: '15px',
-                }}
+                style={{ color: 'rgb(34, 34, 34)', marginTop: '15px' }}
               >
                 Login
               </Nav.Link>

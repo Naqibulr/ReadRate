@@ -78,6 +78,7 @@ export class UserLogIn extends Component {
               onClick={() => this.logIn()}
               style={{
                 marginBottom: '10px',
+                
               }}
             >
               Log in
@@ -394,6 +395,8 @@ export class UserDetails extends Component {
                 marginLeft: 'auto',
                 marginRight: 'auto',
                 marginBottom: '10px',
+                backgroundColor: 'rgb(223, 120, 97)',
+                color: 'rgb(254, 252, 251)',
               }}
             >
               Log out
