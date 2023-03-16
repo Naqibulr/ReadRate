@@ -1,8 +1,17 @@
 import axios from 'axios';
 import { firestore } from './firebase';
 import { collection, query, where, getDocs, addDoc } from 'firebase/firestore';
+import { User } from './user-service';
+import { getCookieValue } from './getcookie';
 
 axios.defaults.baseURL = 'http://localhost:3000/api/v2';
+
+export type Review = {
+  email: string;
+  ISBN: string;
+  rating: number;
+  text: string;
+};
 
 export type Book = {
   id: string;
@@ -15,6 +24,7 @@ export type Book = {
   description: string;
   genre: Array<string>;
   rating: Array<number>;
+  review: Array<Review>;
   addedDate: Date;
   imagePath: string;
 };
@@ -39,6 +49,13 @@ class BookService {
     return response.data;
   }
 
+  colRef = collection(firestore, 'books');
+
+  addReview(review: Review) {
+    console.log('book-service', review);
+    return axios.post('/reviews', { review }).then((response) => response.data);
+  }
+
   getBooksByGenre(genre: string) {
     return axios.get('/books').then((response) => {
       const data = response.data;
@@ -49,7 +66,7 @@ class BookService {
         throw new Error('Invalid response data: not an array');
       }
     });
-    //lag en ny metode for addreview, 
+    //lag en ny metode for addreview,
   }
 
   addBook(book: Book) {

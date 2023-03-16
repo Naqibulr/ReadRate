@@ -7,42 +7,84 @@ import {
   Card,
   Row,
   Col,
-  Modal,
   Container,
   FormGroup,
   FormLabel,
   FormControl,
+  ThemeProvider,
+  ListGroup,
+  Badge,
+  ListGroupItem,
 } from 'react-bootstrap';
 import { createHashHistory } from 'history';
-import bookService, { Book } from './book-service';
+import bookService, { Book, Review } from './book-service';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
 import StarRatings from 'react-star-ratings';
 import { computeAverage } from './average';
 import { Link } from 'react-router-dom';
+import { getCookieValue } from './getcookie';
+
+// REMEMBER TO ADD IMPORTS FROM SERVICE
 
 const history = createHashHistory(); // Use history.push(...) to programmatically change path
 
 interface ReviewFormData {
-  name: string;
+  // name: string;
   rating: number;
   comment: string;
 }
 
+function getIsbnFromUrl(): string | null {
+  const hash = window.location.hash; // gets the hash part of the URL
+  const regex = /\/books\/(\d+)\//; // regex to match the ISBN number
+  const match = hash.match(regex); // finds the first match of the regex in the hash
+  if (match && match.length > 1) {
+    return match[1]; // returns the ISBN number if a match is found
+  }
+  return null; // returns null if no match is found
+}
+
+export function handleWriteReviewButtonPress(book: Book) {
+  if (getCookieValue('loggedIn') == 'true') {
+    //@ts-ignorets-ignore
+    history.push(`/books/${book.ISBN}/review`);
+  } else {
+    Alert.info(`You need to log in to be able to write a review`);
+  }
+}
+
+export function displayAlert() {
+  return;
+}
+
 export const WriteReviewPage = (props: { book: Book }) => {
   const [formData, setFormData] = useState<ReviewFormData>({
-    name: '',
+    // name: '',
     rating: 0,
     comment: '',
   });
+
+  const isbn = getIsbnFromUrl();
+
+  let review: Review = {
+    email: getCookieValue('email'),
+    //@ts-ignore
+    ISBN: isbn, //props.book.ISBN
+    rating: 0,
+    text: '',
+  };
 
   //const { book_id } = props.match.params;
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     // Here you can save the review to your database or do other logic
+    console.log('book-components', review);
+    bookService.addReview(review);
     // Once done, navigate the user back to the book details page or homepage
     history.goBack(); //history.push(`/books/${props.book.ISBN}`); //book-details
+    Alert.info(`Review added`);
   };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -56,10 +98,10 @@ export const WriteReviewPage = (props: { book: Book }) => {
   };
 
   return (
-    <div>
+    <Container className="p-3">
       <h1>Write a Review</h1>
       <Form onSubmit={handleSubmit}>
-        <Form.Group controlId="name">
+        {/* <Form.Group controlId="name">
           <Form.Label>Name</Form.Label>
           <Form.Control
             type="text"
@@ -67,15 +109,15 @@ export const WriteReviewPage = (props: { book: Book }) => {
             value={formData.name}
             onChange={handleInputChange}
           />
-        </Form.Group>
+        </Form.Group> */}
 
         <FormGroup controlId="rating">
           <FormLabel>Rating</FormLabel>
           <FormControl
             as="select"
             name="rating"
-            value={formData.rating}
-            onChange={handleInputChange}
+            //value={formData.rating}
+            onChange={(event) => (review.rating = parseInt(event.currentTarget.value))}
             required
           >
             <option value="">Select a rating...</option>
@@ -93,16 +135,16 @@ export const WriteReviewPage = (props: { book: Book }) => {
             as="textarea"
             rows={3}
             name="comment"
-            value={formData.comment}
-            onChange={handleInputChange}
+            //value={formData.comment}
+            onChange={(event) => (review.text = event.currentTarget.value)}
           />
         </Form.Group>
 
-        <Button variant="primary" type="submit">
+        <Button variant="primary" type="submit" className="btn btn-success mt-3">
           Submit
         </Button>
       </Form>
-    </div>
+    </Container>
   );
 };
 
@@ -160,6 +202,16 @@ export function BookList(props: BookListProps) {
   );
 }
 
+const reviews: Review[] = [
+  {
+    email: 'Jonatan@ermedlem.no',
+    ISBN: 'bokISBN',
+    //avatar: '',
+    text: 'bra bok',
+    rating: 3,
+  },
+];
+
 export class BookDetails extends Component<{
   match: {
     params: { book_id: string };
@@ -168,6 +220,7 @@ export class BookDetails extends Component<{
   book: Book = {
     id: '',
     rating: [],
+    review: [],
     title: '',
     ISBN: '',
     author: '',
@@ -184,9 +237,19 @@ export class BookDetails extends Component<{
     return (
       <Container className="p-3">
         <Row xs={'auto'}>
-          <Button className="btn btn-light" onClick={() => history.push('/')}>
-            Back
-          </Button>
+          <Col sm={3} className="pt-4 ">
+            <Button
+              variant="light"
+              onClick={() => history.push('/')}
+              style={{
+                width: '5rem',
+                borderColor: 'rgb(223, 120, 97)',
+                color: 'rgb(223, 120, 97)',
+              }}
+            >
+              Back
+            </Button>
+          </Col>
         </Row>
         <Row>
           <Col sm={3} className="pt-4 ">
@@ -200,20 +263,29 @@ export class BookDetails extends Component<{
               />
             </Row>
             <Row className="m-3 ">
-              <Button type="button" className="btn btn-success mt-3">
+              <Button
+                type="button"
+                className="btn btn-success mt-3"
+                style={{ backgroundColor: 'rgb(148, 180, 159)', color: 'rgb(255, 255, 255)' }}
+              >
                 Want to read
-              </Button>
-            </Row>
-            <Row className="m-3 ">
-              <Button type="button" className="btn btn-success mt-3">
-                Have read
               </Button>
             </Row>
             <Row className="m-3 ">
               <Button
                 type="button"
                 className="btn btn-success mt-3"
-                onClick={() => history.push(`/books/${this.book.ISBN}/review`)}
+                style={{ backgroundColor: 'rgb(148, 180, 159)', color: 'rgb(255, 255, 255)' }}
+              >
+                Have read
+              </Button>
+            </Row>
+            <Row className="m-3 ">
+              <Button
+                type="button"
+                style={{ backgroundColor: 'rgb(148, 180, 159)', color: 'rgb(255, 255, 255)' }}
+                className="btn btn-success mt-3"
+                onClick={() => handleWriteReviewButtonPress(this.book)} // () => history.push(`/books/${this.book.ISBN}/review`)
               >
                 Write review
               </Button>
@@ -279,6 +351,22 @@ export class BookDetails extends Component<{
                 <small>{this.book.ISBN}</small>
               </Col>
             </Row>
+            <Row>
+              <Col>
+                <h2>Reviews</h2>
+                <ListGroup>
+                  {this.book.review.map((review) => (
+                    <ListGroupItem>
+                      <span className="user">{review.email}</span>
+                      <Badge bg="info" pill>
+                        {review.rating} stars
+                      </Badge>
+                      <p> {review.text} </p>
+                    </ListGroupItem>
+                  ))}
+                </ListGroup>
+              </Col>
+            </Row>
           </Col>
         </Row>
       </Container>
@@ -304,6 +392,7 @@ export class BookAdd extends Component {
     description: '',
     genre: [],
     rating: [],
+    review: [],
     addedDate: new Date(),
     imagePath: '',
   };
@@ -521,8 +610,10 @@ export class BookAdd extends Component {
           <Row>
             <Button
               onClick={() => this.addBook()}
-              variant="lg bg-success"
+              variant="lg"
               style={{
+                backgroundColor: 'rgb(148, 180, 159)',
+                color: 'rgb(255, 255, 255)',
                 width: '50rem',
                 margin: 'auto',
               }}
@@ -572,7 +663,11 @@ export function BookCard(props: { book: Book }) {
 
         <Row>
           <Col className="col-8">
-            <Button variant="success" onClick={() => history.push(`/books/${props.book.ISBN}`)}>
+            <Button
+              variant="success"
+              onClick={() => history.push(`/books/${props.book.ISBN}`)}
+              style={{ backgroundColor: 'rgb(148, 180, 159)', color: 'rgb(255, 255, 255)' }}
+            >
               Read more
             </Button>
           </Col>

@@ -2,6 +2,7 @@ const review = require('./review');
 const book = require('./book');
 
 import { Book } from '../src/book';
+import { Review } from './review';
 export class Author {
   id: string;
   name: string;
