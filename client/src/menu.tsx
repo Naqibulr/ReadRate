@@ -37,7 +37,7 @@ export class Menu extends Component {
     if (this.state.filterValue == 'Book')
       window.location.href = `http://localhost:3000/#/books/search/${this.state.searchValue}`; // Navigate to the search URL with the search input value
     else window.location.href = `http://localhost:3000/#/authors/search/${this.state.searchValue}`;
-    window.location.reload;
+    window.location.reload();
   };
 
   render() {
