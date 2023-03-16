@@ -87,8 +87,16 @@ export class AuthorDetails extends Component<{
 
   render() {
     return (
-      <Container className="p-3">
-        <Row xs={'auto'}>
+      <Container
+        fluid
+        style={{
+          paddingLeft: '50px',
+          paddingTop: '0px',
+          backgroundColor: this.isDarkModeEnabled ? darkMode.background : lightMode.background,
+          color: this.isDarkModeEnabled ? darkMode.font : lightMode.font,
+        }}
+      >
+        <Row xs={'auto'} style={{ paddingLeft: '40px' }}>
           <Button
             className="btn btn-light"
             onClick={() => history.push('/')}
@@ -226,114 +234,168 @@ export class AuthorAdd extends Component {
 
   render() {
     return (
-      <Card
+      <Container
+        fluid
         style={{
-          border: '0',
-          textAlign: 'center',
-          margin: '10%',
-          marginTop: '3%',
+          backgroundColor: this.isDarkModeEnabled ? darkMode.background : lightMode.background,
+          color: this.isDarkModeEnabled ? darkMode.font : lightMode.font,
+          height: '100vh',
+          marginTop: '-50px',
+          paddingTop: '70px',
         }}
       >
-        <Card.Title>Details:</Card.Title>
-        <Form>
-          <Row>
-            <Col>
-              <Form.Group className="mb-3" controlId="name">
-                <Form.Label>Name</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Enter name"
-                  onChange={(event) => (this.author.name = event.currentTarget.value)}
-                />
-              </Form.Group>
-            </Col>
-            <Col>
-              <Form.Group className="mb-3" controlId="id">
-                <Form.Label>ID</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Enter ID"
-                  onChange={(event) => (this.author.id = event.currentTarget.value)}
-                />
-              </Form.Group>
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <Form.Group className="mb-3" controlId="image">
-                <Form.Label>Image</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Enter image URL"
-                  onChange={(event) => (this.author.imagePath = event.currentTarget.value)}
-                />
-              </Form.Group>
-            </Col>
-            <Col>
-              <Form.Group className="mb-3" controlId="country">
-                <Form.Label>Country</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Enter country"
-                  onChange={(event) => (this.author.country = event.currentTarget.value)}
-                />
-              </Form.Group>
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <Form.Group className="mb-3" controlId="birthDate">
-                <Form.Label>Birth date</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="dd. month yyyy"
-                  onChange={(event) => (this.author.birthDate = event.currentTarget.value)}
-                />
-              </Form.Group>
-            </Col>
-            <Col>
-              <Form.Group className="mb-3" controlId="deathDate">
-                <Form.Label>Death date</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Enter death date, if alive leave empty"
-                  onChange={(event) => (this.author.deathDate = event.currentTarget.value)}
-                />
-              </Form.Group>
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <Form.Group className="mb-3" controlId="description">
-                <Form.Label>Description</Form.Label>
-                <Form.Control
-                  type="text"
-                  as="textarea"
-                  placeholder="Enter description"
-                  rows={1}
-                  onChange={(event) => (this.author.description = event.currentTarget.value)}
-                />
-              </Form.Group>
-            </Col>
-          </Row>
-          <Row>
-            <Button
-              onClick={() => this.addAuthor()}
-              variant="lg bg-success"
-              style={{
-                backgroundColor: this.isDarkModeEnabled
-                  ? darkMode.buttonCard
-                  : lightMode.buttonCard,
-                color: this.isDarkModeEnabled ? darkMode.card : lightMode.card,
-                width: '50rem',
-                margin: 'auto',
-              }}
-            >
-              Submit
-            </Button>
-          </Row>
-        </Form>
-      </Card>
+        <Card
+          style={{
+            border: '0',
+            textAlign: 'center',
+            margin: '10%',
+            marginTop: '3%',
+            backgroundColor: this.isDarkModeEnabled ? darkMode.background : lightMode.background,
+          }}
+        >
+          <Card.Title>Details:</Card.Title>
+          <Form>
+            <Row>
+              <Col>
+                <Form.Group className="mb-3" controlId="name">
+                  <Form.Label>Name</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Enter name"
+                    onChange={(event) => (this.author.name = event.currentTarget.value)}
+                    style={{
+                      backgroundColor: this.isDarkModeEnabled
+                        ? darkMode.background
+                        : lightMode.background,
+                      color: this.isDarkModeEnabled ? darkMode.font : lightMode.font,
+                    }}
+                  />
+                </Form.Group>
+              </Col>
+              <Col>
+                <Form.Group className="mb-3" controlId="id">
+                  <Form.Label>ID</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Enter ID"
+                    onChange={(event) => (this.author.id = event.currentTarget.value)}
+                    style={{
+                      backgroundColor: this.isDarkModeEnabled
+                        ? darkMode.background
+                        : lightMode.background,
+                      color: this.isDarkModeEnabled ? darkMode.font : lightMode.font,
+                    }}
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <Form.Group className="mb-3" controlId="image">
+                  <Form.Label>Image</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Enter image URL"
+                    onChange={(event) => (this.author.imagePath = event.currentTarget.value)}
+                    style={{
+                      backgroundColor: this.isDarkModeEnabled
+                        ? darkMode.background
+                        : lightMode.background,
+                      color: this.isDarkModeEnabled ? darkMode.font : lightMode.font,
+                    }}
+                  />
+                </Form.Group>
+              </Col>
+              <Col>
+                <Form.Group className="mb-3" controlId="country">
+                  <Form.Label>Country</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Enter country"
+                    onChange={(event) => (this.author.country = event.currentTarget.value)}
+                    style={{
+                      backgroundColor: this.isDarkModeEnabled
+                        ? darkMode.background
+                        : lightMode.background,
+                      color: this.isDarkModeEnabled ? darkMode.font : lightMode.font,
+                    }}
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <Form.Group className="mb-3" controlId="birthDate">
+                  <Form.Label>Birth date</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="dd. month yyyy"
+                    onChange={(event) => (this.author.birthDate = event.currentTarget.value)}
+                    style={{
+                      backgroundColor: this.isDarkModeEnabled
+                        ? darkMode.background
+                        : lightMode.background,
+                      color: this.isDarkModeEnabled ? darkMode.font : lightMode.font,
+                    }}
+                  />
+                </Form.Group>
+              </Col>
+              <Col>
+                <Form.Group className="mb-3" controlId="deathDate">
+                  <Form.Label>Death date</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Enter death date, if alive leave empty"
+                    onChange={(event) => (this.author.deathDate = event.currentTarget.value)}
+                    style={{
+                      backgroundColor: this.isDarkModeEnabled
+                        ? darkMode.background
+                        : lightMode.background,
+                      color: this.isDarkModeEnabled ? darkMode.font : lightMode.font,
+                    }}
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <Form.Group className="mb-3" controlId="description">
+                  <Form.Label>Description</Form.Label>
+                  <Form.Control
+                    type="text"
+                    as="textarea"
+                    placeholder="Enter description"
+                    rows={1}
+                    onChange={(event) => (this.author.description = event.currentTarget.value)}
+                    style={{
+                      backgroundColor: this.isDarkModeEnabled
+                        ? darkMode.background
+                        : lightMode.background,
+                      color: this.isDarkModeEnabled ? darkMode.font : lightMode.font,
+                    }}
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row>
+              <Button
+                onClick={() => this.addAuthor()}
+                variant="lg "
+                style={{
+                  backgroundColor: this.isDarkModeEnabled
+                    ? darkMode.buttonCard
+                    : lightMode.buttonCard,
+                  color: this.isDarkModeEnabled ? darkMode.card : lightMode.card,
+                  width: '50rem',
+                  margin: 'auto',
+                }}
+              >
+                Submit
+              </Button>
+            </Row>
+          </Form>
+        </Card>
+      </Container>
     );
   }
   mounted() {}

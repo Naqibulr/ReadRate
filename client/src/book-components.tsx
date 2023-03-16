@@ -182,6 +182,7 @@ interface BookListProps {
 export function BookList(props: BookListProps) {
   const [books, setBooks] = useState<Book[]>([]);
   const genre = props.match.params.genre;
+  const [isDarkModeEnabled, setIsDarkModeEnabled] = useState(getDarkModeCookies());
 
   useEffect(() => {
     bookService
@@ -191,7 +192,13 @@ export function BookList(props: BookListProps) {
   }, []);
 
   return (
-    <div className="p-4 pt-1">
+    <div
+      className="p-4 pt-1"
+      style={{
+        backgroundColor: isDarkModeEnabled ? darkMode.background : lightMode.background,
+        color: isDarkModeEnabled ? darkMode.font : lightMode.font,
+      }}
+    >
       <Row style={{ marginTop: '10px' }}>
         <h3>{props.match.params.genre}</h3>
       </Row>
@@ -243,13 +250,15 @@ export class BookDetails extends Component<{
     return (
       <Container
         fluid
-        className="p-5 "
         style={{
           backgroundColor: this.isDarkModeEnabled ? darkMode.background : lightMode.background,
+          color: this.isDarkModeEnabled ? darkMode.font : lightMode.font,
+          paddingLeft: '50px',
+          paddingTop: '0px',
         }}
       >
-        <Row>
-          <Col sm={3} className="p-5 ">
+        <Row style={{ paddingLeft: '30px' }}>
+          <Col sm={3} className="pl-5 ">
             <Button
               variant="light"
               onClick={() => history.push('/')}
@@ -327,8 +336,7 @@ export class BookDetails extends Component<{
             </Row>
             <Row className="mt-1">
               <Col>
-                {' '}
-                <h5>ReadRate Rating:</h5>{' '}
+                <h5 style={{}}>ReadRate</h5>
               </Col>
               <Col>
                 <StarRating rating={computeAverage(this.book.rating)}></StarRating>
@@ -336,8 +344,7 @@ export class BookDetails extends Component<{
             </Row>
             <Row className="mt-1">
               <Col>
-                {' '}
-                <h5>Google books rating:</h5>{' '}
+                <h5>Google books:</h5>{' '}
               </Col>
               <Col>
                 <StarRating rating={this.googleBookRating}></StarRating>
@@ -488,215 +495,276 @@ export class BookAdd extends Component {
 
   render() {
     return (
-      <Card
+      <Container
+        fluid
         style={{
-          border: '0',
-          textAlign: 'center',
-          margin: '10%',
-          marginTop: '3%',
+          backgroundColor: this.isDarkModeEnabled ? darkMode.background : lightMode.background,
+          color: this.isDarkModeEnabled ? darkMode.font : lightMode.font,
+          height: '100vh',
+          marginTop: '-50px',
+          paddingTop: '70px',
         }}
       >
-        <Card.Title>Details:</Card.Title>
-        <Form>
-          <Row>
-            <Col>
-              <Form.Group className="mb-3" controlId="title">
-                <Form.Label>Title</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Enter title"
-                  onChange={(event) => (this.book.title = event.currentTarget.value)}
+        <Card
+          style={{
+            border: '0',
+            textAlign: 'center',
+            margin: '10%',
+            marginTop: '3%',
+            backgroundColor: this.isDarkModeEnabled ? darkMode.background : lightMode.background,
+            color: this.isDarkModeEnabled ? darkMode.font : lightMode.font,
+          }}
+        >
+          <Card.Title>Details:</Card.Title>
+          <Form>
+            <Row>
+              <Col>
+                <Form.Group className="mb-3" controlId="title">
+                  <Form.Label>Title</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Enter title"
+                    onChange={(event) => (this.book.title = event.currentTarget.value)}
+                    style={{
+                      backgroundColor: this.isDarkModeEnabled
+                        ? darkMode.background
+                        : lightMode.background,
+                      color: this.isDarkModeEnabled ? darkMode.font : lightMode.font,
+                    }}
+                  />
+                </Form.Group>
+              </Col>
+              <Col>
+                <Form.Group className="mb-3" controlId="isbn">
+                  <Form.Label>ISBN</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Enter ISBN"
+                    onChange={(event) => (this.book.ISBN = event.currentTarget.value)}
+                    style={{
+                      backgroundColor: this.isDarkModeEnabled
+                        ? darkMode.background
+                        : lightMode.background,
+                      color: this.isDarkModeEnabled ? darkMode.font : lightMode.font,
+                    }}
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <Form.Group className="mb-3" controlId="author">
+                  <Form.Label>Author</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Enter author name"
+                    onChange={(event) => (this.book.author = event.currentTarget.value)}
+                    style={{
+                      backgroundColor: this.isDarkModeEnabled
+                        ? darkMode.background
+                        : lightMode.background,
+                      color: this.isDarkModeEnabled ? darkMode.font : lightMode.font,
+                    }}
+                  />
+                </Form.Group>
+              </Col>
+              <Col>
+                <Form.Group className="mb-3" controlId="releaseYear">
+                  <Form.Label>Release year</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Enter Release year"
+                    onChange={(event) =>
+                      (this.book.releaseYear = parseInt(event.currentTarget.value))
+                    }
+                    style={{
+                      backgroundColor: this.isDarkModeEnabled
+                        ? darkMode.background
+                        : lightMode.background,
+                      color: this.isDarkModeEnabled ? darkMode.font : lightMode.font,
+                    }}
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <Form.Group className="mb-3" controlId="publisher">
+                  <Form.Label>Publisher</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Enter publisher name"
+                    onChange={(event) => (this.book.publisher = event.currentTarget.value)}
+                    style={{
+                      backgroundColor: this.isDarkModeEnabled
+                        ? darkMode.background
+                        : lightMode.background,
+                      color: this.isDarkModeEnabled ? darkMode.font : lightMode.font,
+                    }}
+                  />
+                </Form.Group>
+              </Col>
+              <Col>
+                <Form.Group className="mb-3" controlId="pages">
+                  <Form.Label>Number of pages</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Enter number of pages"
+                    onChange={(event) => (this.book.pages = parseInt(event.currentTarget.value))}
+                    style={{
+                      backgroundColor: this.isDarkModeEnabled
+                        ? darkMode.background
+                        : lightMode.background,
+                      color: this.isDarkModeEnabled ? darkMode.font : lightMode.font,
+                    }}
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <Form.Group className="mb-3" controlId="description">
+                  <Form.Label>Description</Form.Label>
+                  <Form.Control
+                    type="text"
+                    as="textarea"
+                    placeholder="Enter description"
+                    rows={1}
+                    onChange={(event) => (this.book.description = event.currentTarget.value)}
+                    style={{
+                      backgroundColor: this.isDarkModeEnabled
+                        ? darkMode.background
+                        : lightMode.background,
+                      color: this.isDarkModeEnabled ? darkMode.font : lightMode.font,
+                    }}
+                  />
+                </Form.Group>
+              </Col>
+              <Col>
+                <Form.Group className="mb-3" controlId="image">
+                  <Form.Label>Image</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Enter image URL"
+                    onChange={(event) => (this.book.imagePath = event.currentTarget.value)}
+                    style={{
+                      backgroundColor: this.isDarkModeEnabled
+                        ? darkMode.background
+                        : lightMode.background,
+                      color: this.isDarkModeEnabled ? darkMode.font : lightMode.font,
+                    }}
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row>
+              <Form.Label>Choose Genre</Form.Label>
+              <Form.Group className="mb-3" controlId="formBasicCheckbox">
+                <Form.Check
+                  inline
+                  type="checkbox"
+                  label="Fantasy"
+                  value="Fantasy"
+                  onChange={(event) => this.handleCheckboxChange(event)}
+                />
+                <Form.Check
+                  inline
+                  type="checkbox"
+                  label="Humour"
+                  value="Humor"
+                  onChange={(event) => this.handleCheckboxChange(event)}
+                />
+                <Form.Check
+                  inline
+                  type="checkbox"
+                  label="History"
+                  value="History"
+                  onChange={(event) => this.handleCheckboxChange(event)}
+                />
+                <Form.Check
+                  inline
+                  type="checkbox"
+                  label="Novel"
+                  value="Novel"
+                  onChange={(event) => this.handleCheckboxChange(event)}
+                />
+                <Form.Check
+                  inline
+                  type="checkbox"
+                  label="Children's"
+                  value="Children's"
+                  onChange={(event) => this.handleCheckboxChange(event)}
+                />
+                <Form.Check
+                  inline
+                  type="checkbox"
+                  label="Crime"
+                  value="Crime"
+                  onChange={(event) => this.handleCheckboxChange(event)}
+                />
+                <Form.Check
+                  inline
+                  type="checkbox"
+                  label="Drama"
+                  value="Drama"
+                  onChange={(event) => this.handleCheckboxChange(event)}
+                />
+                <Form.Check
+                  inline
+                  type="checkbox"
+                  label="Horror"
+                  value="Horror"
+                  onChange={(event) => this.handleCheckboxChange(event)}
+                />
+                <Form.Check
+                  inline
+                  type="checkbox"
+                  label="Poetry"
+                  value="Poetry"
+                  onChange={(event) => this.handleCheckboxChange(event)}
+                />
+                <Form.Check
+                  inline
+                  type="checkbox"
+                  label="Science"
+                  value="Science"
+                  onChange={(event) => this.handleCheckboxChange(event)}
+                />
+                <Form.Check
+                  inline
+                  type="checkbox"
+                  label="Tragedy"
+                  value="Tragedy"
+                  onChange={(event) => this.handleCheckboxChange(event)}
+                />
+                <Form.Check
+                  inline
+                  type="checkbox"
+                  label="Fiction"
+                  value="Fiction"
+                  onChange={(event) => this.handleCheckboxChange(event)}
                 />
               </Form.Group>
-            </Col>
-            <Col>
-              <Form.Group className="mb-3" controlId="isbn">
-                <Form.Label>ISBN</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Enter ISBN"
-                  onChange={(event) => (this.book.ISBN = event.currentTarget.value)}
-                />
-              </Form.Group>
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <Form.Group className="mb-3" controlId="author">
-                <Form.Label>Author</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Enter author name"
-                  onChange={(event) => (this.book.author = event.currentTarget.value)}
-                />
-              </Form.Group>
-            </Col>
-            <Col>
-              <Form.Group className="mb-3" controlId="releaseYear">
-                <Form.Label>Release year</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Enter Release year"
-                  onChange={(event) =>
-                    (this.book.releaseYear = parseInt(event.currentTarget.value))
-                  }
-                />
-              </Form.Group>
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <Form.Group className="mb-3" controlId="publisher">
-                <Form.Label>Publisher</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Enter publisher name"
-                  onChange={(event) => (this.book.publisher = event.currentTarget.value)}
-                />
-              </Form.Group>
-            </Col>
-            <Col>
-              <Form.Group className="mb-3" controlId="pages">
-                <Form.Label>Number of pages</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Enter number of pages"
-                  onChange={(event) => (this.book.pages = parseInt(event.currentTarget.value))}
-                />
-              </Form.Group>
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <Form.Group className="mb-3" controlId="description">
-                <Form.Label>Description</Form.Label>
-                <Form.Control
-                  type="text"
-                  as="textarea"
-                  placeholder="Enter description"
-                  rows={1}
-                  onChange={(event) => (this.book.description = event.currentTarget.value)}
-                />
-              </Form.Group>
-            </Col>
-            <Col>
-              <Form.Group className="mb-3" controlId="image">
-                <Form.Label>Image</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Enter image URL"
-                  onChange={(event) => (this.book.imagePath = event.currentTarget.value)}
-                />
-              </Form.Group>
-            </Col>
-          </Row>
-          <Row>
-            <Form.Label>Choose Genre</Form.Label>
-            <Form.Group className="mb-3" controlId="formBasicCheckbox">
-              <Form.Check
-                inline
-                type="checkbox"
-                label="Fantasy"
-                value="Fantasy"
-                onChange={(event) => this.handleCheckboxChange(event)}
-              />
-              <Form.Check
-                inline
-                type="checkbox"
-                label="Humour"
-                value="Humor"
-                onChange={(event) => this.handleCheckboxChange(event)}
-              />
-              <Form.Check
-                inline
-                type="checkbox"
-                label="History"
-                value="History"
-                onChange={(event) => this.handleCheckboxChange(event)}
-              />
-              <Form.Check
-                inline
-                type="checkbox"
-                label="Novel"
-                value="Novel"
-                onChange={(event) => this.handleCheckboxChange(event)}
-              />
-              <Form.Check
-                inline
-                type="checkbox"
-                label="Children's"
-                value="Children's"
-                onChange={(event) => this.handleCheckboxChange(event)}
-              />
-              <Form.Check
-                inline
-                type="checkbox"
-                label="Crime"
-                value="Crime"
-                onChange={(event) => this.handleCheckboxChange(event)}
-              />
-              <Form.Check
-                inline
-                type="checkbox"
-                label="Drama"
-                value="Drama"
-                onChange={(event) => this.handleCheckboxChange(event)}
-              />
-              <Form.Check
-                inline
-                type="checkbox"
-                label="Horror"
-                value="Horror"
-                onChange={(event) => this.handleCheckboxChange(event)}
-              />
-              <Form.Check
-                inline
-                type="checkbox"
-                label="Poetry"
-                value="Poetry"
-                onChange={(event) => this.handleCheckboxChange(event)}
-              />
-              <Form.Check
-                inline
-                type="checkbox"
-                label="Science"
-                value="Science"
-                onChange={(event) => this.handleCheckboxChange(event)}
-              />
-              <Form.Check
-                inline
-                type="checkbox"
-                label="Tragedy"
-                value="Tragedy"
-                onChange={(event) => this.handleCheckboxChange(event)}
-              />
-              <Form.Check
-                inline
-                type="checkbox"
-                label="Fiction"
-                value="Fiction"
-                onChange={(event) => this.handleCheckboxChange(event)}
-              />
-            </Form.Group>
-          </Row>
-          <Row>
-            <Button
-              onClick={() => this.addBook()}
-              variant="lg"
-              style={{
-                backgroundColor: this.isDarkModeEnabled
-                  ? darkMode.buttonCard
-                  : lightMode.buttonCard,
-                color: this.isDarkModeEnabled ? darkMode.buttonCard : lightMode.buttonCard,
-                width: '50rem',
-                margin: 'auto',
-              }}
-            >
-              Submit
-            </Button>
-          </Row>
-        </Form>
-      </Card>
+            </Row>
+            <Row>
+              <Button
+                onClick={() => this.addBook()}
+                variant="lg"
+                style={{
+                  backgroundColor: this.isDarkModeEnabled
+                    ? darkMode.buttonCard
+                    : lightMode.buttonCard,
+                  color: this.isDarkModeEnabled ? darkMode.card : lightMode.card,
+                  width: '50rem',
+                  margin: 'auto',
+                }}
+              >
+                Submit
+              </Button>
+            </Row>
+          </Form>
+        </Card>
+      </Container>
     );
   }
   mounted() {}
@@ -759,7 +827,7 @@ export function BookCard(props: { book: Book }) {
               onClick={() => history.push(`/books/${props.book.ISBN}`)}
               style={{
                 backgroundColor: isDarkModeEnabled ? darkMode.buttonCard : lightMode.buttonCard,
-                color: isDarkModeEnabled ? darkMode.card : lightMode.card,
+                color: isDarkModeEnabled ? darkMode.font : lightMode.font,
                 border: 'none',
               }}
             >

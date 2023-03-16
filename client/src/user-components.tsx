@@ -30,16 +30,20 @@ export class UserLogIn extends Component {
       <Card
         style={{
           border: 'none',
+          borderRadius: '0px',
           padding: '15px',
           textAlign: 'center',
           marginLeft: 'auto',
           marginRight: 'auto',
-          backgroundColor: this.isDarkModeEnabled ? darkMode.card : lightMode.card,
+          height: '100vh',
+          backgroundColor: this.isDarkModeEnabled ? darkMode.background : lightMode.background,
         }}
       >
         {/*Card forms in for log in screen */}
-        <Card.Title>Log in</Card.Title>
-        <Container style={{ width: '20rem', marginLeft: 'auto', marginRight: 'auto' }}>
+        <Card.Title style={{ color: this.isDarkModeEnabled ? darkMode.font : lightMode.font }}>
+          Log in
+        </Card.Title>
+        <Container fluid style={{ width: '20rem', marginLeft: 'auto', marginRight: 'auto' }}>
           <Row>
             <Form.Control
               value={this.email}
@@ -49,6 +53,10 @@ export class UserLogIn extends Component {
               style={{
                 textAlign: 'center',
                 marginBottom: '10px',
+                color: this.isDarkModeEnabled ? darkMode.font : lightMode.font,
+                backgroundColor: this.isDarkModeEnabled
+                  ? darkMode.background
+                  : lightMode.background,
               }}
             ></Form.Control>
           </Row>
@@ -67,6 +75,10 @@ export class UserLogIn extends Component {
               style={{
                 textAlign: 'center',
                 marginBottom: '10px',
+                backgroundColor: this.isDarkModeEnabled
+                  ? darkMode.background
+                  : lightMode.background,
+                color: this.isDarkModeEnabled ? darkMode.font : lightMode.font,
               }}
             ></Form.Control>
           </Row>
@@ -75,10 +87,13 @@ export class UserLogIn extends Component {
         <Container style={{ width: '15rem', marginLeft: 'auto', marginRight: 'auto' }}>
           <Row>
             <Button
-              variant="success"
               onClick={() => this.logIn()}
               style={{
                 marginBottom: '10px',
+                backgroundColor: this.isDarkModeEnabled
+                  ? darkMode.buttonCard
+                  : lightMode.buttonCard,
+                border: 'none',
               }}
             >
               Log in
@@ -86,10 +101,15 @@ export class UserLogIn extends Component {
           </Row>
           <Row>
             <Button
-              variant="outline-success"
+              className={this.isDarkModeEnabled ? 'dark-mode-button' : 'light-mode-button'}
               onClick={() => this.createUser()}
               style={{
                 marginBottom: '10px',
+                backgroundColor: 'transparent',
+                border: this.isDarkModeEnabled
+                  ? ` 1px solid ${darkMode.buttonCard}`
+                  : ` 1px solid ${lightMode.buttonCard}`,
+                color: this.isDarkModeEnabled ? darkMode.buttonCard : lightMode.buttonCard,
               }}
             >
               No user? Create one here
@@ -399,6 +419,7 @@ export class UserDetails extends Component {
                   ? darkMode.buttonMenu
                   : lightMode.buttonMenu,
                 color: this.isDarkModeEnabled ? darkMode.background : lightMode.background,
+                border: 'none',
               }}
             >
               Log out
@@ -418,7 +439,7 @@ export class UserDetails extends Component {
 
   logOut() {
     loggedIn = false;
-    history.push('/books');
+    history.push('/books/login');
     currentUser = {
       user_id: 0,
       email: '',
