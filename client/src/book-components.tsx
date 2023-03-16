@@ -27,6 +27,7 @@ import { getCookieValue } from './getcookie';
 import { getDarkModeCookies } from './getcookie';
 
 import getBookRating from './google-books-rating';
+import { darkMode, lightMode } from './colors';
 
 // REMEMBER TO ADD IMPORTS FROM SERVICE
 
@@ -236,19 +237,26 @@ export class BookDetails extends Component<{
     addedDate: new Date(),
     imagePath: '',
   };
+  isDarkModeEnabled = getDarkModeCookies();
 
   render() {
     return (
-      <Container className="p-3">
-        <Row xs={'auto'}>
-          <Col sm={3} className="pt-4 ">
+      <Container
+        fluid
+        className="p-5 "
+        style={{
+          backgroundColor: this.isDarkModeEnabled ? darkMode.background : lightMode.background,
+        }}
+      >
+        <Row>
+          <Col sm={3} className="p-5 ">
             <Button
               variant="light"
               onClick={() => history.push('/')}
               style={{
                 width: '5rem',
-                borderColor: 'rgb(223, 120, 97)',
-                color: 'rgb(223, 120, 97)',
+                borderColor: this.isDarkModeEnabled ? darkMode.buttonMenu : lightMode.buttonMenu,
+                color: this.isDarkModeEnabled ? darkMode.buttonMenu : lightMode.buttonMenu,
               }}
             >
               Back
@@ -270,7 +278,12 @@ export class BookDetails extends Component<{
               <Button
                 type="button"
                 className="btn btn-success mt-3"
-                style={{ backgroundColor: 'rgb(148, 180, 159)', color: 'rgb(255, 255, 255)' }}
+                style={{
+                  backgroundColor: this.isDarkModeEnabled
+                    ? darkMode.buttonCard
+                    : lightMode.buttonCard,
+                  color: this.isDarkModeEnabled ? darkMode.card : lightMode.card,
+                }}
               >
                 Want to read
               </Button>
@@ -279,7 +292,12 @@ export class BookDetails extends Component<{
               <Button
                 type="button"
                 className="btn btn-success mt-3"
-                style={{ backgroundColor: 'rgb(148, 180, 159)', color: 'rgb(255, 255, 255)' }}
+                style={{
+                  backgroundColor: this.isDarkModeEnabled
+                    ? darkMode.buttonCard
+                    : lightMode.buttonCard,
+                  color: this.isDarkModeEnabled ? darkMode.card : lightMode.card,
+                }}
               >
                 Have read
               </Button>
@@ -287,7 +305,12 @@ export class BookDetails extends Component<{
             <Row className="m-3 ">
               <Button
                 type="button"
-                style={{ backgroundColor: 'rgb(148, 180, 159)', color: 'rgb(255, 255, 255)' }}
+                style={{
+                  backgroundColor: this.isDarkModeEnabled
+                    ? darkMode.buttonCard
+                    : lightMode.buttonCard,
+                  color: this.isDarkModeEnabled ? darkMode.card : lightMode.card,
+                }}
                 className="btn btn-success mt-3"
                 onClick={() => handleWriteReviewButtonPress(this.book)} // () => history.push(`/books/${this.book.ISBN}/review`)
               >
@@ -324,7 +347,13 @@ export class BookDetails extends Component<{
               <p>{this.book.description}</p>
             </Row>
             <Row className="mt-3">
-              <Col sm={1} style={{ fontWeight: 'bold', color: 'rgb(77, 77, 77)' }}>
+              <Col
+                sm={1}
+                style={{
+                  fontWeight: 'bold',
+                  color: this.isDarkModeEnabled ? darkMode.font : lightMode.font,
+                }}
+              >
                 <p> Genres:</p>
               </Col>
               {this.book.genre.map((genre) => (
@@ -333,7 +362,7 @@ export class BookDetails extends Component<{
                   <Link
                     to={`/books/genres/${genre}`}
                     style={{
-                      color: 'rgb(128, 128, 128)',
+                      color: this.isDarkModeEnabled ? darkMode.font : lightMode.font,
                       textDecoration: 'none',
                       borderBottom: '2px solid green',
                       fontWeight: 'bold',
@@ -346,7 +375,14 @@ export class BookDetails extends Component<{
             </Row>
             <Row>
               <Col sm={1}>
-                <small style={{ fontWeight: 'bold', color: 'rgb(77, 77, 77)' }}>Pages:</small>
+                <small
+                  style={{
+                    fontWeight: 'bold',
+                    color: this.isDarkModeEnabled ? darkMode.font : lightMode.font,
+                  }}
+                >
+                  Pages:
+                </small>
               </Col>
               <Col sm={8}>
                 <small>{this.book.pages}</small>
@@ -354,7 +390,14 @@ export class BookDetails extends Component<{
             </Row>
             <Row>
               <Col sm={1}>
-                <small style={{ fontWeight: 'bold', color: 'rgb(77, 77, 77)' }}>Published: </small>
+                <small
+                  style={{
+                    fontWeight: 'bold',
+                    color: this.isDarkModeEnabled ? darkMode.font : lightMode.font,
+                  }}
+                >
+                  Published:{' '}
+                </small>
               </Col>
               <Col sm={8}>
                 <small>
@@ -364,7 +407,14 @@ export class BookDetails extends Component<{
             </Row>
             <Row>
               <Col sm={1}>
-                <small style={{ fontWeight: 'bold', color: 'rgb(77, 77, 77)' }}>ISBN:</small>
+                <small
+                  style={{
+                    fontWeight: 'bold',
+                    color: this.isDarkModeEnabled ? darkMode.font : lightMode.font,
+                  }}
+                >
+                  ISBN:
+                </small>
               </Col>
               <Col sm={8}>
                 <small>{this.book.ISBN}</small>
@@ -419,6 +469,7 @@ export class BookAdd extends Component {
   };
 
   ischecked: boolean = false;
+  isDarkModeEnabled = getDarkModeCookies();
 
   handleCheckboxChange = (event: any) => {
     this.ischecked = event.target.checked;
@@ -633,8 +684,10 @@ export class BookAdd extends Component {
               onClick={() => this.addBook()}
               variant="lg"
               style={{
-                backgroundColor: 'rgb(148, 180, 159)',
-                color: 'rgb(255, 255, 255)',
+                backgroundColor: this.isDarkModeEnabled
+                  ? darkMode.buttonCard
+                  : lightMode.buttonCard,
+                color: this.isDarkModeEnabled ? darkMode.buttonCard : lightMode.buttonCard,
                 width: '50rem',
                 margin: 'auto',
               }}
@@ -684,14 +737,17 @@ export function BookCard(props: { book: Book }) {
       />
       <Card.Body
         style={{
-          backgroundColor: isDarkModeEnabled ? '#1a1d21' : 'white',
-          color: isDarkModeEnabled ? 'white' : 'black',
+          backgroundColor: isDarkModeEnabled ? darkMode.card : lightMode.card,
+          color: isDarkModeEnabled ? darkMode.font : lightMode.font,
         }}
       >
         <Card.Title className="text-truncate">{props.book.title}</Card.Title>
         <Card.Text
           className="text-truncate"
-          style={{ color: 'rgb(128,128,128)', cursor: 'pointer' }}
+          style={{
+            color: isDarkModeEnabled ? darkMode.fontAccent : lightMode.fontAccent,
+            cursor: 'pointer',
+          }}
         >
           {props.book.author}
         </Card.Text>
@@ -701,7 +757,11 @@ export function BookCard(props: { book: Book }) {
             <Button
               variant="success"
               onClick={() => history.push(`/books/${props.book.ISBN}`)}
-              style={{ backgroundColor: 'rgb(148, 180, 159)', color: 'rgb(255, 255, 255)' }}
+              style={{
+                backgroundColor: isDarkModeEnabled ? darkMode.buttonCard : lightMode.buttonCard,
+                color: isDarkModeEnabled ? darkMode.card : lightMode.card,
+                border: 'none',
+              }}
             >
               Read more
             </Button>
@@ -711,7 +771,12 @@ export function BookCard(props: { book: Book }) {
               className="d-flex align-items-center justify-content-end"
               style={{ fontSize: '1.2rem', fontWeight: 'bold' }}
             >
-              <span style={{ color: '#FFA500', marginRight: '5px' }}>
+              <span
+                style={{
+                  color: isDarkModeEnabled ? darkMode.star : lightMode.star,
+                  marginRight: '5px',
+                }}
+              >
                 <FontAwesomeIcon icon={faStar} />
               </span>
               <span>{computeAverage(props.book.rating)}</span>

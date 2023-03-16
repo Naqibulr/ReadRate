@@ -6,6 +6,8 @@ import bookService, { Book } from './book-service';
 import { AuthorCard } from './author-components';
 import authorService, { Author } from './author-service';
 import { useEffect, useState } from 'react';
+import { getDarkModeCookies } from './getcookie';
+import { darkMode, lightMode } from './colors';
 
 export function BookSearch() {
   const [books, setBooks] = useState<Book[]>([]);
@@ -15,6 +17,7 @@ export function BookSearch() {
   const [yearTo, updateYearTo] = useState<string>();
   const [searchTermArray, updateSearchTermArray] = useState<Array<string>>();
   const [click, updateClick] = useState<string>('1');
+  const [isDarkModeEnabled, setIsDarkModeEnabled] = useState(getDarkModeCookies());
 
   useEffect(() => {
     const fetchBooks = async () => {
@@ -70,7 +73,14 @@ export function BookSearch() {
   };
 
   return (
-    <Container fluid style={{ margin: 0 }}>
+    <Container
+      fluid
+      style={{
+        margin: 0,
+        backgroundColor: isDarkModeEnabled ? darkMode.background : lightMode.background,
+        height: '100vh',
+      }}
+    >
       <InputGroup className="p-3">
         <Form.Control
           placeholder="Filter"
@@ -79,7 +89,7 @@ export function BookSearch() {
           onChange={handleChangeFilter}
         />
         <Col>
-          <Button variant="light" id="button-addon2" onClick={searchWithFilter}>
+          <Button variant="light" id="button-addon2" onClick={searchWithFilter} style={{}}>
             Add filter
           </Button>
         </Col>
@@ -149,6 +159,7 @@ export function BookSearch() {
 export function AuthorSearch() {
   const [authors, setAuthors] = useState<Author[]>([]);
   const { searchTerm } = useParams<{ searchTerm: string }>();
+  const [isDarkModeEnabled, setIsDarkModeEnabled] = useState(getDarkModeCookies());
 
   useEffect(() => {
     const fetchAuthors = async () => {
@@ -161,8 +172,24 @@ export function AuthorSearch() {
   }, []);
 
   return (
-    <Container fluid style={{ margin: 0 }}>
-      <h3 style={{ marginLeft: '20px', marginTop: '5px', marginBottom: '0px' }}>{searchTerm}</h3>
+    <Container
+      fluid
+      style={{
+        marginTop: '-10px',
+        backgroundColor: isDarkModeEnabled ? darkMode.background : lightMode.background,
+        height: '100vh',
+      }}
+    >
+      <h3
+        style={{
+          marginLeft: '20px',
+          marginTop: '5px',
+          marginBottom: '0px',
+          color: isDarkModeEnabled ? darkMode.font : lightMode.font,
+        }}
+      >
+        {searchTerm}
+      </h3>
       <Carousel interval={null}>
         <Carousel.Item style={{ padding: '1rem' }}>
           <Row>

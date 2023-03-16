@@ -18,7 +18,9 @@ import bookService, { Book } from './book-service';
 import { useEffect, useState } from 'react';
 import { BookSearch, AuthorSearch } from './search';
 import { computeAverage } from './average';
+
 import { getDarkModeCookies } from './getcookie';
+import { darkMode, lightMode } from './colors';
 
 function Home() {
   const [fiction, setFiction] = useState<Book[]>([]);
@@ -58,13 +60,19 @@ function Home() {
   }, []);
 
   return (
-    <Container fluid style={{ margin: 0, backgroundColor: 'rgb(254, 252, 251)' }}>
+    <Container
+      fluid
+      style={{
+        marginTop: -10,
+        backgroundColor: isDarkModeEnabled ? darkMode.background : lightMode.background,
+      }}
+    >
       <h3
         style={{
           marginLeft: '20px',
           marginTop: '5px',
           marginBottom: '0px',
-          color: 'rgb(48, 45, 44)',
+          color: isDarkModeEnabled ? darkMode.font : lightMode.font,
         }}
       >
         Highest rated
@@ -93,7 +101,7 @@ function Home() {
           marginLeft: '20px',
           marginTop: '5px',
           marginBottom: '0px',
-          color: 'rgb(48, 45, 44)',
+          color: isDarkModeEnabled ? darkMode.font : lightMode.font,
         }}
       >
         Most recent
@@ -122,7 +130,7 @@ function Home() {
           marginLeft: '20px',
           marginTop: '5px',
           marginBottom: '0px',
-          color: 'rgb(48, 45, 44)',
+          color: isDarkModeEnabled ? darkMode.font : lightMode.font,
         }}
       >
         Fiction

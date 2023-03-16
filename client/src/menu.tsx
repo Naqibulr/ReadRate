@@ -8,6 +8,7 @@ import Logo from './Logo.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleHalfStroke } from '@fortawesome/free-solid-svg-icons';
 import getBookRating from './google-books-rating';
+import { darkMode, lightMode } from './colors';
 //import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
 export class Menu extends Component {
@@ -47,7 +48,9 @@ export class Menu extends Component {
         collapseOnSelect
         expand="lg"
         variant="dark"
-        style={{ backgroundColor: 'rgb(254, 252, 251)', color: 'rgb(73 15 224)' }}
+        style={{
+          backgroundColor: this.isDarkModeEnabled ? darkMode.background : lightMode.background,
+        }}
       >
         <Navbar.Brand href="/">
           <img
@@ -67,7 +70,15 @@ export class Menu extends Component {
                 <Dropdown id="dropdown">
                   <Dropdown.Toggle
                     variant="light"
-                    style={{ borderColor: 'rgb(223, 120, 97)', color: 'rgb(223, 120, 97)' }}
+                    style={{
+                      backgroundColor: this.isDarkModeEnabled
+                        ? darkMode.background
+                        : lightMode.background,
+                      borderColor: this.isDarkModeEnabled
+                        ? darkMode.buttonMenu
+                        : lightMode.buttonMenu,
+                      color: this.isDarkModeEnabled ? darkMode.buttonMenu : lightMode.buttonMenu,
+                    }}
                     id="dropdown-basic"
                   >
                     {this.state.filterValue}
@@ -86,13 +97,29 @@ export class Menu extends Component {
                   aria-label="Search"
                   aria-describedby="Search field"
                   onChange={this.handleInputChange}
+                  style={{
+                    backgroundColor: this.isDarkModeEnabled
+                      ? darkMode.background
+                      : lightMode.background,
+                    borderColor: this.isDarkModeEnabled
+                      ? darkMode.buttonMenu
+                      : lightMode.buttonMenu,
+                  }}
                 />
 
                 <Button
                   variant="light"
                   id="button-addon2"
                   onClick={this.handleSearch}
-                  style={{ backgroundColor: 'rgb(223, 120, 97)', color: 'rgb(254, 252, 251)' }}
+                  style={{
+                    backgroundColor: this.isDarkModeEnabled
+                      ? darkMode.buttonMenu
+                      : lightMode.buttonMenu,
+                    color: this.isDarkModeEnabled ? darkMode.background : lightMode.background,
+                    borderColor: this.isDarkModeEnabled
+                      ? darkMode.buttonMenu
+                      : lightMode.buttonMenu,
+                  }}
                 >
                   Search
                 </Button>
@@ -100,12 +127,19 @@ export class Menu extends Component {
 
               <Nav.Link
                 href="/#/books"
-                style={{ color: 'rgb(73 15 224)', marginTop: '15px' }}
+                style={{
+                  color: this.isDarkModeEnabled ? darkMode.font : lightMode.font,
+                  marginTop: '15px',
+                }}
               ></Nav.Link>
               {this.isAdmin ? (
                 <Nav.Link
                   href="/#/books/add"
-                  style={{ color: 'rgb(34, 34, 34)', marginTop: '15px', whiteSpace: 'nowrap' }}
+                  style={{
+                    color: this.isDarkModeEnabled ? darkMode.font : lightMode.font,
+                    marginTop: '15px',
+                    whiteSpace: 'nowrap',
+                  }}
                 >
                   Add book
                 </Nav.Link>
@@ -113,14 +147,21 @@ export class Menu extends Component {
               {this.isAdmin ? (
                 <Nav.Link
                   href="/#/addauthors/"
-                  style={{ color: 'rgb(34, 34, 34)', marginTop: '15px', whiteSpace: 'nowrap' }}
+                  style={{
+                    color: this.isDarkModeEnabled ? darkMode.font : lightMode.font,
+                    marginTop: '15px',
+                    whiteSpace: 'nowrap',
+                  }}
                 >
                   Add author
                 </Nav.Link>
               ) : null}
               <Nav.Link
                 href="/#/books/user"
-                style={{ color: 'rgb(34, 34, 34)', marginTop: '15px' }}
+                style={{
+                  color: this.isDarkModeEnabled ? darkMode.font : lightMode.font,
+                  marginTop: '15px',
+                }}
               >
                 Login
               </Nav.Link>
@@ -141,7 +182,7 @@ export class Menu extends Component {
                   style={{
                     height: 30,
                     width: 30,
-                    color: this.isDarkModeEnabled ? '#white' : '#222',
+                    color: this.isDarkModeEnabled ? darkMode.font : lightMode.font,
                   }}
                 />
               </Button>

@@ -5,6 +5,7 @@ import { Button, Form, Card, Row, Col, Container } from 'react-bootstrap';
 import userService, { User } from './user-service';
 import { createHashHistory } from 'history';
 import { forgetLogin, getCookieValue, getDarkModeCookies, setLoginCookies } from './getcookie';
+import { darkMode, lightMode } from './colors';
 
 //false as default
 export let loggedIn: boolean = false;
@@ -22,7 +23,7 @@ const history = createHashHistory(); // Use history.push(...)
 export class UserLogIn extends Component {
   email: string = '';
   password: string = '';
-  darkModeEnabled = getDarkModeCookies();
+  isDarkModeEnabled = getDarkModeCookies();
 
   render() {
     return (
@@ -33,7 +34,7 @@ export class UserLogIn extends Component {
           textAlign: 'center',
           marginLeft: 'auto',
           marginRight: 'auto',
-          backgroundColor: this.darkModeEnabled ? '#000' : '#fff',
+          backgroundColor: this.isDarkModeEnabled ? darkMode.card : lightMode.card,
         }}
       >
         {/*Card forms in for log in screen */}
@@ -78,7 +79,6 @@ export class UserLogIn extends Component {
               onClick={() => this.logIn()}
               style={{
                 marginBottom: '10px',
-                
               }}
             >
               Log in
@@ -395,8 +395,10 @@ export class UserDetails extends Component {
                 marginLeft: 'auto',
                 marginRight: 'auto',
                 marginBottom: '10px',
-                backgroundColor: 'rgb(223, 120, 97)',
-                color: 'rgb(254, 252, 251)',
+                backgroundColor: this.isDarkModeEnabled
+                  ? darkMode.buttonMenu
+                  : lightMode.buttonMenu,
+                color: this.isDarkModeEnabled ? darkMode.background : lightMode.background,
               }}
             >
               Log out
