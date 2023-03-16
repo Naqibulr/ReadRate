@@ -299,6 +299,8 @@ export class RegisterUser extends Component {
 }
 
 export class UserDetails extends Component {
+  listItems: { title: string; books: Book[]; }[] = [];
+
   render() {
     return (
       <>
@@ -388,7 +390,40 @@ export class UserDetails extends Component {
             <Card.Text style={{ fontWeight: 'bold' }}>Your Lists:</Card.Text>
           </Row>
           <Row>
-            {this.createLists()}
+            {/* @ts-ignore */}
+            {this.listItems.map((list, index) => {
+              console.log("test 2:")
+              console.log(list)
+              return (
+                <div key={index}>
+                  <h3 style={{ marginLeft: '20px', marginTop: '5px', marginBottom: '0px' }}>{list.title}</h3>
+                  {/* @ts-ignore */}
+
+
+
+                  <Carousel interval={null}>
+                    {list.books.map((book, index) => {
+                      if (index % 6 === 0) {
+                        { console.log(book) }
+                        return (<Carousel.Item key={index} style={{ padding: '1rem' }}>
+                          <Row>
+                            {list.books.slice(index, index + 6).map((book, index) => (
+                              <Col md={2} key={index} >
+                                <BookCard book={book} />
+                              </Col>
+                            ))}
+                          </Row>
+                        </Carousel.Item>)
+
+                      }
+                      return null;
+                    })}
+                  </Carousel>
+
+
+                </div>
+              )
+            })}
           </Row>
           <Row style={{ padding: '10vh' }}>
             <Button
@@ -414,50 +449,44 @@ export class UserDetails extends Component {
       history.push('/books/login');
     } else {
     }
+
+    this.createLists()
   }
 
-  createLists() {
+  async createLists() {
     //Recieve and store lists
-
-    var books: Array<Book> = []
-    var listItems = [];
-
-    for (let x in currentUser.lists) {
+    for (let title in currentUser.lists) {
+      const books = new Array
+      var i = 0;
       //@ts-ignore
-      for (let y in currentUser.lists[x]) {
-        //@ts-ignore
-        bookService.getBook(currentUser.lists[x][y].toString()).then((book: Book) => books.push(book))
-        //@ts-ignore
-      }
-      var aList = (
-        <>
-          <h3 style={{ marginLeft: '20px', marginTop: '5px', marginBottom: '0px' }}>{x}</h3>
-          <Carousel interval={null}>
-            {books.map((book, index) => {
-              if (index % 6 === 0) {
-                console.log(books)
-                return (
-                  <Carousel.Item key={index} style={{ padding: '1rem' }}>
-                    <Row>
-                      {books.slice(index, index + 6).map((book, index) => (
-                        <Col md={2} key={index}>
-                          <BookCard book={book} />
-                        </Col>
-                      ))}
-                    </Row>
-                  </Carousel.Item>
-                );
-              }
-              return null;
-            })}
-          </Carousel>
-        </>
-      )
-      listItems.push(aList)
-    }
-    console.log(books)
+      for (let isbn in currentUser.lists[title]) {
 
-    return listItems
+        //@ts-ignore
+        await bookService.getBook(currentUser.lists[title][isbn].toString()).then((book: Book) => {
+          const item: Book = {
+            id: "",
+            title: book.title,
+            ISBN: book.ISBN,
+            author: book.author,
+            releaseYear: book.releaseYear,
+            publisher: book.publisher,
+            pages: book.pages,
+            description: book.description,
+            genre: book.genre,
+            rating: book.rating,
+            imagePath: book.imagePath
+          };
+
+          books.push(item)
+
+        })
+
+      }
+      this.listItems.push({ title, books })
+      console.log("test 1: ")
+      console.log(this.listItems)
+    }
+
   }
 
   logOut() {
