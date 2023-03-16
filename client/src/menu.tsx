@@ -2,8 +2,11 @@
 import React, { useState } from 'react';
 import { Button, Container, Dropdown, Form, InputGroup, Nav, Navbar } from 'react-bootstrap';
 import { Component } from 'react-simplified';
-import { getDarkModeCookies } from './getcookie';
+import { getDarkModeCookies, setDarkModCookies } from './getcookie';
 import Logo from './Logo.png';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCircleHalfStroke } from '@fortawesome/free-solid-svg-icons';
+import getBookRating from './google-books-rating';
 //import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
 export class Menu extends Component {
@@ -13,7 +16,13 @@ export class Menu extends Component {
   };
 
   isAdmin = document.cookie.includes('admin=true');
-  isdarkMode = getDarkModeCookies();
+  isDarkModeEnabled = getDarkModeCookies();
+
+  handleToggleDarkMode = () => {
+    setDarkModCookies(!this.isDarkModeEnabled);
+    window.location.reload();
+    console.log(getBookRating('American Psycho'));
+  };
 
   handleInputChange = (event: any) => {
     this.setState({ searchValue: event.target.value }); // Update the search input value when the user types into the field
@@ -38,7 +47,7 @@ export class Menu extends Component {
         expand="lg"
         variant="dark"
         style={{
-          background: this.isdarkMode ? '#192734' : 'rgb(251 238 193)',
+          background: this.isDarkModeEnabled ? '#192734' : 'rgb(251 238 193)',
           color: 'rgb(73 15 224)',
         }}
       >
@@ -56,13 +65,19 @@ export class Menu extends Component {
           <Navbar.Collapse id="responsive-navbar-nav">
             <Nav className="me-auto"></Nav>
             <Nav>
-              <InputGroup className="p-3">
+              <InputGroup className="p-3" style={{ border: 'none' }}>
                 <Dropdown id="dropdown">
-                  <Dropdown.Toggle variant="light" id="dropdown-basic">
+                  <Dropdown.Toggle
+                    variant="light"
+                    id="dropdown-basic"
+                    style={{ backgroundColor: this.isDarkModeEnabled ? 'grey' : 'darkcyan' }}
+                  >
                     {this.state.filterValue}
                   </Dropdown.Toggle>
 
-                  <Dropdown.Menu>
+                  <Dropdown.Menu
+                    style={{ backgroundColor: this.isDarkModeEnabled ? 'grey' : 'darkcyan' }}
+                  >
                     <Dropdown.Item onClick={() => this.handleItemClick('Book')}>Book</Dropdown.Item>
                     <Dropdown.Item onClick={() => this.handleItemClick('Author')}>
                       Author
@@ -89,7 +104,11 @@ export class Menu extends Component {
               {this.isAdmin ? (
                 <Nav.Link
                   href="/#/books/add"
-                  style={{ color: 'rgb(73 15 224)', marginTop: '15px', whiteSpace: 'nowrap' }}
+                  style={{
+                    color: this.isDarkModeEnabled ? 'white' : 'rgb(73 15 224)',
+                    marginTop: '15px',
+                    whiteSpace: 'nowrap',
+                  }}
                 >
                   Add book
                 </Nav.Link>
@@ -97,14 +116,48 @@ export class Menu extends Component {
               {this.isAdmin ? (
                 <Nav.Link
                   href="/#/addauthors/"
-                  style={{ color: 'rgb(73 15 224)', marginTop: '15px', whiteSpace: 'nowrap' }}
+                  style={{
+                    color: this.isDarkModeEnabled ? 'white' : 'rgb(73 15 224)',
+                    marginTop: '15px',
+                    whiteSpace: 'nowrap',
+                  }}
                 >
                   Add author
                 </Nav.Link>
               ) : null}
-              <Nav.Link href="/#/books/user" style={{ color: 'rgb(73 15 224)', marginTop: '15px' }}>
+              <Nav.Link
+                href="/#/books/user"
+                style={{
+                  color: this.isDarkModeEnabled ? 'white' : 'rgb(73 15 224)',
+                  marginTop: '15px',
+                }}
+              >
                 Login
               </Nav.Link>
+              <Button
+                onClick={() => this.handleToggleDarkMode()}
+                style={{
+                  backgroundColor: 'transparent',
+                  paddingTop: 0,
+                  alignItems: 'center',
+                  border: 'none',
+                  height: 30,
+                  left: 0,
+                  marginTop: '22px',
+                }}
+              >
+                <FontAwesomeIcon
+                  icon={faCircleHalfStroke}
+                  style={{
+                    height: 30,
+                    width: 30,
+                    color: this.isDarkModeEnabled ? '#white' : '#222',
+                  }}
+                />
+              </Button>
+              {/* <button style="background-color: #222; color: #fff; border: 2px solid #fff;">
+                Dark Mode
+              </button> */}
             </Nav>
           </Navbar.Collapse>
         </Container>

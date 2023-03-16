@@ -35,11 +35,6 @@ function Home() {
   const [topBooks, setTopBooks] = useState<Book[]>([]);
   const [mostRecent, setMotRecent] = useState<Book[]>([]);
   const [isDarkModeEnabled, setIsDarkModeEnabled] = useState(getDarkModeCookies());
-  const handleToggleDarkMode = () => {
-    setIsDarkModeEnabled(!isDarkModeEnabled);
-    setDarkModCookies(!isDarkModeEnabled); // update cookies with the new value
-    window.location.reload();
-  };
 
   useEffect(() => {
     const fetchBooks = async () => {
@@ -73,10 +68,7 @@ function Home() {
   }, []);
 
   return (
-    <Container
-      fluid
-      style={{ marginTop: -5, background: getDarkModeCookies() ? '#192734' : 'white' }}
-    >
+    <Container fluid style={{ marginTop: -5, background: isDarkModeEnabled ? '#192734' : 'white' }}>
       <h3
         style={{
           marginLeft: '20px',
@@ -87,9 +79,7 @@ function Home() {
       >
         Highest rated
       </h3>
-      <button onClick={handleToggleDarkMode}>
-        {isDarkModeEnabled ? 'Disable' : 'Enable'} Dark Mode
-      </button>
+
       <Carousel interval={null}>
         {topBooks.map((book, index) => {
           // Check if the item index is a multiple of 6 to create a new carousel item
@@ -109,7 +99,16 @@ function Home() {
           return null;
         })}
       </Carousel>
-      <h3 style={{ marginLeft: '20px', marginTop: '5px', marginBottom: '0px' }}>Most recent</h3>
+      <h3
+        style={{
+          marginLeft: '20px',
+          marginTop: '5px',
+          marginBottom: '0px',
+          color: isDarkModeEnabled ? 'white' : 'black',
+        }}
+      >
+        Most recent
+      </h3>
       <Carousel interval={null}>
         {mostRecent.map((book, index) => {
           // Check if the item index is a multiple of 6 to create a new carousel item
@@ -129,7 +128,16 @@ function Home() {
           return null;
         })}
       </Carousel>
-      <h3 style={{ marginLeft: '20px', marginTop: '5px', marginBottom: '0px' }}>Fiction</h3>
+      <h3
+        style={{
+          marginLeft: '20px',
+          marginTop: '5px',
+          marginBottom: '0px',
+          color: isDarkModeEnabled ? 'white' : 'black',
+        }}
+      >
+        Fiction
+      </h3>
       <Carousel interval={null}>
         {fiction.map((book, index) => {
           // Check if the item index is a multiple of 6 to create a new carousel item

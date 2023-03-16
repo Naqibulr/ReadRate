@@ -21,6 +21,7 @@ import StarRatings from 'react-star-ratings';
 import { computeAverage } from './average';
 import { Link } from 'react-router-dom';
 import { getDarkModeCookies } from './getcookie';
+import getBookRating from './google-books-rating';
 
 const history = createHashHistory(); // Use history.push(...) to programmatically change path
 
@@ -166,6 +167,7 @@ export class BookDetails extends Component<{
     params: { book_id: string };
   };
 }> {
+  googleBookRating: number = 0;
   book: Book = {
     id: '',
     rating: [],
@@ -228,7 +230,22 @@ export class BookDetails extends Component<{
               <h5>By {this.book.author}</h5>
             </Row>
             <Row className="mt-1">
-              <StarRating rating={computeAverage(this.book.rating)}></StarRating>
+              <Col>
+                {' '}
+                <h5>ReadRate Rating:</h5>{' '}
+              </Col>
+              <Col>
+                <StarRating rating={computeAverage(this.book.rating)}></StarRating>
+              </Col>
+            </Row>
+            <Row className="mt-1">
+              <Col>
+                {' '}
+                <h5>Google books rating:</h5>{' '}
+              </Col>
+              <Col>
+                <StarRating rating={this.googleBookRating}></StarRating>
+              </Col>
             </Row>
             <Row className="overflow-auto mt-4" style={{ height: '40vh' }}>
               <p>{this.book.description}</p>
@@ -285,11 +302,13 @@ export class BookDetails extends Component<{
       </Container>
     );
   }
-  mounted() {
-    bookService
-      .getBook(this.props.match.params.book_id)
-      .then((book) => (this.book = book))
-      .catch((error) => Alert.danger('Error getting recipe details: ' + error.message));
+  async mounted() {
+    try {
+      this.book = await bookService.getBook(this.props.match.params.book_id);
+      this.googleBookRating = await getBookRating(this.book.title);
+    } catch {
+      (error: unknown) => Alert.danger('Error getting recipe details: ' + (error as string));
+    }
   }
 }
 
@@ -558,6 +577,7 @@ export function BookCard(props: { book: Book }) {
   const [isDarkModeEnabled, setIsDarkModeEnabled] = useState(getDarkModeCookies());
   return (
     <Card
+      key={props.book.id}
       className="shadow bg-white rounded"
       style={{
         width: '14.5rem',

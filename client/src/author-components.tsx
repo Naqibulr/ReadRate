@@ -10,13 +10,14 @@ import StarRatings from 'react-star-ratings';
 import bookService, { Book } from './book-service';
 import { BookCard } from './book-components';
 import { computeAuthorRating } from './average';
+import { getDarkModeCookies } from './getcookie';
 
 // REMEMBER TO ADD IMPORTS FROM SERVICE
 
 const history = createHashHistory(); // Use history.push(...) to programmatically change path
 
 function StarRating(props: { rating: number }) {
-  const [rating, setRating] = useState(4.8);
+  const [rating, setRating] = useState(props.rating);
 
   return (
     <div>
@@ -37,6 +38,7 @@ function StarRating(props: { rating: number }) {
  */
 export class AuthorList extends Component {
   testData: String = '';
+  isDarkModeEnabled = getDarkModeCookies();
 
   render() {
     return (
@@ -68,6 +70,7 @@ export class AuthorDetails extends Component<{
     params: { author_id: string };
   };
 }> {
+  isDarkModeEnabled = getDarkModeCookies();
   author: Author = {
     id: '',
     name: '',
@@ -79,7 +82,6 @@ export class AuthorDetails extends Component<{
     description: '',
     imagePath: '',
   };
-
   books: Array<Book> = [];
 
   render() {
@@ -172,6 +174,7 @@ export class AuthorDetails extends Component<{
 }
 
 export class AuthorAdd extends Component {
+  isDarkModeEnabled = getDarkModeCookies();
   author: Author = {
     id: '',
     name: '',
@@ -197,10 +200,6 @@ export class AuthorAdd extends Component {
       this.author.imagePath
     );
     Alert.success('The book has been added');
-  }
-
-  getBookByAuthor(author: string) {
-    console.log(bookService.getBookByAuthor(author));
   }
 
   render() {
@@ -297,7 +296,7 @@ export class AuthorAdd extends Component {
           </Row>
           <Row>
             <Button
-              onClick={() => this.getBookByAuthor('J.R.R.Tolkein')}
+              onClick={() => this.addAuthor()}
               variant="lg bg-success"
               style={{
                 width: '50rem',
@@ -315,6 +314,7 @@ export class AuthorAdd extends Component {
 }
 
 export class AuthorEdit extends Component<{ match: { params: { id: number } } }> {
+  isDarkModeEnabled = getDarkModeCookies();
   render() {
     return (
       <>
@@ -331,6 +331,8 @@ export class AuthorEdit extends Component<{ match: { params: { id: number } } }>
 }
 
 export function AuthorCard(props: { author: Author }) {
+  const [isDarkModeEnabled, setIsDarkModeEnabled] = useState(getDarkModeCookies());
+
   return (
     <Card className="shadow bg-white rounded" style={{ width: '14.5rem', margin: '2px' }}>
       <Card.Img

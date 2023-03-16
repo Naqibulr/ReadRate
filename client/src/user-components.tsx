@@ -141,6 +141,7 @@ export class UserLogIn extends Component {
 export class RegisterUser extends Component {
   user: User = { user_id: 0, email: '', first_name: '', last_name: '', password: '', admin: false };
   confirm_password: string = '';
+  isDarkModeEnabled = getDarkModeCookies();
 
   render() {
     return (
@@ -298,6 +299,7 @@ export class RegisterUser extends Component {
 }
 
 export class UserDetails extends Component {
+  isDarkModeEnabled = getDarkModeCookies();
   render() {
     return (
       <>
