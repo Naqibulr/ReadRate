@@ -237,9 +237,19 @@ export class BookDetails extends Component<{
     return (
       <Container className="p-3">
         <Row xs={'auto'}>
-          <Button className="btn btn-light" onClick={() => history.push('/')}>
-            Back
-          </Button>
+          <Col sm={3} className="pt-4 ">
+            <Button
+              variant="light"
+              onClick={() => history.push('/')}
+              style={{
+                width: '5rem',
+                borderColor: 'rgb(223, 120, 97)',
+                color: 'rgb(223, 120, 97)',
+              }}
+            >
+              Back
+            </Button>
+          </Col>
         </Row>
         <Row>
           <Col sm={3} className="pt-4 ">
@@ -253,18 +263,27 @@ export class BookDetails extends Component<{
               />
             </Row>
             <Row className="m-3 ">
-              <Button type="button" className="btn btn-success mt-3">
+              <Button
+                type="button"
+                className="btn btn-success mt-3"
+                style={{ backgroundColor: 'rgb(148, 180, 159)', color: 'rgb(255, 255, 255)' }}
+              >
                 Want to read
               </Button>
             </Row>
             <Row className="m-3 ">
-              <Button type="button" className="btn btn-success mt-3">
+              <Button
+                type="button"
+                className="btn btn-success mt-3"
+                style={{ backgroundColor: 'rgb(148, 180, 159)', color: 'rgb(255, 255, 255)' }}
+              >
                 Have read
               </Button>
             </Row>
             <Row className="m-3 ">
               <Button
                 type="button"
+                style={{ backgroundColor: 'rgb(148, 180, 159)', color: 'rgb(255, 255, 255)' }}
                 className="btn btn-success mt-3"
                 onClick={() => handleWriteReviewButtonPress(this.book)} // () => history.push(`/books/${this.book.ISBN}/review`)
               >
@@ -591,8 +610,10 @@ export class BookAdd extends Component {
           <Row>
             <Button
               onClick={() => this.addBook()}
-              variant="lg bg-success"
+              variant="lg"
               style={{
+                backgroundColor: 'rgb(148, 180, 159)',
+                color: 'rgb(255, 255, 255)',
                 width: '50rem',
                 margin: 'auto',
               }}
@@ -642,7 +663,11 @@ export function BookCard(props: { book: Book }) {
 
         <Row>
           <Col className="col-8">
-            <Button variant="success" onClick={() => history.push(`/books/${props.book.ISBN}`)}>
+            <Button
+              variant="success"
+              onClick={() => history.push(`/books/${props.book.ISBN}`)}
+              style={{ backgroundColor: 'rgb(148, 180, 159)', color: 'rgb(255, 255, 255)' }}
+            >
               Read more
             </Button>
           </Col>
