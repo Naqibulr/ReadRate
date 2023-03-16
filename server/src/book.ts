@@ -11,7 +11,7 @@ export class Book {
   description: string;
   imagePath: string;
   id: string;
-  rating: number;
+  rating: number[];
 
   constructor(
     id: string,
@@ -25,7 +25,7 @@ export class Book {
     pages: number,
     description: string,
     imagePath: string,
-    rating: number
+    rating: number[]
   ) {
     this.id = id;
     this.title = title;
@@ -39,6 +39,21 @@ export class Book {
     this.description = description;
     this.imagePath = imagePath;
     this.rating = rating;
+  }
+  computeAverage(): number {
+    let sum = 0;
+    let numbers = this.rating;
+
+    for (let i = 0; i < numbers.length; i++) {
+      sum += numbers[i];
+    }
+    if (numbers.length === 0) {
+      return 0;
+    }
+
+    const average = sum / numbers.length;
+
+    return Number(average.toFixed(1));
   }
 
   toString(): String {

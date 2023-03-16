@@ -1,5 +1,6 @@
 //@ts-ignore
 import { Author } from './author';
+import { computeAverage } from './average';
 import { Book } from './book';
 
 export class List {
@@ -22,6 +23,21 @@ export class List {
    */
   search(searchTerm: string): any[] {
     return this.objectList.filter((obj) => {
+      if (searchTerm.includes('@@')) {
+        let searchTermArray: string[] = searchTerm.split('@@');
+        let yearFrom: number = searchTermArray[0] ? parseInt(searchTermArray[0]) : -10000;
+        let yearTo: number = searchTermArray[1] ? parseInt(searchTermArray[1]) : 10000;
+        if (Number.isNaN(yearFrom)) yearFrom = -10000;
+        if (Number.isNaN(yearTo)) yearTo = 10000;
+        if (obj.releaseYear) {
+          return obj.releaseYear >= yearFrom && obj.releaseYear <= yearTo;
+        }
+      }
+
+      if (searchTerm.includes('++') && obj.rating) {
+        return computeAverage(obj.rating) >= parseInt(searchTerm[searchTerm.indexOf('++') - 1]);
+      }
+
       return Object.keys(obj).some((key) => {
         const val = obj[key];
         if (
@@ -32,12 +48,19 @@ export class List {
           return Object.keys(val).some((key) => {
             //@ts-ignore
             const valinside = val[key];
+            if (typeof valinside === 'number') {
+              return valinside.toString().includes(searchTerm);
+            }
             return (
               typeof valinside === 'string' &&
               valinside.toLowerCase().includes(searchTerm.trim().toLowerCase())
             );
           });
         }
+        if (typeof val === 'number') {
+          return val.toString().includes(searchTerm);
+        }
+
         return (
           typeof val === 'string' && val.toLowerCase().includes(searchTerm.trim().toLowerCase())
         );
