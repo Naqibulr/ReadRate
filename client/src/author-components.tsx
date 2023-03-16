@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Component } from 'react-simplified';
 import { Alert, Column } from './widgets';
 import { Button, Form, Card, Row, Col, Container, Carousel } from 'react-bootstrap';
@@ -86,7 +86,11 @@ export class AuthorDetails extends Component<{
     return (
       <Container className="p-3">
         <Row xs={'auto'}>
-          <Button className="btn btn-light" onClick={() => history.push('/')}>
+          <Button
+            className="btn btn-light"
+            onClick={() => history.push('/')}
+            style={{ width: '5rem', borderColor: 'rgb(223, 120, 97)', color: 'rgb(223, 120, 97)' }}
+          >
             Back
           </Button>
         </Row>
@@ -298,8 +302,10 @@ export class AuthorAdd extends Component {
           <Row>
             <Button
               onClick={() => this.getBookByAuthor('J.R.R.Tolkein')}
-              variant="lg bg-success"
+              variant="lg"
               style={{
+                backgroundColor: 'rgb(148, 180, 159)',
+                color: 'rgb(255, 255, 255)',
                 width: '50rem',
                 margin: 'auto',
               }}
@@ -331,6 +337,15 @@ export class AuthorEdit extends Component<{ match: { params: { id: number } } }>
 }
 
 export function AuthorCard(props: { author: Author }) {
+  const [books, setBooks] = useState<Book[]>([]);
+
+  useEffect(() => {
+    const fetchBooks = async () => {
+      const books = await bookService.getBookByAuthor(props.author.name);
+      setBooks(books);
+    };
+    fetchBooks();
+  }, []);
   return (
     <Card className="shadow bg-white rounded" style={{ width: '14.5rem', margin: '2px' }}>
       <Card.Img
@@ -342,7 +357,10 @@ export function AuthorCard(props: { author: Author }) {
         <Card.Title className="text-truncate">{props.author.name}</Card.Title>
         <Row>
           <Col className="col-8">
-            <Button variant="success" onClick={() => history.push(`/authors/${props.author.id}`)}>
+            <Button
+              onClick={() => history.push(`/authors/${props.author.id}`)}
+              style={{ backgroundColor: 'rgb(148, 180, 159)', color: 'rgb(255, 255, 255)' }}
+            >
               Read more
             </Button>
           </Col>
@@ -354,6 +372,7 @@ export function AuthorCard(props: { author: Author }) {
               <span style={{ color: '#FFA500', marginRight: '5px' }}>
                 <FontAwesomeIcon icon={faStar} />
               </span>
+              <span>{computeAuthorRating(books)}</span>
             </div>
           </Col>
         </Row>
