@@ -136,3 +136,14 @@ router.post('/users/register', (request, response) => {
 });
 
 export default router;
+
+router.post('/reviews', (request, response) => {
+  const data = request.body;
+  const review: Review = data.review;
+  console.log('router', review);
+  bookService
+    //@ts-ignore
+    .addReview(review)
+    .then(() => response.status(200).send())
+    .catch((error) => response.status(500).send(error));
+});

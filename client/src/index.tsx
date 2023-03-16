@@ -2,7 +2,7 @@ import ReactDOM from 'react-dom';
 import * as React from 'react';
 import { Alert } from './widgets';
 import { HashRouter, Route } from 'react-router-dom';
-import { Carousel, Container, Row, Col, ThemeProvider } from 'react-bootstrap';
+import { Carousel, Container, Row, Col } from 'react-bootstrap';
 import {
   BookAdd,
   BookDetails,
@@ -18,17 +18,6 @@ import bookService, { Book } from './book-service';
 import { useEffect, useState } from 'react';
 import { BookSearch, AuthorSearch } from './search';
 import { computeAverage } from './average';
-import { getDarkModeCookies, setDarkModCookies } from './getcookie';
-
-const darkTheme = {
-  backgroundColor: '#000',
-  color: '#fff',
-};
-
-const lightTheme = {
-  backgroundColor: '#fff',
-  color: '#000',
-};
 
 function Home() {
   const [fiction, setFiction] = useState<Book[]>([]);
