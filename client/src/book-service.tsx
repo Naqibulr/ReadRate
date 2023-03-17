@@ -1,8 +1,17 @@
 import axios from 'axios';
 import { firestore } from './firebase';
 import { collection, query, where, getDocs, addDoc } from 'firebase/firestore';
+import { User } from './user-service';
+import { getCookieValue } from './getcookie';
 
 axios.defaults.baseURL = 'http://localhost:3000/api/v2';
+
+export type Review = {
+  email: string;
+  ISBN: string;
+  rating: number;
+  text: string;
+};
 
 export type Book = {
   id: string;
@@ -15,8 +24,12 @@ export type Book = {
   description: string;
   genre: Array<string>;
   rating: Array<number>;
+  review: Array<Review>;
+  addedDate: Date;
   imagePath: string;
 };
+
+//definer en type review
 class BookService {
   /**
    * Get all testdata.
@@ -31,6 +44,17 @@ class BookService {
       }
     });
   }
+  async getFilteredBooks(searchTerm: string) {
+    const response = await axios.get<Array<Book>>('/books/search/' + searchTerm);
+    return response.data;
+  }
+
+  colRef = collection(firestore, 'books');
+
+  addReview(review: Review) {
+    console.log('book-service', review);
+    return axios.post('/reviews', { review }).then((response) => response.data);
+  }
 
   getBooksByGenre(genre: string) {
     return axios.get('/books').then((response) => {
@@ -42,14 +66,40 @@ class BookService {
         throw new Error('Invalid response data: not an array');
       }
     });
+    //lag en ny metode for addreview,
   }
 
   addBook(book: Book) {
     return axios.post('/books', { book }).then((response) => response.data);
   }
 
-  getBook(isbn: string) {
-    return axios.get<Book>('/books/' + isbn).then((response) => response.data)
+  getBook(ISBN: string) {
+    return axios.get('/books').then((response) => {
+      const data = response.data;
+      if (Array.isArray(data)) {
+        const filteredData = data.find((book) => book.ISBN === ISBN);
+        if (filteredData) {
+          return filteredData;
+        } else {
+          throw new Error(`Book with ISBN ${ISBN} not found`);
+        }
+      } else {
+        throw new Error('Invalid response data: not an array');
+      }
+    });
+  }
+  getBookByAuthor(author: string) {
+    return axios.get('/books').then((response) => {
+      const data = response.data;
+      let books: Array<Book> = [];
+      if (Array.isArray(data)) {
+        const filteredData = data.filter((book) => book.author === author);
+        books = filteredData;
+      } else {
+        throw new Error('Invalid response data: not an array');
+      }
+      return books;
+    });
   }
 }
 const bookService = new BookService();

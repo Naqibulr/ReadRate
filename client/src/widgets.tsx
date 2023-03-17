@@ -12,6 +12,7 @@ export class Column extends Component<{ width?: number; right?: boolean }> {
   render() {
     return (
       <div className={'col' + (this.props.width ? '-' + this.props.width : '')}>
+        {/*@ts-ignore */}
         <div className={'float-' + (this.props.right ? 'end' : 'start')}>{this.props.children}</div>
       </div>
     );

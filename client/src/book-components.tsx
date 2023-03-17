@@ -1,16 +1,154 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Component } from 'react-simplified';
 import { Alert, Column } from './widgets';
-import { Button, Form, Card, Row, Col, Container } from 'react-bootstrap';
+import {
+  Button,
+  Form,
+  Card,
+  Row,
+  Col,
+  Container,
+  FormGroup,
+  FormLabel,
+  FormControl,
+  ThemeProvider,
+  ListGroup,
+  Badge,
+  ListGroupItem,
+} from 'react-bootstrap';
 import { createHashHistory } from 'history';
-import bookService, { Book } from './book-service';
+import bookService, { Book, Review } from './book-service';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
 import StarRatings from 'react-star-ratings';
+import { computeAverage } from './average';
+import { Link } from 'react-router-dom';
+import { getCookieValue } from './getcookie';
 
 // REMEMBER TO ADD IMPORTS FROM SERVICE
 
 const history = createHashHistory(); // Use history.push(...) to programmatically change path
+
+interface ReviewFormData {
+  // name: string;
+  rating: number;
+  comment: string;
+}
+
+function getIsbnFromUrl(): string | null {
+  const hash = window.location.hash; // gets the hash part of the URL
+  const regex = /\/books\/(\d+)\//; // regex to match the ISBN number
+  const match = hash.match(regex); // finds the first match of the regex in the hash
+  if (match && match.length > 1) {
+    return match[1]; // returns the ISBN number if a match is found
+  }
+  return null; // returns null if no match is found
+}
+
+export function handleWriteReviewButtonPress(book: Book) {
+  if (getCookieValue('loggedIn') == 'true') {
+    //@ts-ignorets-ignore
+    history.push(`/books/${book.ISBN}/review`);
+  } else {
+    Alert.info(`You need to log in to be able to write a review`);
+  }
+}
+
+export function displayAlert() {
+  return;
+}
+
+export const WriteReviewPage = (props: { book: Book }) => {
+  const [formData, setFormData] = useState<ReviewFormData>({
+    // name: '',
+    rating: 0,
+    comment: '',
+  });
+
+  const isbn = getIsbnFromUrl();
+
+  let review: Review = {
+    email: getCookieValue('email'),
+    //@ts-ignore
+    ISBN: isbn, //props.book.ISBN
+    rating: 0,
+    text: '',
+  };
+
+  //const { book_id } = props.match.params;
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    // Here you can save the review to your database or do other logic
+    console.log('book-components', review);
+    bookService.addReview(review);
+    // Once done, navigate the user back to the book details page or homepage
+    history.goBack(); //history.push(`/books/${props.book.ISBN}`); //book-details
+    Alert.info(`Review added`);
+  };
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = event.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleRatingChange = (newRating: number) => {
+    // @ts-ignore
+    StarRating(newRating);
+  };
+
+  return (
+    <Container className="p-3">
+      <h1>Write a Review</h1>
+      <Form onSubmit={handleSubmit}>
+        {/* <Form.Group controlId="name">
+          <Form.Label>Name</Form.Label>
+          <Form.Control
+            type="text"
+            name="name"
+            value={formData.name}
+            onChange={handleInputChange}
+          />
+        </Form.Group> */}
+
+        <FormGroup controlId="rating">
+          <FormLabel>Rating</FormLabel>
+          <FormControl
+            as="select"
+            name="rating"
+            //value={formData.rating}
+            onChange={(event) => (review.rating = parseInt(event.currentTarget.value))}
+            required
+          >
+            <option value="">Select a rating...</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+          </FormControl>
+        </FormGroup>
+
+        <Form.Group controlId="comment">
+          <Form.Label>Review</Form.Label>
+          <Form.Control
+            as="textarea"
+            rows={3}
+            name="comment"
+            //value={formData.comment}
+            onChange={(event) => (review.text = event.currentTarget.value)}
+          />
+        </Form.Group>
+
+        <Button variant="primary" type="submit" className="btn btn-success mt-3">
+          Submit
+        </Button>
+      </Form>
+    </Container>
+  );
+};
+
+// REMEMBER TO ADD IMPORTS FROM SERVICE
 
 function StarRating(props: { rating: number }) {
   const [rating, setRating] = useState(4.8);
@@ -29,36 +167,50 @@ function StarRating(props: { rating: number }) {
   );
 }
 
-/**
- * Renders book list.
- */
-export class BookList extends Component {
-  testData: String = '';
-
-  render() {
-    return (
-      <>
-        {/* Search bar for easy access to gicen book */}
-        <Card style={{ border: 'none', padding: '15px' }}>
-          <Card.Title style={{ marginLeft: 'auto', marginRight: 'auto' }}>Example title</Card.Title>
-          <Card.Title style={{ marginLeft: 'auto', marginRight: 'auto' }}>Example title</Card.Title>
-
-          {this.testData}
-        </Card>
-      </>
-    );
-  }
-
-  mounted() {
-    //retrieving testdata
-    /* bookService
-      .getAll()
-      .then((recievedData) => (this.testData = recievedData))
-      .catch((error) => Alert.danger('Error getting books: ' + error.message)); */
-  }
-
-  search(input: string) {}
+interface BookListProps {
+  match: {
+    params: {
+      genre: string;
+    };
+  };
 }
+
+export function BookList(props: BookListProps) {
+  const [books, setBooks] = useState<Book[]>([]);
+  const genre = props.match.params.genre;
+
+  useEffect(() => {
+    bookService
+      .getBooksByGenre(genre)
+      .then((books) => setBooks(books))
+      .catch((error) => Alert.danger('Error getting recipe details: ' + error.message));
+  }, []);
+
+  return (
+    <div className="p-4 pt-1">
+      <Row style={{ marginTop: '10px' }}>
+        <h3>{props.match.params.genre}</h3>
+      </Row>
+      <Row>
+        {books.map((book) => (
+          <Col className="mb-3" key={book.id} md={2}>
+            <BookCard book={book} />
+          </Col>
+        ))}
+      </Row>
+    </div>
+  );
+}
+
+const reviews: Review[] = [
+  {
+    email: 'Jonatan@ermedlem.no',
+    ISBN: 'bokISBN',
+    //avatar: '',
+    text: 'bra bok',
+    rating: 3,
+  },
+];
 
 export class BookDetails extends Component<{
   match: {
@@ -68,6 +220,7 @@ export class BookDetails extends Component<{
   book: Book = {
     id: '',
     rating: [],
+    review: [],
     title: '',
     ISBN: '',
     author: '',
@@ -76,6 +229,7 @@ export class BookDetails extends Component<{
     pages: 0,
     description: '',
     genre: [],
+    addedDate: new Date(),
     imagePath: '',
   };
 
@@ -83,13 +237,23 @@ export class BookDetails extends Component<{
     return (
       <Container className="p-3">
         <Row xs={'auto'}>
-          <Button className="btn btn-light" onClick={() => history.push('/')}>
-            Back
-          </Button>
+          <Col sm={3} className="pt-4 ">
+            <Button
+              variant="light"
+              onClick={() => history.push('/')}
+              style={{
+                width: '5rem',
+                borderColor: 'rgb(223, 120, 97)',
+                color: 'rgb(223, 120, 97)',
+              }}
+            >
+              Back
+            </Button>
+          </Col>
         </Row>
         <Row>
           <Col sm={3} className="pt-4 ">
-            <Row className="m-3">
+            <Row className="m-3 p-0">
               <img
                 src={this.book.imagePath}
                 className="img-fluid shadow "
@@ -99,13 +263,31 @@ export class BookDetails extends Component<{
               />
             </Row>
             <Row className="m-3 ">
-              <Button type="button" className="btn btn-success mt-3">
+              <Button
+                type="button"
+                className="btn btn-success mt-3"
+                style={{ backgroundColor: 'rgb(148, 180, 159)', color: 'rgb(255, 255, 255)' }}
+              >
                 Want to read
               </Button>
             </Row>
             <Row className="m-3 ">
-              <Button type="button" className="btn btn-success mt-3">
+              <Button
+                type="button"
+                className="btn btn-success mt-3"
+                style={{ backgroundColor: 'rgb(148, 180, 159)', color: 'rgb(255, 255, 255)' }}
+              >
                 Have read
+              </Button>
+            </Row>
+            <Row className="m-3 ">
+              <Button
+                type="button"
+                style={{ backgroundColor: 'rgb(148, 180, 159)', color: 'rgb(255, 255, 255)' }}
+                className="btn btn-success mt-3"
+                onClick={() => handleWriteReviewButtonPress(this.book)} // () => history.push(`/books/${this.book.ISBN}/review`)
+              >
+                Write review
               </Button>
             </Row>
           </Col>
@@ -117,8 +299,7 @@ export class BookDetails extends Component<{
               <h5>By {this.book.author}</h5>
             </Row>
             <Row className="mt-1">
-              {/* MIDLERTIDIG LØSNING UNDER FIKS SENERE */}
-              <StarRating rating={1}></StarRating>
+              <StarRating rating={computeAverage(this.book.rating)}></StarRating>
             </Row>
             <Row className="overflow-auto mt-4" style={{ height: '40vh' }}>
               <p>{this.book.description}</p>
@@ -129,7 +310,18 @@ export class BookDetails extends Component<{
               </Col>
               {this.book.genre.map((genre) => (
                 <Col sm={1}>
-                  <a>{genre}</a>
+                  {/* <Button onClick={() => history.push(`/books/genres/${genre}`)}>{genre}</Button> */}
+                  <Link
+                    to={`/books/genres/${genre}`}
+                    style={{
+                      color: 'rgb(128, 128, 128)',
+                      textDecoration: 'none',
+                      borderBottom: '2px solid green',
+                      fontWeight: 'bold',
+                    }}
+                  >
+                    {genre}
+                  </Link>
                 </Col>
               ))}
             </Row>
@@ -159,13 +351,33 @@ export class BookDetails extends Component<{
                 <small>{this.book.ISBN}</small>
               </Col>
             </Row>
+            <Row>
+              <Col>
+                <h2>Reviews</h2>
+                <ListGroup>
+                  {this.book.review.map((review) => (
+                    <ListGroupItem>
+                      <span className="user">{review.email}</span>
+                      <Badge bg="info" pill>
+                        {review.rating} stars
+                      </Badge>
+                      <p> {review.text} </p>
+                    </ListGroupItem>
+                  ))}
+                </ListGroup>
+              </Col>
+            </Row>
           </Col>
         </Row>
       </Container>
     );
   }
-
-  mounted() {}
+  mounted() {
+    bookService
+      .getBook(this.props.match.params.book_id)
+      .then((book) => (this.book = book))
+      .catch((error) => Alert.danger('Error getting recipe details: ' + error.message));
+  }
 }
 
 export class BookAdd extends Component {
@@ -180,6 +392,8 @@ export class BookAdd extends Component {
     description: '',
     genre: [],
     rating: [],
+    review: [],
+    addedDate: new Date(),
     imagePath: '',
   };
 
@@ -396,8 +610,10 @@ export class BookAdd extends Component {
           <Row>
             <Button
               onClick={() => this.addBook()}
-              variant="lg bg-success"
+              variant="lg"
               style={{
+                backgroundColor: 'rgb(148, 180, 159)',
+                color: 'rgb(255, 255, 255)',
                 width: '50rem',
                 margin: 'auto',
               }}
@@ -438,11 +654,20 @@ export function BookCard(props: { book: Book }) {
       />
       <Card.Body>
         <Card.Title className="text-truncate">{props.book.title}</Card.Title>
-        <Card.Text>{props.book.author}</Card.Text>
+        <Card.Text
+          className="text-truncate"
+          style={{ color: 'rgb(128,128,128)', cursor: 'pointer' }}
+        >
+          {props.book.author}
+        </Card.Text>
 
         <Row>
           <Col className="col-8">
-            <Button variant="success" onClick={() => history.push(`/books/${props.book.ISBN}`)}>
+            <Button
+              variant="success"
+              onClick={() => history.push(`/books/${props.book.ISBN}`)}
+              style={{ backgroundColor: 'rgb(148, 180, 159)', color: 'rgb(255, 255, 255)' }}
+            >
               Read more
             </Button>
           </Col>
@@ -454,7 +679,7 @@ export function BookCard(props: { book: Book }) {
               <span style={{ color: '#FFA500', marginRight: '5px' }}>
                 <FontAwesomeIcon icon={faStar} />
               </span>
-              <span>{props.book.rating}</span>
+              <span>{computeAverage(props.book.rating)}</span>
             </div>
           </Col>
         </Row>

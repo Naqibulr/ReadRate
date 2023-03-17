@@ -5,6 +5,7 @@ import { Carousel, Button, Form, Card, Row, Col, Container, ListGroup, ListGroup
 import userService, { User } from './user-service';
 import { BookCard } from './book-components';
 import { createHashHistory } from 'history';
+import { forgetLogin, getCookieValue, setLoginCookies } from './getcookie';
 import bookService, { Book } from './book-service';
 
 //false as default
@@ -78,6 +79,7 @@ export class UserLogIn extends Component {
               onClick={() => this.logIn()}
               style={{
                 marginBottom: '10px',
+
               }}
             >
               Log in
@@ -117,9 +119,10 @@ export class UserLogIn extends Component {
         .then((user) => {
           currentUser = user;
           loggedIn = true;
-
+          setLoginCookies(currentUser);
           Alert.success('Logged in as ' + currentUser.email);
           history.push('/books/user');
+          window.location.reload();
         })
         .catch((error) => Alert.danger(error.response.data));
     } else {
@@ -316,30 +319,18 @@ export class UserDetails extends Component {
         >
           {/* Page for all relevant user info for logged in user */}
           <Card.Title>
-            {'User page for ' + currentUser.first_name + ' ' + currentUser.last_name}
+            {'User page for ' + getCookieValue('first_name') + ' ' + getCookieValue('last_nam')}
           </Card.Title>
           <Row style={{ fontSize: '17px' }}>
-            <Card.Text>Your email-adress: {currentUser.email}</Card.Text>
+            <Card.Text>Your email-adress: {getCookieValue('email')}</Card.Text>
           </Row>
           <Row style={{ fontSize: '17px' }}>
             <Card.Text>
               You are{' '}
-              {currentUser.admin ? 'registered as an Admin user' : 'registered as an ordinary user'}
+              {getCookieValue('admin') == 'true'
+                ? 'registered as an Admin user'
+                : 'registered as an ordinary user'}
             </Card.Text>
-          </Row>
-          <Row>
-            <Button
-              variant="outline-success"
-              onClick={() => this.requestAdmin()}
-              style={{
-                width: '15rem',
-                marginLeft: 'auto',
-                marginRight: 'auto',
-                marginBottom: '10px',
-              }}
-            >
-              Request Admin Status
-            </Button>
           </Row>
           <Row style={{ fontSize: '17px' }}>
             {/* <Card.Text style={{ fontWeight: 'bold' }}>Your reviews:</Card.Text>
@@ -434,6 +425,8 @@ export class UserDetails extends Component {
                 marginLeft: 'auto',
                 marginRight: 'auto',
                 marginBottom: '10px',
+                backgroundColor: 'rgb(223, 120, 97)',
+                color: 'rgb(254, 252, 251)',
               }}
             >
               Log out
@@ -445,9 +438,9 @@ export class UserDetails extends Component {
   }
 
   mounted() {
+    let loggedIn = document.cookie.includes('loggedIn=true');
     if (!loggedIn) {
       history.push('/books/login');
-    } else {
     }
 
     this.createLists()
@@ -501,6 +494,8 @@ export class UserDetails extends Component {
       admin: false,
       lists: new Map() as Map<string, Array<string>>,
     } as User;
+    forgetLogin();
+    window.location.reload();
   }
 
   requestAdmin() { }

@@ -2,23 +2,29 @@ const review = require('./review');
 const book = require('./book');
 
 import { Book } from '../src/book';
+import { Review } from './review';
 export class Author {
-  name: String;
-  country: String;
-  books: Book[];
-  birthDate: String;
-  deathDate: String;
-  reviews: Review[];
-  description: String;
+  id: string;
+  name: string;
+  country: string;
+  books: string[];
+  birthDate: string;
+  deathDate: string;
+  reviews: string[];
+  description: string;
+  imagePath: string;
   constructor(
-    name: String,
-    country: String,
-    books: Book[],
-    birthDate: String,
-    deathDate: String,
-    reviews: Review[],
-    description: String
+    id: string,
+    name: string,
+    country: string,
+    books: string[],
+    birthDate: string,
+    deathDate: string,
+    reviews: string[],
+    description: string,
+    imagePath: string
   ) {
+    this.id = id;
     this.name = name;
     this.country = country;
     this.books = books;
@@ -26,9 +32,10 @@ export class Author {
     this.deathDate = deathDate;
     this.reviews = reviews;
     this.description = description;
+    this.imagePath = imagePath;
   }
 
-  toString(): String {
+  toString(): string {
     return 'Author object: ' + this.name;
   }
 }
