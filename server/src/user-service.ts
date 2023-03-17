@@ -26,6 +26,9 @@ class UserService {
         lists: new Map(),
       };
 
+      //add a favorites list by default
+      newUser.lists.set('favorites', []);
+
       //get count of users
       const count = (await getDoc(doc(firestore, 'Users', 'count'))).data();
 
@@ -44,10 +47,7 @@ class UserService {
         last_name: newUser.last_name,
         password: newUser.password,
         admin: false,
-        lists: {
-          list1: [],
-          list2: [],
-        },
+        lists: newUser.lists,
       });
 
       resolve(newUser as User);

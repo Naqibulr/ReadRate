@@ -74,6 +74,8 @@ class BookService {
   }
 
   getBook(ISBN: string) {
+    console.log("book-service client")
+
     return axios.get('/books').then((response) => {
       const data = response.data;
       if (Array.isArray(data)) {

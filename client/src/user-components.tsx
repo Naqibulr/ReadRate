@@ -277,8 +277,6 @@ export class RegisterUser extends Component {
       .then((response) => {
         if (response.length > 0) {
         } else {
-          console.log(response.status);
-          console.log(response.data);
           loggedIn = true;
           history.push('/books/login');
         }
@@ -383,8 +381,6 @@ export class UserDetails extends Component {
           <Row>
             {/* @ts-ignore */}
             {this.listItems.map((list, index) => {
-              console.log("test 2:")
-              console.log(list)
               return (
                 <div key={index}>
                   <h3 style={{ marginLeft: '20px', marginTop: '5px', marginBottom: '0px' }}>{list.title}</h3>
@@ -395,7 +391,6 @@ export class UserDetails extends Component {
                   <Carousel interval={null}>
                     {list.books.map((book, index) => {
                       if (index % 6 === 0) {
-                        { console.log(book) }
                         return (<Carousel.Item key={index} style={{ padding: '1rem' }}>
                           <Row>
                             {list.books.slice(index, index + 6).map((book, index) => (
@@ -448,14 +443,17 @@ export class UserDetails extends Component {
 
   async createLists() {
     //Recieve and store lists
-    for (let title in currentUser.lists) {
+    if (getCookieValue("loggedIn") != 'true')
+      return 0;
+    for (let title in JSON.parse(getCookieValue("lists"))) {
       const books = new Array
       var i = 0;
       //@ts-ignore
-      for (let isbn in currentUser.lists[title]) {
+      for (let isbn in JSON.parse(getCookieValue("lists"))[title]) {
 
         //@ts-ignore
-        await bookService.getBook(currentUser.lists[title][isbn].toString()).then((book: Book) => {
+        await bookService.getBook(JSON.parse(getCookieValue("lists"))[title][isbn].toString()).then((book: Book) => {
+          console.log(book)
           const item: Book = {
             id: "",
             title: book.title,
@@ -467,7 +465,9 @@ export class UserDetails extends Component {
             description: book.description,
             genre: book.genre,
             rating: book.rating,
-            imagePath: book.imagePath
+            imagePath: book.imagePath,
+            review: [],
+            addedDate: new Date()
           };
 
           books.push(item)
@@ -476,15 +476,13 @@ export class UserDetails extends Component {
 
       }
       this.listItems.push({ title, books })
-      console.log("test 1: ")
-      console.log(this.listItems)
     }
 
   }
 
   logOut() {
     loggedIn = false;
-    history.push('/books');
+    history.push('/');
     currentUser = {
       user_id: 0,
       email: '',

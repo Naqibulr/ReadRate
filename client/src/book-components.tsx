@@ -15,6 +15,7 @@ import {
   ListGroup,
   Badge,
   ListGroupItem,
+  Dropdown,
 } from 'react-bootstrap';
 import { createHashHistory } from 'history';
 import bookService, { Book, Review } from './book-service';
@@ -271,15 +272,23 @@ export class BookDetails extends Component<{
                 Want to read
               </Button>
             </Row>
-            <Row className="m-3 ">
-              <Button
-                type="button"
-                className="btn btn-success mt-3"
-                style={{ backgroundColor: 'rgb(148, 180, 159)', color: 'rgb(255, 255, 255)' }}
-              >
-                Have read
-              </Button>
-            </Row>
+            {/* @ts-ignore */}
+            {JSON.parse(getCookieValue("list")).forEach(element => {
+              <Dropdown id="dropdown">
+                <Dropdown.Toggle variant="light" id="dropdown-basic">
+                  {element + '+'}
+                </Dropdown.Toggle>
+
+                <Dropdown.Menu>
+                  <Dropdown.Item onClick={() => handleChangeRating('1')}>1+</Dropdown.Item>
+                  <Dropdown.Item onClick={() => handleChangeRating('2')}>2+</Dropdown.Item>
+                  <Dropdown.Item onClick={() => handleChangeRating('3')}>3+</Dropdown.Item>
+                  <Dropdown.Item onClick={() => handleChangeRating('4')}>4+</Dropdown.Item>
+                  <Dropdown.Item onClick={() => handleChangeRating('5')}>5+</Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>{ ' ' }
+            });}
+
             <Row className="m-3 ">
               <Button
                 type="button"
@@ -323,6 +332,7 @@ export class BookDetails extends Component<{
                     {genre}
                   </Link>
                 </Col>
+
               ))}
             </Row>
             <Row>
@@ -625,7 +635,7 @@ export class BookAdd extends Component {
       </Card>
     );
   }
-  mounted() {}
+  mounted() { }
 }
 
 export class BookEdit extends Component<{ match: { params: { id: number } } }> {
@@ -641,7 +651,7 @@ export class BookEdit extends Component<{ match: { params: { id: number } } }> {
     );
   }
 
-  mounted() {}
+  mounted() { }
 }
 
 export function BookCard(props: { book: Book }) {
