@@ -1,4 +1,4 @@
-import { Book } from './book-service';
+import { Book, Review } from './book-service';
 
 export function computeAverage(numbers: number[]): number {
   let sum = 0;
@@ -24,5 +24,18 @@ export function computeAuthorRating(books: Book[]): number {
       numRatings++;
     });
   });
-  return numRatings > 0 ? totalRating / numRatings : 0;
+  return numRatings > 0 ? Number((totalRating / numRatings).toFixed(1)) : 0;
+}
+
+export function calculateAverageRating(reviews: Array<Review>): number {
+  const totalRatings = reviews.length;
+  if (totalRatings === 0) {
+    return 0;
+  }
+  let sumOfRatings = 0;
+  for (let i = 0; i < totalRatings; i++) {
+    sumOfRatings += reviews[i].rating;
+  }
+  const averageRating = sumOfRatings / totalRatings;
+  return Number(averageRating.toFixed(1));
 }

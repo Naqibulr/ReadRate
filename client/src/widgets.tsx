@@ -30,7 +30,17 @@ export class Alert extends Component {
 
   render() {
     return (
-      <div style={{ position: "absolute", zIndex: "1000", left: "50%", top: "5%", marginRight: "-50%", transform: "translate(-50%, -50%)", width: "80%", }}>
+      <div
+        style={{
+          position: 'absolute',
+          zIndex: '1000',
+          left: '50%',
+          top: '5%',
+          marginRight: '-50%',
+          transform: 'translate(-50%, -50%)',
+          width: '80%',
+        }}
+      >
         {this.alerts.map((alert, i) => (
           <div
             key={alert.id}
@@ -59,7 +69,7 @@ export class Alert extends Component {
       let instance = Alert.instance(); // Get rendered Alert component instance
       if (instance) instance.alerts.push({ id: instance.nextId++, text: text, type: 'success' });
       //@ts-ignore
-      setTimeout(() => instance.alerts.pop(), 3000)
+      setTimeout(() => instance.alerts.pop(), 3000);
     });
   }
 
@@ -72,7 +82,7 @@ export class Alert extends Component {
       let instance = Alert.instance(); // Get rendered Alert component instance
       if (instance) instance.alerts.push({ id: instance.nextId++, text: text, type: 'info' });
       //@ts-ignore
-      setTimeout(() => instance.alerts.pop(), 3000)
+      setTimeout(() => instance.alerts.pop(), 3000);
     });
   }
 
@@ -85,7 +95,7 @@ export class Alert extends Component {
       let instance = Alert.instance(); // Get rendered Alert component instance
       if (instance) instance.alerts.push({ id: instance.nextId++, text: text, type: 'warning' });
       //@ts-ignore
-      setTimeout(() => instance.alerts.pop(), 3000)
+      setTimeout(() => instance.alerts.pop(), 3000);
     });
   }
 
@@ -98,7 +108,7 @@ export class Alert extends Component {
       let instance = Alert.instance(); // Get rendered Alert component instance
       if (instance) instance.alerts.push({ id: instance.nextId++, text: text, type: 'danger' });
       //@ts-ignore
-      setTimeout(() => instance.alerts.pop(), 3000)
+      setTimeout(() => instance.alerts.pop(), 3000);
     });
   }
 }

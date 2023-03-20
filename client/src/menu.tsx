@@ -4,12 +4,13 @@ import React, { useState } from 'react';
 import { Button, Container, Dropdown, Form, InputGroup, Nav, Navbar } from 'react-bootstrap';
 import { Component } from 'react-simplified';
 import { getDarkModeCookies, setDarkModCookies } from './getcookie';
-import Logo from './Logo.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleHalfStroke } from '@fortawesome/free-solid-svg-icons';
 import getBookRating from './google-books-rating';
 import { darkMode, lightMode } from './colors';
 //import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import Logo from './Logo.png';
+import LogoDark from './Logo_darkmode.png';
 
 export class Menu extends Component {
   state = {
@@ -54,7 +55,7 @@ export class Menu extends Component {
       >
         <Navbar.Brand href="/">
           <img
-            src={Logo}
+            src={this.isDarkModeEnabled ? LogoDark : Logo}
             alt="logo"
             style={{ width: '250px', height: 'auto', marginLeft: '20px' }}
           />
@@ -84,9 +85,23 @@ export class Menu extends Component {
                     {this.state.filterValue}
                   </Dropdown.Toggle>
 
-                  <Dropdown.Menu>
-                    <Dropdown.Item onClick={() => this.handleItemClick('Book')}>Book</Dropdown.Item>
-                    <Dropdown.Item onClick={() => this.handleItemClick('Author')}>
+                  <Dropdown.Menu
+                    style={{
+                      backgroundColor: this.isDarkModeEnabled
+                        ? darkMode.background
+                        : lightMode.background,
+                    }}
+                  >
+                    <Dropdown.Item
+                      style={{ color: this.isDarkModeEnabled ? darkMode.font : lightMode.font }}
+                      onClick={() => this.handleItemClick('Book')}
+                    >
+                      Book
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      style={{ color: this.isDarkModeEnabled ? darkMode.font : lightMode.font }}
+                      onClick={() => this.handleItemClick('Author')}
+                    >
                       Author
                     </Dropdown.Item>
                   </Dropdown.Menu>
@@ -104,6 +119,7 @@ export class Menu extends Component {
                     borderColor: this.isDarkModeEnabled
                       ? darkMode.buttonMenu
                       : lightMode.buttonMenu,
+                    color: this.isDarkModeEnabled ? darkMode.font : lightMode.font,
                   }}
                 />
 

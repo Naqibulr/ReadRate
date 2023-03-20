@@ -87,9 +87,21 @@ export function BookSearch() {
           aria-label="Search"
           aria-describedby="Search field"
           onChange={handleChangeFilter}
+          style={{
+            backgroundColor: isDarkModeEnabled ? darkMode.background : lightMode.background,
+            color: isDarkModeEnabled ? darkMode.font : lightMode.font,
+          }}
         />
         <Col>
-          <Button variant="light" id="button-addon2" onClick={searchWithFilter} style={{}}>
+          <Button
+            variant="light"
+            id="button-addon2"
+            onClick={searchWithFilter}
+            style={{
+              backgroundColor: isDarkModeEnabled ? darkMode.buttonCard : lightMode.buttonCard,
+              color: isDarkModeEnabled ? darkMode.font : lightMode.font,
+            }}
+          >
             Add filter
           </Button>
         </Col>
@@ -101,6 +113,10 @@ export function BookSearch() {
               aria-label="Search"
               aria-describedby="Search field"
               onChange={handleChangeYearFrom}
+              style={{
+                backgroundColor: isDarkModeEnabled ? darkMode.background : lightMode.background,
+                color: isDarkModeEnabled ? darkMode.font : lightMode.font,
+              }}
             />
           </InputGroup>
         </Col>
@@ -113,31 +129,87 @@ export function BookSearch() {
               aria-label="Search"
               aria-describedby="Search field"
               onChange={handleChangeYearTo}
+              style={{
+                backgroundColor: isDarkModeEnabled ? darkMode.background : lightMode.background,
+                color: isDarkModeEnabled ? darkMode.font : lightMode.font,
+              }}
             />
           </InputGroup>
         </Col>
         <Col>
           {' '}
-          <Button variant="light" id="button-addon2" onClick={searchWithYear}>
+          <Button
+            variant="light"
+            id="button-addon2"
+            onClick={searchWithYear}
+            style={{
+              backgroundColor: isDarkModeEnabled ? darkMode.buttonCard : lightMode.buttonCard,
+              color: isDarkModeEnabled ? darkMode.font : lightMode.font,
+            }}
+          >
             Search
           </Button>
         </Col>
         <Col></Col>
         <Col>
           <Dropdown id="dropdown">
-            <Dropdown.Toggle variant="light" id="dropdown-basic">
+            <Dropdown.Toggle
+              variant="light"
+              id="dropdown-basic"
+              style={{
+                backgroundColor: isDarkModeEnabled ? darkMode.background : lightMode.background,
+                color: isDarkModeEnabled ? darkMode.font : lightMode.font,
+              }}
+            >
               {click + '+'}
             </Dropdown.Toggle>
 
-            <Dropdown.Menu>
-              <Dropdown.Item onClick={() => handleChangeRating('1')}>1+</Dropdown.Item>
-              <Dropdown.Item onClick={() => handleChangeRating('2')}>2+</Dropdown.Item>
-              <Dropdown.Item onClick={() => handleChangeRating('3')}>3+</Dropdown.Item>
-              <Dropdown.Item onClick={() => handleChangeRating('4')}>4+</Dropdown.Item>
-              <Dropdown.Item onClick={() => handleChangeRating('5')}>5+</Dropdown.Item>
+            <Dropdown.Menu
+              style={{
+                backgroundColor: isDarkModeEnabled ? darkMode.background : lightMode.background,
+              }}
+            >
+              <Dropdown.Item
+                onClick={() => handleChangeRating('1')}
+                style={{ color: isDarkModeEnabled ? darkMode.font : lightMode.font }}
+              >
+                1+
+              </Dropdown.Item>
+              <Dropdown.Item
+                onClick={() => handleChangeRating('2')}
+                style={{ color: isDarkModeEnabled ? darkMode.font : lightMode.font }}
+              >
+                2+
+              </Dropdown.Item>
+              <Dropdown.Item
+                onClick={() => handleChangeRating('3')}
+                style={{ color: isDarkModeEnabled ? darkMode.font : lightMode.font }}
+              >
+                3+
+              </Dropdown.Item>
+              <Dropdown.Item
+                onClick={() => handleChangeRating('4')}
+                style={{ color: isDarkModeEnabled ? darkMode.font : lightMode.font }}
+              >
+                4+
+              </Dropdown.Item>
+              <Dropdown.Item
+                onClick={() => handleChangeRating('5')}
+                style={{ color: isDarkModeEnabled ? darkMode.font : lightMode.font }}
+              >
+                5+
+              </Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>{' '}
-          <Button variant="light" id="button-addon2" onClick={searchRating}>
+          <Button
+            variant="light"
+            id="button-addon2"
+            onClick={searchRating}
+            style={{
+              backgroundColor: isDarkModeEnabled ? darkMode.buttonCard : lightMode.buttonCard,
+              color: isDarkModeEnabled ? darkMode.font : lightMode.font,
+            }}
+          >
             Add rating filter
           </Button>
         </Col>

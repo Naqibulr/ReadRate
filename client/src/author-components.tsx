@@ -90,13 +90,13 @@ export class AuthorDetails extends Component<{
       <Container
         fluid
         style={{
-          paddingLeft: '50px',
-          paddingTop: '0px',
           backgroundColor: this.isDarkModeEnabled ? darkMode.background : lightMode.background,
           color: this.isDarkModeEnabled ? darkMode.font : lightMode.font,
+          paddingLeft: '50px',
+          paddingTop: '0px',
         }}
       >
-        <Row xs={'auto'} style={{ paddingLeft: '40px' }}>
+        <Row xs={'auto'} style={{ paddingLeft: '30px' }}>
           <Button
             className="btn btn-light"
             onClick={() => history.push('/')}

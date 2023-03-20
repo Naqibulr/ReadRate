@@ -21,7 +21,7 @@ import bookService, { Book, Review } from './book-service';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
 import StarRatings from 'react-star-ratings';
-import { computeAverage } from './average';
+import { calculateAverageRating, computeAverage } from './average';
 import { Link } from 'react-router-dom';
 import { getCookieValue } from './getcookie';
 import { getDarkModeCookies } from './getcookie';
@@ -69,6 +69,8 @@ export const WriteReviewPage = (props: { book: Book }) => {
     comment: '',
   });
 
+  const isDarkModeEnabled = getDarkModeCookies();
+
   const isbn = getIsbnFromUrl();
 
   let review: Review = {
@@ -102,7 +104,15 @@ export const WriteReviewPage = (props: { book: Book }) => {
   };
 
   return (
-    <Container className="p-3">
+    <Container
+      fluid
+      className="p-5"
+      style={{
+        backgroundColor: isDarkModeEnabled ? darkMode.background : lightMode.background,
+        color: isDarkModeEnabled ? darkMode.font : lightMode.font,
+        height: '100vh',
+      }}
+    >
       <h1>Write a Review</h1>
       <Form onSubmit={handleSubmit}>
         {/* <Form.Group controlId="name">
@@ -120,6 +130,10 @@ export const WriteReviewPage = (props: { book: Book }) => {
           <FormControl
             as="select"
             name="rating"
+            style={{
+              backgroundColor: isDarkModeEnabled ? darkMode.background : lightMode.background,
+              color: isDarkModeEnabled ? darkMode.font : lightMode.font,
+            }}
             //value={formData.rating}
             onChange={(event) => (review.rating = parseInt(event.currentTarget.value))}
             required
@@ -139,12 +153,25 @@ export const WriteReviewPage = (props: { book: Book }) => {
             as="textarea"
             rows={3}
             name="comment"
+            placeholder="Write your review here..."
+            style={{
+              backgroundColor: isDarkModeEnabled ? darkMode.background : lightMode.background,
+              color: isDarkModeEnabled ? darkMode.font : lightMode.font,
+            }}
             //value={formData.comment}
             onChange={(event) => (review.text = event.currentTarget.value)}
           />
         </Form.Group>
 
-        <Button variant="primary" type="submit" className="btn btn-success mt-3">
+        <Button
+          variant="primary"
+          type="submit"
+          className="btn btn-success mt-3"
+          style={{
+            backgroundColor: isDarkModeEnabled ? darkMode.buttonCard : lightMode.buttonCard,
+            color: isDarkModeEnabled ? darkMode.font : lightMode.font,
+          }}
+        >
           Submit
         </Button>
       </Form>
@@ -187,7 +214,12 @@ export function BookList(props: BookListProps) {
   useEffect(() => {
     bookService
       .getBooksByGenre(genre)
-      .then((books) => setBooks(books))
+      .then((books) => {
+        const sortedBooks = books.sort(
+          (a, b) => calculateAverageRating(b.review) - calculateAverageRating(a.review)
+        );
+        setBooks(sortedBooks);
+      })
       .catch((error) => Alert.danger('Error getting recipe details: ' + error.message));
   }, []);
 
@@ -197,6 +229,7 @@ export function BookList(props: BookListProps) {
       style={{
         backgroundColor: isDarkModeEnabled ? darkMode.background : lightMode.background,
         color: isDarkModeEnabled ? darkMode.font : lightMode.font,
+        height: '100vh',
       }}
     >
       <Row style={{ marginTop: '10px' }}>
@@ -245,6 +278,15 @@ export class BookDetails extends Component<{
     imagePath: '',
   };
   isDarkModeEnabled = getDarkModeCookies();
+  isAdmin = document.cookie.includes('admin=true');
+  async deleteReview(email: string, ISBN: string) {
+    if (this.isAdmin) {
+      bookService.deleteReview(email, ISBN);
+      this.mounted();
+    } else {
+      Alert.danger('You have to be an admin to delete a review');
+    }
+  }
 
   render() {
     return (
@@ -339,7 +381,7 @@ export class BookDetails extends Component<{
                 <h5 style={{}}>ReadRate</h5>
               </Col>
               <Col>
-                <StarRating rating={computeAverage(this.book.rating)}></StarRating>
+                <StarRating rating={calculateAverageRating(this.book.review)}></StarRating>
               </Col>
             </Row>
             <Row className="mt-1">
@@ -433,11 +475,23 @@ export class BookDetails extends Component<{
                 <ListGroup>
                   {this.book.review.map((review) => (
                     <ListGroupItem>
-                      <span className="user">{review.email}</span>
-                      <Badge bg="info" pill>
-                        {review.rating} stars
-                      </Badge>
-                      <p> {review.text} </p>
+                      <Row>
+                        <Col>
+                          <span className="user">{review.email}</span>
+                          <Badge bg="info" pill>
+                            {review.rating} stars
+                          </Badge>
+                          <p> {review.text} </p>
+                        </Col>
+                        <Col xs={2} style={{ alignContent: 'center' }}>
+                          <Button
+                            variant="danger"
+                            onClick={() => this.deleteReview(review.email, review.ISBN)}
+                          >
+                            delete
+                          </Button>
+                        </Col>
+                      </Row>
                     </ListGroupItem>
                   ))}
                 </ListGroup>
@@ -847,7 +901,7 @@ export function BookCard(props: { book: Book }) {
               >
                 <FontAwesomeIcon icon={faStar} />
               </span>
-              <span>{computeAverage(props.book.rating)}</span>
+              <span>{calculateAverageRating(props.book.review)}</span>
             </div>
           </Col>
         </Row>

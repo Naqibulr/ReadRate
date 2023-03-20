@@ -1,6 +1,17 @@
 import axios from 'axios';
 import { firestore } from './firebase';
-import { collection, query, where, getDocs, addDoc } from 'firebase/firestore';
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  addDoc,
+  deleteDoc,
+  doc,
+  getDoc,
+  arrayRemove,
+  updateDoc,
+} from 'firebase/firestore';
 import { User } from './user-service';
 import { getCookieValue } from './getcookie';
 
@@ -101,6 +112,56 @@ class BookService {
       }
       return books;
     });
+  }
+
+  revRef = collection(firestore, 'Reviews');
+  userRef = collection(firestore, 'Users');
+  async deleteReview(email: string, ISBN: string) {
+    this.deleteReviewFromBook(email, ISBN);
+    const q = query(this.revRef, where('email', '==', email), where('ISBN', '==', ISBN));
+    getDocs(q)
+      .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          deleteDoc(doc.ref);
+        });
+        console.log('Reviews successfully deleted!');
+      })
+      .catch((error) => {
+        console.error('Error deleting reviews: ', error);
+      });
+  }
+
+  async deleteReviewFromBook(email: string, ISBN: string) {
+    const q2 = query(this.colRef, where('ISBN', '==', ISBN)); // assuming "ISBN" is the name of the field that holds the ISBN value
+
+    // Retrieve the book document with the specified ISBN value
+    const querySnapshot = await getDocs(q2);
+    if (!querySnapshot.empty) {
+      const bookRef = doc(this.colRef, querySnapshot.docs[0].id); // assuming the first document in the query snapshot is the desired book document
+      console.log('bookRef', querySnapshot.docs[0].data());
+      // Get the reviews array from the book document
+      const bookDoc = await getDoc(bookRef);
+      if (bookDoc.exists()) {
+        const review = bookDoc.data().review;
+        console.log('reviews', review);
+
+        // Find the index of the review object with the matching email attribute
+        const index = review?.findIndex((review: any) => review.email === email);
+
+        // If a review with the matching email attribute is found, remove it from the reviews array
+        if (Array.isArray(review) && review.length > index) {
+          const updatedReviews = arrayRemove(bookDoc.data().review[index]);
+          await updateDoc(bookRef, { review: updatedReviews });
+          console.log('Review deleted successfully.');
+        } else {
+          console.log('No review found with the given email.');
+        }
+      } else {
+        console.log('No book document found with the given ISBN.');
+      }
+    } else {
+      console.log('No book document found with the given ISBN.');
+    }
   }
 }
 const bookService = new BookService();

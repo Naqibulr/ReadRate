@@ -17,7 +17,7 @@ import { Menu } from './menu';
 import bookService, { Book } from './book-service';
 import { useEffect, useState } from 'react';
 import { BookSearch, AuthorSearch } from './search';
-import { computeAverage } from './average';
+import { calculateAverageRating, computeAverage } from './average';
 
 import { getDarkModeCookies } from './getcookie';
 import { darkMode, lightMode } from './colors';
@@ -40,7 +40,7 @@ function Home() {
     const fetchBooks = async () => {
       const booksData = await bookService.getBooks();
       const sortedBooks = booksData.sort(
-        (a, b) => computeAverage(b.rating) - computeAverage(a.rating)
+        (a, b) => calculateAverageRating(b.review) - calculateAverageRating(a.review)
       );
       setTopBooks(sortedBooks);
     };

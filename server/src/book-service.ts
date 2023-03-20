@@ -11,7 +11,7 @@ export type Book = {
   releaseYear: number;
   publisher: string;
   rating: Array<number>;
-  review: Array<string>;
+  review: Array<Review>;
   pages: number;
   description: string;
   genre: Array<string>;
