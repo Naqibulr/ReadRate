@@ -95,17 +95,19 @@ export function BookSearch() {
 
   return (
     <Container fluid style={{ margin: 0 }}>
-      <InputGroup className="p-3">
-        <Form.Control
-          placeholder="Filter"
-          aria-label="Search"
-          aria-describedby="Search field"
-          onChange={handleChangeFilter}
-        />
+      <Row className="m-3">
         <Col>
-          <Button variant="light" id="button-addon2" onClick={searchWithFilter}>
-            Add filter
-          </Button>
+          <InputGroup className="p-0">
+            <Form.Control
+              placeholder="Filter"
+              aria-label="Search"
+              aria-describedby="Search field"
+              onChange={handleChangeFilter}
+            />
+            <Button variant="light" id="button-addon2" onClick={searchWithFilter}>
+              Add filter
+            </Button>
+          </InputGroup>
         </Col>
         <Col>
           {' '}
@@ -115,55 +117,50 @@ export function BookSearch() {
               aria-label="Search"
               aria-describedby="Search field"
               onChange={handleChangeYearFrom}
-            />
-          </InputGroup>
-        </Col>
-
-        <Col>
-          {' '}
-          <InputGroup className="p-0">
+            />{' '}
             <Form.Control
               placeholder="To year"
               aria-label="Search"
               aria-describedby="Search field"
               onChange={handleChangeYearTo}
             />
+            <Button variant="light" id="button-addon2" onClick={searchWithYear}>
+              Search
+            </Button>
           </InputGroup>
         </Col>
         <Col>
-          {' '}
-          <Button variant="light" id="button-addon2" onClick={searchWithYear}>
-            Search
-          </Button>
-        </Col>
-        <Col></Col>
-        <Col>
-          <Dropdown id="dropdown">
-            <Dropdown.Toggle variant="light" id="dropdown-basic">
-              {click + '+'}
-            </Dropdown.Toggle>
+          <InputGroup>
+            <Dropdown id="dropdown">
+              <Dropdown.Toggle variant="light" id="dropdown-basic">
+                {click + '+'}
+              </Dropdown.Toggle>
 
-            <Dropdown.Menu>
-              <Dropdown.Item onClick={() => handleChangeRating('1')}>1+</Dropdown.Item>
-              <Dropdown.Item onClick={() => handleChangeRating('2')}>2+</Dropdown.Item>
-              <Dropdown.Item onClick={() => handleChangeRating('3')}>3+</Dropdown.Item>
-              <Dropdown.Item onClick={() => handleChangeRating('4')}>4+</Dropdown.Item>
-              <Dropdown.Item onClick={() => handleChangeRating('5')}>5+</Dropdown.Item>
-            </Dropdown.Menu>
-          </Dropdown>{' '}
-          <Button variant="light" id="button-addon2" onClick={searchRating}>
-            Add rating filter
-          </Button>
+              <Dropdown.Menu>
+                <Dropdown.Item onClick={() => handleChangeRating('1')}>1+</Dropdown.Item>
+                <Dropdown.Item onClick={() => handleChangeRating('2')}>2+</Dropdown.Item>
+                <Dropdown.Item onClick={() => handleChangeRating('3')}>3+</Dropdown.Item>
+                <Dropdown.Item onClick={() => handleChangeRating('4')}>4+</Dropdown.Item>
+                <Dropdown.Item onClick={() => handleChangeRating('5')}>5+</Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>{' '}
+            <Button variant="light" id="button-addon2" onClick={searchRating}>
+              Add rating filter
+            </Button>
+          </InputGroup>
         </Col>
         <Col>
-          {selectedFilters.map((filter, index) => (
-            <div key={index} className="label">
-              {filter} <button onClick={() => removeFilter(index)}>x</button>
-            </div>
-          ))}
+          <InputGroup>
+            {selectedFilters.map((filter, index) => (
+              <Col key={index} className="label">
+                {filter} <button onClick={() => removeFilter(index)}>x</button>
+              </Col>
+            ))}
+          </InputGroup>
         </Col>
         {/* <h3 style={{ marginLeft: '20px', marginTop: '5px', marginBottom: '0px' }}>{searchTerm}</h3> */}
-      </InputGroup>
+      </Row>
+      <Row></Row>
       <Row>
         {books.map((book: Book) => {
           return (
