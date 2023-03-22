@@ -79,16 +79,18 @@ router.get('/users/login/:email/:password', (request, response) => {
   }
 });
 
-router.get('/books/search/:searchTerm', (request, response) => {
-  const searchTerm = String(request.params.searchTerm);
+router.put('/users/lists', (request, response) => {
+  const data = request.body;
+  const email = String(data.email);
+  const lists = data.lists;
+  console.log('router: ');
+  console.log(lists);
 
-  bookService
-    .getFilteredBooks(searchTerm)
-    .then((books) => {
-      response.send(books);
-    })
+  userService
+    .updateLists(lists, email)
+    .then(() => response.status(200).send())
     .catch((error) => {
-      response.status(500);
+      response.status(500).send(error);
     });
 });
 

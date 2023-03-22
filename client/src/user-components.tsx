@@ -301,11 +301,11 @@ export class RegisterUser extends Component {
 
 export class UserDetails extends Component {
   listItems: { title: string; books: Book[]; }[] = [];
-
+  newList: string = ""
   render() {
     return (
       <>
-        <Card
+        <div
           style={{
             // border: 'none',
             padding: '15px',
@@ -316,7 +316,7 @@ export class UserDetails extends Component {
           }}
         >
           {/* Page for all relevant user info for logged in user */}
-          <Card.Title>
+          <Card.Title style={{ fontSize: '30px' }}>
             {'User page for ' + getCookieValue('first_name') + ' ' + getCookieValue('last_nam')}
           </Card.Title>
           <Row style={{ fontSize: '17px' }}>
@@ -330,6 +330,9 @@ export class UserDetails extends Component {
                 : 'registered as an ordinary user'}
             </Card.Text>
           </Row>
+          <br />
+          <br />
+          <br />
           <Row style={{ fontSize: '17px' }}>
             {/* <Card.Text style={{ fontWeight: 'bold' }}>Your reviews:</Card.Text>
           </Row>
@@ -376,41 +379,73 @@ export class UserDetails extends Component {
             </Col> */}
           </Row>
           <Row>
-            <Card.Text style={{ fontWeight: 'bold' }}>Your Lists:</Card.Text>
+            <Card.Text style={{ fontWeight: 'bold', fontSize: '25px' }}>Your Lists:</Card.Text>
           </Row>
           <Row>
             {/* @ts-ignore */}
             {this.listItems.map((list, index) => {
-              return (
-                <div key={index}>
-                  <h3 style={{ marginLeft: '20px', marginTop: '5px', marginBottom: '0px' }}>{list.title}</h3>
-                  {/* @ts-ignore */}
+              if (list.books.length == 0) {
+                return (
+                  <div key={index}>
+                    <h4 style={{ marginLeft: '20px', marginTop: '5px', marginBottom: '0px' }}>{list.title}</h4>
+                    <p>The list is currently empty</p>
+                  </div>
+                )
+              } else {
+                return (
+                  <div key={index}>
+                    <h4 style={{ marginLeft: '20px', marginTop: '5px', marginBottom: '0px' }}>{list.title}</h4>
+                    {/* @ts-ignore */}
+                    <Carousel interval={null}>
+                      {list.books.map((book, index) => {
+                        if (index % 6 === 0) {
+                          return (<Carousel.Item key={index} style={{ padding: '1rem' }}>
+                            <Row>
+                              {list.books.slice(index, index + 6).map((book, index) => (
+                                <Col md={2} key={index} >
+                                  <BookCard book={book} />
+                                </Col>
+                              ))}
+                            </Row>
+                          </Carousel.Item>)
+
+                        }
+                        return null;
+                      })}
+                    </Carousel>
 
 
-
-                  <Carousel interval={null}>
-                    {list.books.map((book, index) => {
-                      if (index % 6 === 0) {
-                        return (<Carousel.Item key={index} style={{ padding: '1rem' }}>
-                          <Row>
-                            {list.books.slice(index, index + 6).map((book, index) => (
-                              <Col md={2} key={index} >
-                                <BookCard book={book} />
-                              </Col>
-                            ))}
-                          </Row>
-                        </Carousel.Item>)
-
-                      }
-                      return null;
-                    })}
-                  </Carousel>
-
-
-                </div>
-              )
+                  </div>
+                )
+              }
             })}
           </Row>
+          <div style={{
+            width: '15rem',
+            marginLeft: 'auto',
+            marginRight: 'auto',
+            marginBottom: '10px',
+          }}>
+            <Card.Title>Create a new List</Card.Title>
+            <Form.Control
+              value={this.newList}
+              onChange={(event) => (this.newList = event.currentTarget.value)}
+              // Makes it possible to log in with enter as well as with button
+              onKeyUp={(event) => {
+                if (event.key == 'Enter') {
+                  this.addNewList(this.newList);
+                }
+              }}
+              style={{
+                marginBottom: '10px',
+                textAlign: 'center',
+              }}
+            ></Form.Control>
+
+            <Button variant="primary" onClick={() => this.addNewList(this.newList)}>
+              Add to Lists
+            </Button>
+          </div>
           <Row style={{ padding: '10vh' }}>
             <Button
               variant="outline-danger"
@@ -427,9 +462,46 @@ export class UserDetails extends Component {
               Log out
             </Button>
           </Row>
-        </Card>
+        </div>
       </>
     );
+  }
+
+  addNewList(list: string) {
+    //retrieve and format current lists
+    let lists = getCookieValue('lists');
+    lists = JSON.parse(lists)
+
+    if (list == "" || lists.hasOwnProperty(list) == true) {
+      return
+    }
+
+    //add to lists
+    // @ts-ignore
+    lists[list] = []
+
+    //update cookies
+    setLoginCookies(
+      {
+        "user_id": 0,
+        "email": getCookieValue('email'),
+        "first_name": getCookieValue('first_name'),
+        "last_name": getCookieValue('last_name'),
+        "password": getCookieValue('password'),
+        "admin": getCookieValue('admin'),
+        "lists": lists
+      }
+    )
+
+    const email = getCookieValue('email');
+
+    console.log("book-components: ")
+    console.log(lists)
+
+    //axios call to update lists at firestore 
+    // @ts-ignore
+    userService.updateLists(lists, email);
+    this.createLists()
   }
 
   mounted() {
@@ -442,6 +514,8 @@ export class UserDetails extends Component {
   }
 
   async createLists() {
+    this.listItems = []
+
     //Recieve and store lists
     if (getCookieValue("loggedIn") != 'true')
       return 0;

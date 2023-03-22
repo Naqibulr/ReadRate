@@ -44,6 +44,17 @@ class UserService {
       .get<User>('/users/login/' + email + '/' + password)
       .then((response) => response.data as User);
   }
+
+  updateLists(updatedLists: JSON, email: string) {
+    console.log("user service: ")
+    console.log(updatedLists)
+    return axios
+      .put('/users/lists', {
+        lists: updatedLists,
+        email: email
+      })
+      .then((response) => response.data);
+  }
 }
 
 const userService = new UserService();

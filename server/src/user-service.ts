@@ -26,8 +26,13 @@ class UserService {
         lists: new Map(),
       };
 
-      //add a favorites list by default
-      newUser.lists.set('favorites', []);
+      //add defailt lists
+      newUser.lists.set('Favorites', []);
+      newUser.lists.set('Have Read', []);
+      newUser.lists.set('Want To Read', []);
+
+      // Convert the Map object to a plain object
+      const listsObj = Object.fromEntries(newUser.lists);
 
       //get count of users
       const count = (await getDoc(doc(firestore, 'Users', 'count'))).data();
@@ -47,7 +52,7 @@ class UserService {
         last_name: newUser.last_name,
         password: newUser.password,
         admin: false,
-        lists: newUser.lists,
+        lists: listsObj,
       });
 
       resolve(newUser as User);
@@ -103,6 +108,51 @@ class UserService {
         return reject();
       } else {
         resolve();
+      }
+    });
+  }
+
+  updateLists(lists: JSON, email: string) {
+    return new Promise<void>(async (resolve, reject) => {
+      // Create a reference to the users collection
+      const usersRef = collection(firestore, 'Users');
+
+      // Create a query against the collection.
+      const q = query(usersRef, where('email', '==', email));
+
+      //finding corresponding user given the query
+      var user: User;
+      var id: string;
+      const querySnapshot = await getDocs(q);
+
+      querySnapshot.forEach((doc) => {
+        id = doc.id;
+
+        console.log(id);
+        //@ts-ignore
+        user = doc.data();
+      });
+
+      // users .document(id).update({
+      //   age: 13,
+      //   'favorites.color': 'Red',
+      // });
+
+      //rejects if user exists
+      //@ts-ignore
+      if (user) {
+        //@ts-ignore
+        setDoc(doc(firestore, 'Users', id), {
+          email: user.email,
+          first_name: user.first_name,
+          last_name: user.last_name,
+          password: user.password,
+          admin: false,
+          lists: lists,
+        });
+        resolve();
+      } else {
+        return reject();
       }
     });
   }
