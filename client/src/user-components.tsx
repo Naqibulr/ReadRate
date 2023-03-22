@@ -326,12 +326,15 @@ export class UserDetails extends Component {
       <>
         <Card
           style={{
-            // border: 'none',
+            borderRadius: '0px',
             padding: '15px',
             textAlign: 'center',
             marginLeft: 'auto',
             marginRight: 'auto',
             height: '85vh',
+            backgroundColor: this.isDarkModeEnabled ? darkMode.background : lightMode.background,
+            color: this.isDarkModeEnabled ? darkMode.font : lightMode.font,
+            minHeight: '100vh',
           }}
         >
           {/* Page for all relevant user info for logged in user */}

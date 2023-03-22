@@ -474,7 +474,14 @@ export class BookDetails extends Component<{
                 <h2>Reviews</h2>
                 <ListGroup>
                   {this.book.review.map((review) => (
-                    <ListGroupItem>
+                    <ListGroupItem
+                      style={{
+                        backgroundColor: this.isDarkModeEnabled
+                          ? darkMode.background
+                          : lightMode.background,
+                        color: this.isDarkModeEnabled ? darkMode.font : lightMode.font,
+                      }}
+                    >
                       <Row>
                         <Col>
                           <span className="user">{review.email}</span>
