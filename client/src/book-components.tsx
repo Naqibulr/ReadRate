@@ -113,6 +113,7 @@ export function displayAlert() {
 export const WriteReviewEditPage = (props: { book: Book }) => {
   const isbn = getIsbnFromUrl();
   const Email = getEmailFromUrl();
+  let isDarkModeEnabled = getDarkModeCookies();
 
   let [review, setReview] = useState<Review>({
     //@ts-ignore
@@ -167,8 +168,16 @@ export const WriteReviewEditPage = (props: { book: Book }) => {
   };
 
   return (
-    <Container className="p-3">
-      <h1>Write a Review</h1>
+    <Container
+      fluid
+      className="p-5"
+      style={{
+        backgroundColor: isDarkModeEnabled ? darkMode.background : lightMode.background,
+        color: isDarkModeEnabled ? darkMode.font : lightMode.font,
+        height: '87vh',
+      }}
+    >
+      <h1>Edit Review</h1>
       <Form onSubmit={handleUpdate}>
         <FormGroup controlId="rating">
           <FormLabel>Rating</FormLabel>
@@ -180,6 +189,10 @@ export const WriteReviewEditPage = (props: { book: Book }) => {
               setReview({ ...review, rating: parseInt(event.currentTarget.value) })
             } //  (review.rating = parseInt(event.currentTarget.value)
             required
+            style={{
+              backgroundColor: isDarkModeEnabled ? darkMode.background : lightMode.background,
+              color: isDarkModeEnabled ? darkMode.font : lightMode.font,
+            }}
           >
             <option value="">Select a rating...</option>
             <option value="1">1</option>
@@ -198,10 +211,22 @@ export const WriteReviewEditPage = (props: { book: Book }) => {
             name="comment"
             value={review.text}
             onChange={(event) => setReview({ ...review, text: event.currentTarget.value })} // (review.text = event.currentTarget.value)}
+            style={{
+              backgroundColor: isDarkModeEnabled ? darkMode.background : lightMode.background,
+              color: isDarkModeEnabled ? darkMode.font : lightMode.font,
+            }}
           />
         </Form.Group>
 
-        <Button variant="primary" type="submit" className="btn btn-success mt-3">
+        <Button
+          type="submit"
+          className="btn btn-success mt-3"
+          style={{
+            backgroundColor: isDarkModeEnabled ? darkMode.buttonCard : lightMode.buttonCard,
+            color: isDarkModeEnabled ? darkMode.font : lightMode.font,
+            border: 'none',
+          }}
+        >
           Update
         </Button>
       </Form>
@@ -256,7 +281,7 @@ export const WriteReviewPage = (props: { book: Book }) => {
       style={{
         backgroundColor: isDarkModeEnabled ? darkMode.background : lightMode.background,
         color: isDarkModeEnabled ? darkMode.font : lightMode.font,
-        height: '100vh',
+        height: '87vh',
       }}
     >
       <h1>Write a Review</h1>
@@ -416,10 +441,9 @@ export class BookDetails extends Component<{
   isAdmin = document.cookie.includes('admin=true');
   async deleteReview(email: string, ISBN: string) {
     if (this.isAdmin) {
+      console.log(this.isAdmin);
       bookService.deleteReview(email, ISBN);
       this.mounted();
-    } else {
-      Alert.danger('You have to be an admin to delete a review');
     }
   }
   //create a handleList
@@ -505,7 +529,8 @@ export class BookDetails extends Component<{
                   backgroundColor: this.isDarkModeEnabled
                     ? darkMode.buttonCard
                     : lightMode.buttonCard,
-                  color: this.isDarkModeEnabled ? darkMode.card : lightMode.card,
+                  color: this.isDarkModeEnabled ? darkMode.font : lightMode.font,
+                  border: 'none',
                 }}
                 className="btn btn-success mt-3"
                 onClick={() => handleWriteReviewButtonPress(this.book)} // () => history.push(`/books/${this.book.ISBN}/review`)
@@ -617,9 +642,20 @@ export class BookDetails extends Component<{
             <Row>
               <Col>
                 <h2>Reviews</h2>
-                <ListGroup>
+                <ListGroup
+                  style={{
+                    backgroundColor: this.isDarkModeEnabled ? darkMode.card : lightMode.card,
+                    color: this.isDarkModeEnabled ? darkMode.font : lightMode.font,
+                  }}
+                >
                   {this.book.review.map((review) => (
-                    <ListGroupItem style={{ position: 'relative' }}>
+                    <ListGroupItem
+                      style={{
+                        position: 'relative',
+                        backgroundColor: this.isDarkModeEnabled ? darkMode.card : lightMode.card,
+                        color: this.isDarkModeEnabled ? darkMode.font : lightMode.font,
+                      }}
+                    >
                       <div className="d-flex align-items-center">
                         <span className="fw-bold me-3">{review.email}</span>
                         <div className="d-flex align-items-center">
@@ -629,15 +665,39 @@ export class BookDetails extends Component<{
                         </div>
                       </div>
                       <p className="mt-2"> {review.text} </p>
-                      <div>
-                        <Button
-                          style={{ position: 'absolute', bottom: 0, right: 0, margin: '8px' }}
-                          variant="primary"
-                          onClick={() => handleReviewEditButtonPress(this.book, review)} //console.log('this.book, review', this.book, review)
-                        >
-                          Edit
-                        </Button>
-                      </div>
+
+                      <Button
+                        style={{
+                          position: 'absolute',
+                          bottom: 0,
+                          right: 0,
+                          margin: '8px',
+                          backgroundColor: this.isDarkModeEnabled
+                            ? darkMode.buttonCard
+                            : lightMode.buttonCard,
+                          color: this.isDarkModeEnabled ? darkMode.font : lightMode.font,
+                          border: 'none',
+                        }}
+                        onClick={() => handleReviewEditButtonPress(this.book, review)} //console.log('this.book, review', this.book, review)
+                      >
+                        Edit
+                      </Button>
+
+                      <Button
+                        variant="danger"
+                        style={{
+                          position: 'absolute',
+                          bottom: 0,
+                          right: 60,
+                          margin: '8px',
+                          visibility: this.isAdmin ? 'visible' : 'hidden',
+                          color: this.isDarkModeEnabled ? darkMode.font : lightMode.font,
+                          border: 'none',
+                        }}
+                        onClick={() => this.deleteReview(review.email, review.ISBN)}
+                      >
+                        Delete
+                      </Button>
                     </ListGroupItem>
                   ))}
                 </ListGroup>
@@ -668,15 +728,34 @@ export class BookDetails extends Component<{
         <Dropdown>
           <Dropdown.Toggle
             id="dropdown-basic"
-            style={{ backgroundColor: 'rgb(148, 180, 159)', color: 'rgb(255, 255, 255)' }}
-            className="btn btn-success mt-3"
+            style={{
+              backgroundColor: this.isDarkModeEnabled ? darkMode.buttonCard : lightMode.buttonCard,
+              color: this.isDarkModeEnabled ? darkMode.font : lightMode.font,
+              border: 'none',
+            }}
+            className="btn  mt-3"
           >
             Add to a list
           </Dropdown.Toggle>
 
-          <Dropdown.Menu>
+          <Dropdown.Menu
+            style={{
+              backgroundColor: this.isDarkModeEnabled ? darkMode.background : lightMode.background,
+              color: this.isDarkModeEnabled ? darkMode.font : lightMode.font,
+            }}
+          >
             {Object.keys(JSON.parse(getCookieValue('lists'))).map((key: string) => (
-              <Dropdown.Item onClick={() => this.handleList(key)}>{key}</Dropdown.Item>
+              <Dropdown.Item
+                onClick={() => this.handleList(key)}
+                style={{
+                  backgroundColor: this.isDarkModeEnabled
+                    ? darkMode.background
+                    : lightMode.background,
+                  color: this.isDarkModeEnabled ? darkMode.font : lightMode.font,
+                }}
+              >
+                {key}
+              </Dropdown.Item>
             ))}
           </Dropdown.Menu>
         </Dropdown>
@@ -982,7 +1061,7 @@ export class BookAdd extends Component {
                   backgroundColor: this.isDarkModeEnabled
                     ? darkMode.buttonCard
                     : lightMode.buttonCard,
-                  color: this.isDarkModeEnabled ? darkMode.card : lightMode.card,
+                  color: this.isDarkModeEnabled ? darkMode.font : lightMode.font,
                   width: '50rem',
                   margin: 'auto',
                 }}
@@ -1019,11 +1098,13 @@ export function BookCard(props: { book: Book }) {
   return (
     <Card
       key={props.book.id}
-      className="shadow bg-white rounded"
+      className="shadow rounded"
       style={{
         width: '14.5rem',
         margin: '2px',
         border: 'none',
+        backgroundColor: isDarkModeEnabled ? darkMode.card : lightMode.card,
+        color: isDarkModeEnabled ? darkMode.font : lightMode.font,
       }}
     >
       <Card.Img

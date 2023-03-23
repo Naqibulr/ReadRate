@@ -104,6 +104,7 @@ export function BookSearch() {
         backgroundColor: isDarkModeEnabled ? darkMode.background : lightMode.background,
         color: isDarkModeEnabled ? darkMode.font : lightMode.font,
         width: '100vw',
+        minHeight: '90vh',
       }}
     >
       <Row className="m-3">

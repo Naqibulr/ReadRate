@@ -103,6 +103,11 @@ export class UserLogIn extends Component {
               onClick={() => this.logIn()}
               style={{
                 marginBottom: '10px',
+                backgroundColor: this.isDarkModeEnabled
+                  ? darkMode.buttonCard
+                  : lightMode.buttonCard,
+                color: this.isDarkModeEnabled ? darkMode.font : lightMode.font,
+                border: 'none',
               }}
             >
               Log in
@@ -353,7 +358,6 @@ export class UserDetails extends Component {
           backgroundColor: this.isDarkModeEnabled ? darkMode.background : lightMode.background,
           color: this.isDarkModeEnabled ? darkMode.font : lightMode.font,
           minHeight: '220vh',
-          maxHeight: '1000vh',
         }}
       >
         {/* Page for all relevant user info for logged in user */}

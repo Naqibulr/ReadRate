@@ -63,7 +63,7 @@ export class AuthorList extends Component {
       .catch((error) => Alert.danger('Error getting books: ' + error.message));
   }
 
-  search(input: string) { }
+  search(input: string) {}
 }
 
 export class AuthorDetails extends Component<{
@@ -384,7 +384,7 @@ export class AuthorAdd extends Component {
                   backgroundColor: this.isDarkModeEnabled
                     ? darkMode.buttonCard
                     : lightMode.buttonCard,
-                  color: this.isDarkModeEnabled ? darkMode.card : lightMode.card,
+                  color: this.isDarkModeEnabled ? darkMode.font : lightMode.font,
                   width: '50rem',
                   margin: 'auto',
                 }}
@@ -397,7 +397,7 @@ export class AuthorAdd extends Component {
       </Container>
     );
   }
-  mounted() { }
+  mounted() {}
 }
 
 export class AuthorEdit extends Component<{ match: { params: { id: number } } }> {
@@ -414,7 +414,7 @@ export class AuthorEdit extends Component<{ match: { params: { id: number } } }>
     );
   }
 
-  mounted() { }
+  mounted() {}
 }
 
 export function AuthorCard(props: { author: Author }) {
