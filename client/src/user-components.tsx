@@ -566,7 +566,7 @@ export class UserDetails extends Component {
               genre: book.genre,
               rating: book.rating,
               imagePath: book.imagePath,
-              review: [],
+              review: book.review,
               addedDate: new Date(),
             };
 
@@ -593,5 +593,5 @@ export class UserDetails extends Component {
     window.location.reload();
   }
 
-  requestAdmin() {}
+  requestAdmin() { }
 }
