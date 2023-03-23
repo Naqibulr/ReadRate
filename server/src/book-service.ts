@@ -11,7 +11,7 @@ export type Book = {
   releaseYear: number;
   publisher: string;
   rating: Array<number>;
-  review: Array<string>;
+  review: Array<Review>;
   pages: number;
   description: string;
   genre: Array<string>;
@@ -106,6 +106,21 @@ class BookService {
     }
   }
 
+  async getReviews() {
+    const snapshot = await getDocs(this.revRef);
+    const reviews = snapshot.docs.map((doc) => {
+      const reviewData = doc.data();
+      const review: Review = {
+        email: reviewData.email,
+        ISBN: reviewData.ISBN,
+        rating: reviewData.rating,
+        text: reviewData.text,
+      };
+      return review;
+    });
+    return reviews;
+  }
+
   addBook(book: Book) {
     console.log('book-service', book);
     return new Promise<void>(async (resolve, reject) => {
@@ -188,6 +203,10 @@ class BookService {
 
   async getBooksByISBN(ISBN: string) {
     return (await this.getBooks()).filter((book) => book.ISBN == ISBN)[0];
+  }
+
+  getReviewByBookAndEmail(book: Book, email: string) {
+    return book.review.filter((review) => review.email == email)[0];
   }
 }
 

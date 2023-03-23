@@ -43,6 +43,13 @@ router.get('/books', (_request, response) => {
     .catch((error) => response.status(500).send(error));
 });
 
+router.get('/reviews', (_request, response) => {
+  const data = request.body;
+  bookService
+    .getReviews()
+    .then((reviews) => response.send(reviews))
+    .catch((error) => response.status(500).send(error));
+});
 //////////////////////USER
 // Gets a user if the login is completed
 router.get('/users/login/:email/:password', (request, response) => {

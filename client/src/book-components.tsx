@@ -19,11 +19,12 @@ import {
 import { createHashHistory } from 'history';
 import bookService, { Book, Review } from './book-service';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faStar } from '@fortawesome/free-solid-svg-icons';
+import { faStar, faWindowRestore } from '@fortawesome/free-solid-svg-icons';
 import StarRatings from 'react-star-ratings';
 import { computeAverage } from './average';
 import { Link } from 'react-router-dom';
 import { getCookieValue } from './getcookie';
+import { FaStar } from 'react-icons/fa';
 
 // REMEMBER TO ADD IMPORTS FROM SERVICE
 
@@ -45,12 +46,57 @@ function getIsbnFromUrl(): string | null {
   return null; // returns null if no match is found
 }
 
+function getEmailFromUrl(): string | null {
+  const hash = window.location.hash; // gets the hash part of the URL
+  const regex = /\/books\/(\d+)\/review\/(\w+@\w+\.\w+)/; // regex to match the email address
+  const match = hash.match(regex); // finds the first match of the regex in the hash
+  if (match && match.length > 2) {
+    return match[2]; // returns the email address if a match is found
+  }
+  return null; // returns null if no match is found
+}
+
+// function getIsbnFromUrl(): string | null {
+//   const path = window.location.pathname; // gets the pathname part of the URL
+//   const regex = /\/books\/(\d+)\//; // regex to match the ISBN number
+//   const match = path.match(regex); // finds the first match of the regex in the pathname
+//   if (match && match.length > 1) {
+//     return match[1]; // returns the ISBN number if a match is found
+//   }
+//   return null; // returns null if no match is found
+// }
+
+// function getEmailFromUrl(): string | null {
+//   const path = window.location.pathname; // gets the pathname part of the URL
+//   const regex = /\/books\/(\d+)\/review\/(\w+@\w+\.\w+)/; // regex to match the email address
+//   const match = path.match(regex); // finds the first match of the regex in the pathname
+//   if (match && match.length > 2) {
+//     return match[2]; // returns the email address if a match is found
+//   }
+//   return null; // returns null if no match is found
+// }
+
 export function handleWriteReviewButtonPress(book: Book) {
   if (getCookieValue('loggedIn') == 'true') {
     //@ts-ignorets-ignore
-    history.push(`/books/${book.ISBN}/review`);
+    if (bookService.reviewAlreadyExists(book.ISBN, getCookieValue('email')) != 'true') {
+      history.push(`/books/${book.ISBN}/review`);
+    } else {
+      Alert.info(
+        `You have already written a review for this book, please edit this instead of adding multiple reviews`
+      );
+    }
   } else {
     Alert.info(`You need to log in to be able to write a review`);
+  }
+}
+
+export function handleReviewEditButtonPress(book: Book, review: Review) {
+  if (getCookieValue('loggedIn') == 'true' && review.email == getCookieValue('email')) {
+    //@ts-ignorets-ignore
+    history.push(`/books/${book.ISBN}/review/${review.email}`);
+  } else {
+    Alert.info(`You can only edit your own reviews, if you're not logged in, please log in`);
   }
 }
 
@@ -58,9 +104,107 @@ export function displayAlert() {
   return;
 }
 
+export const WriteReviewEditPage = (props: { book: Book }) => {
+  const isbn = getIsbnFromUrl();
+  const Email = getEmailFromUrl();
+
+  let [review, setReview] = useState<Review>({
+    //@ts-ignore
+    email: Email,
+    //@ts-ignore
+    ISBN: isbn,
+    rating: 0,
+    text: '',
+  });
+
+  console.log(Email, isbn);
+  //@ts-ignore
+  bookService.deleteReviewFromBook(Email, isbn);
+
+  useEffect(() => {
+    if (isbn !== null && Email !== null) {
+      bookService
+        .getReviewByIsbnAndEmail(isbn, Email)
+        .then((result) => {
+          setReview(result);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  }, []);
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    // Here you can save the review to your database or do other logic
+    console.log('book-components', review);
+    bookService.addReview(review);
+    // Once done, navigate the user back to the book details page or homepage
+    history.goBack(); //history.push(`/books/${props.book.ISBN}`); //book-details
+    setTimeout(() => {
+      window.location.reload();
+    }, 100);
+    Alert.info(`Review added`);
+  };
+
+  const handleUpdate = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    console.log(Email);
+    console.log(isbn);
+    try {
+      //@ts-ignore
+      bookService.deleteReview(Email, isbn).then(() => handleSubmit(event));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  return (
+    <Container className="p-3">
+      <h1>Write a Review</h1>
+      <Form onSubmit={handleUpdate}>
+        <FormGroup controlId="rating">
+          <FormLabel>Rating</FormLabel>
+          <FormControl
+            as="select"
+            name="rating"
+            value={review.rating}
+            onChange={(event) =>
+              setReview({ ...review, rating: parseInt(event.currentTarget.value) })
+            } //  (review.rating = parseInt(event.currentTarget.value)
+            required
+          >
+            <option value="">Select a rating...</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+          </FormControl>
+        </FormGroup>
+
+        <Form.Group controlId="comment">
+          <Form.Label>Review</Form.Label>
+          <Form.Control
+            as="textarea"
+            rows={3}
+            name="comment"
+            value={review.text}
+            onChange={(event) => setReview({ ...review, text: event.currentTarget.value })} // (review.text = event.currentTarget.value)}
+          />
+        </Form.Group>
+
+        <Button variant="primary" type="submit" className="btn btn-success mt-3">
+          Update
+        </Button>
+      </Form>
+    </Container>
+  );
+};
+
 export const WriteReviewPage = (props: { book: Book }) => {
   const [formData, setFormData] = useState<ReviewFormData>({
-    // name: '',
     rating: 0,
     comment: '',
   });
@@ -70,12 +214,10 @@ export const WriteReviewPage = (props: { book: Book }) => {
   let review: Review = {
     email: getCookieValue('email'),
     //@ts-ignore
-    ISBN: isbn, //props.book.ISBN
+    ISBN: isbn,
     rating: 0,
     text: '',
   };
-
-  //const { book_id } = props.match.params;
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -84,6 +226,9 @@ export const WriteReviewPage = (props: { book: Book }) => {
     bookService.addReview(review);
     // Once done, navigate the user back to the book details page or homepage
     history.goBack(); //history.push(`/books/${props.book.ISBN}`); //book-details
+    setTimeout(() => {
+      window.location.reload();
+    }, 100);
     Alert.info(`Review added`);
   };
 
@@ -201,17 +346,6 @@ export function BookList(props: BookListProps) {
     </div>
   );
 }
-
-const reviews: Review[] = [
-  {
-    email: 'Jonatan@ermedlem.no',
-    ISBN: 'bokISBN',
-    //avatar: '',
-    text: 'bra bok',
-    rating: 3,
-  },
-];
-
 export class BookDetails extends Component<{
   match: {
     params: { book_id: string };
@@ -356,12 +490,23 @@ export class BookDetails extends Component<{
                 <h2>Reviews</h2>
                 <ListGroup>
                   {this.book.review.map((review) => (
-                    <ListGroupItem>
-                      <span className="user">{review.email}</span>
-                      <Badge bg="info" pill>
-                        {review.rating} stars
-                      </Badge>
-                      <p> {review.text} </p>
+                    <ListGroupItem style={{ position: 'relative' }}>
+                      <div className="d-flex align-items-center">
+                        <span className="fw-bold me-3">{review.email}</span>
+                        <div className="d-flex align-items-center">
+                          {[...Array(review.rating)].map((_, i) => (
+                            <FaStar key={i} className="text-warning" />
+                          ))}
+                        </div>
+                      </div>
+                      <p className="mt-2"> {review.text} </p>
+                      <Button
+                        style={{ position: 'absolute', bottom: 0, right: 0, margin: '8px' }}
+                        variant="primary"
+                        onClick={() => handleReviewEditButtonPress(this.book, review)} //console.log('this.book, review', this.book, review)
+                      >
+                        Edit
+                      </Button>
                     </ListGroupItem>
                   ))}
                 </ListGroup>
