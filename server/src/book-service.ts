@@ -1,5 +1,14 @@
 import { firestore } from './firebase';
-import { collection, query, getDocs, addDoc, updateDoc, doc, arrayUnion } from 'firebase/firestore';
+import {
+  collection,
+  query,
+  getDocs,
+  addDoc,
+  updateDoc,
+  doc,
+  arrayUnion,
+  where,
+} from 'firebase/firestore';
 import { List } from './list';
 import userService from './user-service';
 
@@ -11,7 +20,7 @@ export type Book = {
   releaseYear: number;
   publisher: string;
   rating: Array<number>;
-  review: Array<string>;
+  review: Array<Review>;
   pages: number;
   description: string;
   genre: Array<string>;
@@ -106,6 +115,21 @@ class BookService {
     }
   }
 
+  async getReviews() {
+    const snapshot = await getDocs(this.revRef);
+    const reviews = snapshot.docs.map((doc) => {
+      const reviewData = doc.data();
+      const review: Review = {
+        email: reviewData.email,
+        ISBN: reviewData.ISBN,
+        rating: reviewData.rating,
+        text: reviewData.text,
+      };
+      return review;
+    });
+    return reviews;
+  }
+
   addBook(book: Book) {
     return new Promise<void>(async (resolve, reject) => {
       addDoc(this.colRef, {
@@ -188,6 +212,11 @@ class BookService {
   async getBooksByISBN(ISBN: string) {
     return (await this.getBooks()).filter((book) => book.ISBN == ISBN)[0];
   }
+
+  getReviewByBookAndEmail(book: Book, email: string) {
+    return book.review.filter((review) => review.email == email)[0];
+  }
+
   getBook(ISBN: string) {
     return new Promise<Book>(async (resolve, reject) => {
       const q = query(this.colRef, where('ISBN', '==', ISBN));

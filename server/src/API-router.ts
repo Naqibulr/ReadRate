@@ -42,6 +42,13 @@ router.get('/books', (_request, response) => {
     .catch((error) => response.status(500).send(error));
 });
 
+router.get('/reviews', (_request, response) => {
+  const data = request.body;
+  bookService
+    .getReviews()
+    .then((reviews) => response.send(reviews))
+    .catch((error) => response.status(500).send(error));
+});
 //Get a recipe with given recipe_id
 router.get('/books/:isbn', (request, response) => {
   const isbn = String(request.params.isbn);
