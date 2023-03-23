@@ -52,3 +52,15 @@ export function setLoginCookies(currentUser: any) {
   document.cookie = `email=${currentUser.email}; path=/`;
   document.cookie = `lists=${JSON.stringify(currentUser.lists)}; path=/`;
 }
+
+
+export function checkCookie(cookieName: string) {
+  var cookies = document.cookie.split(';');
+  for (var i = 0; i < cookies.length; i++) {
+    var cookie = cookies[i].trim();
+    if (cookie.indexOf(cookieName + '=') === 0) {
+      return true; // Cookie value exists
+    }
+  }
+  return false; // Cookie value does not exist
+}

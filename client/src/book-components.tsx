@@ -24,7 +24,7 @@ import { faStar } from '@fortawesome/free-solid-svg-icons';
 import StarRatings from 'react-star-ratings';
 import { computeAverage } from './average';
 import { Link } from 'react-router-dom';
-import { getCookieValue, setLoginCookies } from './getcookie';
+import { checkCookie, getCookieValue, setLoginCookies } from './getcookie';
 import userService from './user-service';
 
 // REMEMBER TO ADD IMPORTS FROM SERVICE
@@ -301,23 +301,7 @@ export class BookDetails extends Component<{
                 alt="..."
               />
             </Row>
-            {/* @ts-ignore */}
-            <Dropdown>
-              <Dropdown.Toggle id="dropdown-basic" style={{ backgroundColor: 'rgb(148, 180, 159)', color: 'rgb(255, 255, 255)' }}
-                className="btn btn-success mt-3">
-                Add to a list
-              </Dropdown.Toggle>
-
-
-              <Dropdown.Menu>
-                {
-                  Object.keys(JSON.parse(getCookieValue("lists"))).map((key: string) => (
-                    <Dropdown.Item onClick={() => this.handleList(key)}>{key}</Dropdown.Item>
-                  ))
-                }
-              </Dropdown.Menu>
-            </Dropdown>{' '}
-
+            {this.renderDropDownMenu()}
             <Row className="m-3 ">
               <Button
                 type="button"
@@ -408,7 +392,7 @@ export class BookDetails extends Component<{
             </Row>
           </Col>
         </Row>
-      </Container>
+      </Container >
     );
   }
   mounted() {
@@ -416,6 +400,32 @@ export class BookDetails extends Component<{
       .getBook(this.props.match.params.book_id)
       .then((book) => (this.book = book))
       .catch((error) => Alert.danger('Error getting recipe details: ' + error.message));
+  }
+
+  renderDropDownMenu() {
+    if (checkCookie("lists")) {
+      return (
+        < Dropdown >
+          <Dropdown.Toggle id="dropdown-basic" style={{ backgroundColor: 'rgb(148, 180, 159)', color: 'rgb(255, 255, 255)' }}
+            className="btn btn-success mt-3">
+            Add to a list
+          </Dropdown.Toggle>
+
+
+          <Dropdown.Menu>
+            {
+              Object.keys(JSON.parse(getCookieValue("lists"))).map((key: string) => (
+                <Dropdown.Item onClick={() => this.handleList(key)}>{key}</Dropdown.Item>
+              ))
+            }
+          </Dropdown.Menu>
+        </Dropdown>
+      )
+    } else {
+      return (
+        <></>
+      )
+    }
   }
 }
 
