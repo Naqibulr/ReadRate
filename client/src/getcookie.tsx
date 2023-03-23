@@ -30,6 +30,7 @@ export function forgetLogin() {
   document.cookie = 'last_name=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
   document.cookie = 'user_id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
   document.cookie = 'email=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+  document.cookie = 'lists=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
 }
 
 /**
@@ -49,6 +50,7 @@ export function setLoginCookies(currentUser: any) {
   document.cookie = `user_id=${currentUser.user_id}; path=/`;
   document.cookie = `last_name=${currentUser.last_name}; path=/`;
   document.cookie = `email=${currentUser.email}; path=/`;
+  document.cookie = `lists=${JSON.stringify(currentUser.lists)}; path=/`;
 }
 
 export function setDarkModCookies(isDarkModeEnabled: boolean) {
@@ -60,4 +62,15 @@ export function getDarkModeCookies() {
     .split(';')
     .find((cookie) => cookie.trim().startsWith('darkModeEnabled='));
   return cookie ? cookie.split('=')[1] === 'true' : false;
+}
+
+export function checkCookie(cookieName: string) {
+  var cookies = document.cookie.split(';');
+  for (var i = 0; i < cookies.length; i++) {
+    var cookie = cookies[i].trim();
+    if (cookie.indexOf(cookieName + '=') === 0) {
+      return true; // Cookie value exists
+    }
+  }
+  return false; // Cookie value does not exist
 }

@@ -10,6 +10,7 @@ import {
   BookCard,
   BookList,
   WriteReviewPage,
+  WriteReviewEditPage,
 } from './book-components';
 import { AuthorAdd, AuthorDetails, AuthorEdit, AuthorCard } from './author-components';
 import { UserDetails, UserLogIn, RegisterUser } from './user-components';
@@ -54,7 +55,6 @@ function Home() {
         (a: Book, b: Book) => new Date(b.addedDate).getTime() - new Date(a.addedDate).getTime()
       );
       setMotRecent(sortedBooks);
-      console.log(sortedBooks);
     };
     fetchBooks();
   }, []);
@@ -177,6 +177,11 @@ ReactDOM.render(
       <Route exact path="/authors/:id/edit" component={AuthorEdit} />
       <Route exact path="/addauthors/" component={AuthorAdd} />
       <Route exact path="/books/:book_id(\d+)/review" component={WriteReviewPage} />
+      <Route
+        exact
+        path="/books/:book_id(\d+)/review/:review_email(\w+@\w+\.\w+)"
+        component={WriteReviewEditPage} //
+      />
     </div>
   </HashRouter>,
   document.getElementById('root')

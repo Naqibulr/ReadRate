@@ -8,8 +8,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleHalfStroke } from '@fortawesome/free-solid-svg-icons';
 import getBookRating from './google-books-rating';
 import { darkMode, lightMode } from './colors';
-//import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { getCookieValue } from './getcookie';
 import Logo from './Logo.png';
+import { loggedIn } from './user-components';
+//import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import LogoDark from './Logo_darkmode.png';
 
 export class Menu extends Component {
@@ -175,11 +177,11 @@ export class Menu extends Component {
               <Nav.Link
                 href="/#/books/user"
                 style={{
-                  color: this.isDarkModeEnabled ? darkMode.font : lightMode.font,
                   marginTop: '15px',
+                  color: this.isDarkModeEnabled ? darkMode.font : lightMode.font,
                 }}
               >
-                Login
+                {getCookieValue('loggedIn') == 'true' ? 'Profile' : 'Login'}
               </Nav.Link>
               <Button
                 onClick={() => this.handleToggleDarkMode()}

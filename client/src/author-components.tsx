@@ -63,7 +63,7 @@ export class AuthorList extends Component {
       .catch((error) => Alert.danger('Error getting books: ' + error.message));
   }
 
-  search(input: string) {}
+  search(input: string) { }
 }
 
 export class AuthorDetails extends Component<{
@@ -196,7 +196,6 @@ export class AuthorDetails extends Component<{
         this.author = author;
         bookService.getBookByAuthor(this.author.name).then((books) => {
           this.books = books;
-          console.log(this.books);
         });
       })
       .catch((error) => Alert.danger('Error getting recipe details: ' + error.message));
@@ -398,7 +397,7 @@ export class AuthorAdd extends Component {
       </Container>
     );
   }
-  mounted() {}
+  mounted() { }
 }
 
 export class AuthorEdit extends Component<{ match: { params: { id: number } } }> {
@@ -415,7 +414,7 @@ export class AuthorEdit extends Component<{ match: { params: { id: number } } }>
     );
   }
 
-  mounted() {}
+  mounted() { }
 }
 
 export function AuthorCard(props: { author: Author }) {

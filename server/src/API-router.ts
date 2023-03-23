@@ -2,7 +2,7 @@ import express, { request, response } from 'express';
 import bookService from './book-service';
 import { Book } from './book-service';
 import bcrypt from 'bcryptjs';
-import userService from './user-service';
+import userService, { User } from './user-service';
 import authorService from './author-service';
 
 /**
@@ -29,7 +29,6 @@ router.get('/review/:isbn', (_request, response) => {
 router.post('/books', (request, response) => {
   const data = request.body;
   const book: Book = data.book;
-  console.log('router', book);
   bookService
     .addBook(book)
     .then(() => response.status(200).send())
@@ -41,6 +40,35 @@ router.get('/books', (_request, response) => {
     .getBooks()
     .then((books) => response.send(books))
     .catch((error) => response.status(500).send(error));
+});
+
+router.get('/reviews', (_request, response) => {
+  const data = request.body;
+  bookService
+    .getReviews()
+    .then((reviews) => response.send(reviews))
+    .catch((error) => response.status(500).send(error));
+});
+//Get a recipe with given recipe_id
+router.get('/books/:isbn', (request, response) => {
+  const isbn = String(request.params.isbn);
+  bookService
+    .getBook(isbn)
+    .then((book) => (book ? response.send(book) : response.status(404).send('Recipe not found')))
+    .catch((error) => response.status(500).send(error));
+});
+
+router.get('/books/search/:searchTerm', (request, response) => {
+  const searchTerm = String(request.params.searchTerm);
+
+  bookService
+    .getFilteredBooks(searchTerm)
+    .then((books) => {
+      response.send(books);
+    })
+    .catch((error) => {
+      response.status(500);
+    });
 });
 
 //////////////////////USER
@@ -58,7 +86,7 @@ router.get('/users/login/:email/:password', (request, response) => {
       .getUser(email)
       .then((user) => {
         if (bcrypt.compareSync(password, String(user.password))) {
-          response.send(user);
+          response.send(user as User);
         } else {
           response.status(400).send('Incorrect Email and/or Password! ');
         }
@@ -71,16 +99,16 @@ router.get('/users/login/:email/:password', (request, response) => {
   }
 });
 
-router.get('/books/search/:searchTerm', (request, response) => {
-  const searchTerm = String(request.params.searchTerm);
+router.put('/users/lists', (request, response) => {
+  const data = request.body;
+  const email = String(data.email);
+  const lists = data.lists;
 
-  bookService
-    .getFilteredBooks(searchTerm)
-    .then((books) => {
-      response.send(books);
-    })
+  userService
+    .updateLists(lists, email)
+    .then(() => response.status(200).send())
     .catch((error) => {
-      response.status(500);
+      response.status(500).send(error);
     });
 });
 
@@ -140,7 +168,6 @@ export default router;
 router.post('/reviews', (request, response) => {
   const data = request.body;
   const review: Review = data.review;
-  console.log('router', review);
   bookService
     //@ts-ignore
     .addReview(review)

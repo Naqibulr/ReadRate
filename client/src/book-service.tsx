@@ -11,6 +11,8 @@ import {
   getDoc,
   arrayRemove,
   updateDoc,
+  FieldValue,
+  arrayUnion,
 } from 'firebase/firestore';
 import { User } from './user-service';
 import { getCookieValue } from './getcookie';
@@ -45,6 +47,59 @@ class BookService {
   /**
    * Get all testdata.
    */
+
+  updateReviewsInBook = async (bookISBN: string, review: Review) => {
+    try {
+      const bookRef = doc(collection(firestore, 'Books'), bookISBN);
+      const reviewsQuery = query(collection(firestore, 'Reviews'), where('ISBN', '==', bookISBN));
+
+      const reviewsSnapshot = await getDocs(reviewsQuery);
+
+      // Get the ID of the review document to update
+      const reviewID = reviewsSnapshot.docs.find((doc) => doc.data().email === review.email)?.id;
+
+      if (!reviewID) {
+        throw new Error('Could not find the review document');
+      }
+
+      // Update the review document in Firebase
+      await updateDoc(doc(collection(firestore, 'Reviews'), reviewID), {
+        rating: review.rating,
+        text: review.text,
+      });
+
+      // Update the reviews array in the book document
+      await updateDoc(bookRef, {
+        //@ts-ignore
+        reviews: FieldValue.arrayUnion(review),
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  updateReview = async (review: Review) => {
+    try {
+      const reviewsRef = collection(firestore, 'Reviews');
+      const queryRef = query(
+        reviewsRef,
+        where('ISBN', '==', review.ISBN),
+        where('email', '==', review.email)
+      );
+      const snapshot = await getDocs(queryRef);
+      if (snapshot.empty) {
+        throw new Error(`Review with ISBN ${review.ISBN} and email ${review.email} not found`);
+      }
+      const docRef = snapshot.docs[0].ref;
+      await updateDoc(docRef, review);
+
+      console.log(`Review with email ${review.email} and ISBN ${review.ISBN} updated successfully`);
+      this.updateReviewsInBook;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   getBooks() {
     return axios.get('/books').then((response) => {
       const data = response.data;
@@ -63,8 +118,36 @@ class BookService {
   colRef = collection(firestore, 'books');
 
   addReview(review: Review) {
-    console.log('book-service', review);
     return axios.post('/reviews', { review }).then((response) => response.data);
+  }
+
+  reviewAlreadyExists(ISBN: string, email: string) {
+    try {
+      // code that might throw an error
+      this.getReviewByIsbnAndEmail(ISBN, email);
+      return true;
+    } catch (error) {
+      // handle the error
+      console.log(error);
+      return false;
+    }
+  }
+
+  getReviewByIsbnAndEmail(ISBN: string, email: string) {
+    return axios.get('/reviews').then((response) => {
+      const data = response.data;
+      if (Array.isArray(data)) {
+        const filteredData = data.find((review) => review.ISBN === ISBN && review.email == email);
+        if (filteredData) {
+          console.log(filteredData);
+          return filteredData;
+        } else {
+          throw new Error(`Book with ISBN ${ISBN} not found`);
+        }
+      } else {
+        throw new Error('Invalid response data: not an array');
+      }
+    });
   }
 
   getBooksByGenre(genre: string) {
@@ -81,7 +164,6 @@ class BookService {
   }
 
   addBook(book: Book) {
-    console.log('book-service', book);
     return axios.post('/books', { book }).then((response) => response.data);
   }
 
