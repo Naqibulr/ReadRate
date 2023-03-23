@@ -342,177 +342,156 @@ export class UserDetails extends Component {
   newList: string = '';
   render() {
     return (
-      <>
-        <div
+      <div
+        style={{
+          borderRadius: '0px',
+          padding: '15px',
+          textAlign: 'center',
+          marginLeft: 'auto',
+          marginRight: 'auto',
+          height: '85vh',
+          backgroundColor: this.isDarkModeEnabled ? darkMode.background : lightMode.background,
+          color: this.isDarkModeEnabled ? darkMode.font : lightMode.font,
+          minHeight: '220vh',
+          maxHeight: '1000vh',
+        }}
+      >
+        {/* Page for all relevant user info for logged in user */}
+        <Card.Title style={{ fontSize: '30px' }}>
+          {'User page for ' + getCookieValue('first_name') + ' ' + getCookieValue('last_nam')}
+        </Card.Title>
+        <Row style={{ fontSize: '17px' }}>
+          <Card.Text>Your email-adress: {getCookieValue('email')}</Card.Text>
+        </Row>
+        <Row style={{ fontSize: '17px' }}>
+          <Card.Text>
+            You are{' '}
+            {getCookieValue('admin') == 'true'
+              ? 'registered as an Admin user'
+              : 'registered as an ordinary user'}
+          </Card.Text>
+        </Row>
+        <br />
+        <br />
+        <br />
+        <Row style={{ fontSize: '17px' }}></Row>
+        <Row>
+          <Card.Text style={{ fontWeight: 'bold', fontSize: '25px' }}>Your Lists:</Card.Text>
+        </Row>
+        <Row
           style={{
-            borderRadius: '0px',
-            padding: '15px',
-            textAlign: 'center',
-            marginLeft: 'auto',
-            marginRight: 'auto',
-            height: '85vh',
             backgroundColor: this.isDarkModeEnabled ? darkMode.background : lightMode.background,
-            color: this.isDarkModeEnabled ? darkMode.font : lightMode.font,
-            minHeight: '100vh',
           }}
         >
-          {/* Page for all relevant user info for logged in user */}
-          <Card.Title style={{ fontSize: '30px' }}>
-            {'User page for ' + getCookieValue('first_name') + ' ' + getCookieValue('last_nam')}
-          </Card.Title>
-          <Row style={{ fontSize: '17px' }}>
-            <Card.Text>Your email-adress: {getCookieValue('email')}</Card.Text>
-          </Row>
-          <Row style={{ fontSize: '17px' }}>
-            <Card.Text>
-              You are{' '}
-              {getCookieValue('admin') == 'true'
-                ? 'registered as an Admin user'
-                : 'registered as an ordinary user'}
-            </Card.Text>
-          </Row>
-          <br />
-          <br />
-          <br />
-          <Row style={{ fontSize: '17px' }}>
-            {/* <Card.Text style={{ fontWeight: 'bold' }}>Your reviews:</Card.Text>
-          </Row>
-          <Row>
-            <Col xs={3}>
-              Book title 1 <br />
-              4 / 5
-              <Form.Range />
-              <Form.Control
-                as="textarea"
-                rows={12}
-                value="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer bibendum convallis ornare. Aliquam id iaculis leo. In malesuada mi sed mauris euismod, vitae pretium leo feugiat. Sed at nisl blandit, volutpat arcu at, dignissim enim. Donec vel massa nulla. Maecenas eget sollicitudin nisl. Morbi et ex id elit vehicula fringilla at vel velit. Maecenas at quam odio. Donec id consectetur purus, sit amet lacinia dolor. Vivamus gravida leo ut nisl sollicitudin, ac sagittis lectus consectetur. Nulla iaculis vel lectus ac sodales. Maecenas at sapien pretium, vehicula sapien eget, feugiat ligula. Nulla egestas ligula non tempus commodo. Quisque tristique urna dui, non finibus nisi bibendum non. Mauris pulvinar sed lacus vitae convallis. Sed dictum efficitur nibh eget condimentum."
-              ></Form.Control>
-            </Col>
-            <Col xs={3}>
-              Book title 2 <br />
-              2 / 5
-              <Form.Range />
-              <Form.Control
-                as="textarea"
-                rows={12}
-                value="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer bibendum convallis ornare. Aliquam id iaculis leo. In malesuada mi sed mauris euismod, vitae pretium leo feugiat. Sed at nisl blandit, volutpat arcu at, dignissim enim. Donec vel massa nulla. Maecenas eget sollicitudin nisl. Morbi et ex id elit vehicula fringilla at vel velit. Maecenas at quam odio. Donec id consectetur purus, sit amet lacinia dolor. Vivamus gravida leo ut nisl sollicitudin, ac sagittis lectus consectetur. Nulla iaculis vel lectus ac sodales. Maecenas at sapien pretium, vehicula sapien eget, feugiat ligula. Nulla egestas ligula non tempus commodo. Quisque tristique urna dui, non finibus nisi bibendum non. Mauris pulvinar sed lacus vitae convallis. Sed dictum efficitur nibh eget condimentum."
-              ></Form.Control>
-            </Col>
-            <Col xs={3}>
-              Book title 3 <br />
-              3 / 5
-              <Form.Range />
-              <Form.Control
-                as="textarea"
-                rows={12}
-                value="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer bibendum convallis ornare. Aliquam id iaculis leo. In malesuada mi sed mauris euismod, vitae pretium leo feugiat. Sed at nisl blandit, volutpat arcu at, dignissim enim. Donec vel massa nulla. Maecenas eget sollicitudin nisl. Morbi et ex id elit vehicula fringilla at vel velit. Maecenas at quam odio. Donec id consectetur purus, sit amet lacinia dolor. Vivamus gravida leo ut nisl sollicitudin, ac sagittis lectus consectetur. Nulla iaculis vel lectus ac sodales. Maecenas at sapien pretium, vehicula sapien eget, feugiat ligula. Nulla egestas ligula non tempus commodo. Quisque tristique urna dui, non finibus nisi bibendum non. Mauris pulvinar sed lacus vitae convallis. Sed dictum efficitur nibh eget condimentum."
-              ></Form.Control>
-            </Col>
-            <Col xs={3}>
-              Book title 4 <br />
-              3 / 5
-              <Form.Range />
-              <Form.Control
-                as="textarea"
-                rows={12}
-                value="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer bibendum convallis ornare. Aliquam id iaculis leo. In malesuada mi sed mauris euismod, vitae pretium leo feugiat. Sed at nisl blandit, volutpat arcu at, dignissim enim. Donec vel massa nulla. Maecenas eget sollicitudin nisl. Morbi et ex id elit vehicula fringilla at vel velit. Maecenas at quam odio. Donec id consectetur purus, sit amet lacinia dolor. Vivamus gravida leo ut nisl sollicitudin, ac sagittis lectus consectetur. Nulla iaculis vel lectus ac sodales. Maecenas at sapien pretium, vehicula sapien eget, feugiat ligula. Nulla egestas ligula non tempus commodo. Quisque tristique urna dui, non finibus nisi bibendum non. Mauris pulvinar sed lacus vitae convallis. Sed dictum efficitur nibh eget condimentum."
-              ></Form.Control>
-            </Col> */}
-          </Row>
-          <Row>
-            <Card.Text style={{ fontWeight: 'bold', fontSize: '25px' }}>Your Lists:</Card.Text>
-          </Row>
-          <Row>
-            {/* @ts-ignore */}
-            {this.listItems.map((list, index) => {
-              if (list.books.length == 0) {
-                return (
-                  <div key={index}>
-                    <h4 style={{ marginLeft: '20px', marginTop: '5px', marginBottom: '0px' }}>
-                      {list.title}
-                    </h4>
-                    <p>The list is currently empty</p>
-                  </div>
-                );
-              } else {
-                return (
-                  <div key={index}>
-                    <h4 style={{ marginLeft: '20px', marginTop: '5px', marginBottom: '0px' }}>
-                      {list.title}
-                    </h4>
-                    {/* @ts-ignore */}
-                    <Carousel interval={null}>
-                      {list.books.map((book, index) => {
-                        if (index % 6 === 0) {
-                          return (
-                            <Carousel.Item key={index} style={{ padding: '1rem' }}>
-                              <Row>
-                                {list.books.slice(index, index + 6).map((book, index) => (
-                                  <Col md={2} key={index}>
-                                    <BookCard book={book} />
-                                  </Col>
-                                ))}
-                              </Row>
-                            </Carousel.Item>
-                          );
-                        }
-                        return null;
-                      })}
-                    </Carousel>
-                  </div>
-                );
+          {/* @ts-ignore */}
+          {this.listItems.map((list, index) => {
+            if (list.books.length == 0) {
+              return (
+                <div key={index}>
+                  <h4 style={{ marginLeft: '20px', marginTop: '5px', marginBottom: '0px' }}>
+                    {list.title}
+                  </h4>
+                  <p>The list is currently empty</p>
+                </div>
+              );
+            } else {
+              return (
+                <div
+                  key={index}
+                  style={{
+                    backgroundColor: this.isDarkModeEnabled
+                      ? darkMode.background
+                      : lightMode.background,
+                  }}
+                >
+                  <h4 style={{ marginLeft: '20px', marginTop: '5px', marginBottom: '0px' }}>
+                    {list.title}
+                  </h4>
+                  {/* @ts-ignore */}
+                  <Carousel interval={null}>
+                    {list.books.map((book, index) => {
+                      if (index % 6 === 0) {
+                        return (
+                          <Carousel.Item key={index} style={{ padding: '1rem' }}>
+                            <Row>
+                              {list.books.slice(index, index + 6).map((book, index) => (
+                                <Col md={2} key={index}>
+                                  <BookCard book={book} />
+                                </Col>
+                              ))}
+                            </Row>
+                          </Carousel.Item>
+                        );
+                      }
+                      return null;
+                    })}
+                  </Carousel>
+                </div>
+              );
+            }
+          })}
+        </Row>
+        <div
+          style={{
+            width: '15rem',
+            marginLeft: 'auto',
+            marginRight: 'auto',
+            marginBottom: '10px',
+            backgroundColor: this.isDarkModeEnabled ? darkMode.background : lightMode.background,
+          }}
+        >
+          <Card.Title>Create a new List</Card.Title>
+          <Form.Control
+            value={this.newList}
+            onChange={(event) => (this.newList = event.currentTarget.value)}
+            // Makes it possible to log in with enter as well as with button
+            onKeyUp={(event) => {
+              if (event.key == 'Enter') {
+                this.addNewList(this.newList);
               }
-            })}
-          </Row>
-          <div
+            }}
+            style={{
+              marginBottom: '10px',
+              textAlign: 'center',
+              backgroundColor: this.isDarkModeEnabled ? darkMode.background : lightMode.background,
+              color: this.isDarkModeEnabled ? darkMode.font : lightMode.font,
+            }}
+          ></Form.Control>
+
+          <Button
+            onClick={() => this.addNewList(this.newList)}
+            style={{
+              backgroundColor: this.isDarkModeEnabled ? darkMode.buttonCard : lightMode.buttonCard,
+              color: this.isDarkModeEnabled ? darkMode.font : lightMode.font,
+              border: 'none',
+            }}
+          >
+            Add to Lists
+          </Button>
+        </div>
+        <Row
+          style={{
+            padding: '10vh',
+            backgroundColor: this.isDarkModeEnabled ? darkMode.background : lightMode.background,
+          }}
+        >
+          <Button
+            variant="outline-danger"
+            onClick={() => this.logOut()}
             style={{
               width: '15rem',
               marginLeft: 'auto',
               marginRight: 'auto',
               marginBottom: '10px',
+              backgroundColor: this.isDarkModeEnabled ? darkMode.buttonMenu : lightMode.buttonMenu,
+              color: this.isDarkModeEnabled ? darkMode.font : lightMode.font,
+              border: 'none',
             }}
           >
-            <Card.Title>Create a new List</Card.Title>
-            <Form.Control
-              value={this.newList}
-              onChange={(event) => (this.newList = event.currentTarget.value)}
-              // Makes it possible to log in with enter as well as with button
-              onKeyUp={(event) => {
-                if (event.key == 'Enter') {
-                  this.addNewList(this.newList);
-                }
-              }}
-              style={{
-                marginBottom: '10px',
-                textAlign: 'center',
-              }}
-            ></Form.Control>
-
-            <Button variant="primary" onClick={() => this.addNewList(this.newList)}>
-              Add to Lists
-            </Button>
-          </div>
-          <Row style={{ padding: '10vh' }}>
-            <Button
-              variant="outline-danger"
-              onClick={() => this.logOut()}
-              style={{
-                width: '15rem',
-                marginLeft: 'auto',
-                marginRight: 'auto',
-                marginBottom: '10px',
-                backgroundColor: this.isDarkModeEnabled
-                  ? darkMode.buttonMenu
-                  : lightMode.buttonMenu,
-                color: this.isDarkModeEnabled ? darkMode.background : lightMode.background,
-                border: 'none',
-              }}
-            >
-              Log out
-            </Button>
-          </Row>
-        </div>
-      </>
+            Log out
+          </Button>
+        </Row>
+      </div>
     );
   }
 

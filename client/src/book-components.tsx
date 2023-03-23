@@ -434,8 +434,8 @@ export class BookDetails extends Component<{
     //check if already in chosen list
     // @ts-ignore
     if (lists[list].includes(chosenBookISBN) == true) {
-      Alert.danger(`This book is already added to ${list}`)
-      return
+      Alert.danger(`This book is already added to ${list}`);
+      return;
     }
     //add to list
     // @ts-ignore
@@ -457,7 +457,6 @@ export class BookDetails extends Component<{
     //axios call to update lists at firestore
     // @ts-ignore
     userService.updateLists(lists, email);
-
   };
 
   render() {
@@ -649,11 +648,18 @@ export class BookDetails extends Component<{
       </Container>
     );
   }
-  mounted() {
-    bookService
-      .getBook(this.props.match.params.book_id)
-      .then((book) => (this.book = book))
-      .catch((error) => Alert.danger('Error getting recipe details: ' + error.message));
+  async mounted() {
+    try {
+      // Get book details
+      const book = await bookService.getBook(this.props.match.params.book_id);
+      this.book = book;
+
+      // Get google book rating
+      const rating = await getBookRating(this.book.title);
+      this.googleBookRating = rating;
+    } catch (error) {
+      Alert.danger('Error getting recipe details: ' + error);
+    }
   }
 
   renderDropDownMenu() {
@@ -989,7 +995,7 @@ export class BookAdd extends Component {
       </Container>
     );
   }
-  mounted() { }
+  mounted() {}
 }
 
 export class BookEdit extends Component<{ match: { params: { id: number } } }> {
@@ -1005,7 +1011,7 @@ export class BookEdit extends Component<{ match: { params: { id: number } } }> {
     );
   }
 
-  mounted() { }
+  mounted() {}
 }
 
 export function BookCard(props: { book: Book }) {

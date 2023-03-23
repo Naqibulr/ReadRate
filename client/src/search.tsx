@@ -97,7 +97,15 @@ export function BookSearch() {
   };
 
   return (
-    <Container fluid style={{ margin: 0 }}>
+    <Container
+      fluid
+      style={{
+        margin: -17,
+        backgroundColor: isDarkModeEnabled ? darkMode.background : lightMode.background,
+        color: isDarkModeEnabled ? darkMode.font : lightMode.font,
+        width: '100vw',
+      }}
+    >
       <Row className="m-3">
         <Col>
           <InputGroup className="p-0">
@@ -106,8 +114,20 @@ export function BookSearch() {
               aria-label="Search"
               aria-describedby="Search field"
               onChange={handleChangeFilter}
+              style={{
+                backgroundColor: isDarkModeEnabled ? darkMode.background : lightMode.background,
+                color: isDarkModeEnabled ? darkMode.font : lightMode.font,
+              }}
             />
-            <Button variant="light" id="button-addon2" onClick={searchWithFilter}>
+            <Button
+              variant="light"
+              id="button-addon2"
+              onClick={searchWithFilter}
+              style={{
+                backgroundColor: isDarkModeEnabled ? darkMode.buttonCard : lightMode.buttonCard,
+                color: isDarkModeEnabled ? darkMode.font : lightMode.font,
+              }}
+            >
               Add filter
             </Button>
           </InputGroup>
@@ -141,7 +161,15 @@ export function BookSearch() {
                 color: isDarkModeEnabled ? darkMode.font : lightMode.font,
               }}
             />
-            <Button variant="light" id="button-addon2" onClick={searchWithYear}>
+            <Button
+              variant="light"
+              id="button-addon2"
+              onClick={searchWithYear}
+              style={{
+                backgroundColor: isDarkModeEnabled ? darkMode.buttonCard : lightMode.buttonCard,
+                color: isDarkModeEnabled ? darkMode.font : lightMode.font,
+              }}
+            >
               Search
             </Button>
           </InputGroup>
@@ -149,19 +177,63 @@ export function BookSearch() {
         <Col>
           <InputGroup>
             <Dropdown id="dropdown">
-              <Dropdown.Toggle variant="light" id="dropdown-basic">
+              <Dropdown.Toggle
+                variant="light"
+                id="dropdown-basic"
+                style={{
+                  backgroundColor: isDarkModeEnabled ? darkMode.background : lightMode.background,
+                  color: isDarkModeEnabled ? darkMode.font : lightMode.font,
+                }}
+              >
                 {click + '+'}
               </Dropdown.Toggle>
 
-              <Dropdown.Menu>
-                <Dropdown.Item onClick={() => handleChangeRating('1')}>1+</Dropdown.Item>
-                <Dropdown.Item onClick={() => handleChangeRating('2')}>2+</Dropdown.Item>
-                <Dropdown.Item onClick={() => handleChangeRating('3')}>3+</Dropdown.Item>
-                <Dropdown.Item onClick={() => handleChangeRating('4')}>4+</Dropdown.Item>
-                <Dropdown.Item onClick={() => handleChangeRating('5')}>5+</Dropdown.Item>
+              <Dropdown.Menu
+                style={{
+                  backgroundColor: isDarkModeEnabled ? darkMode.background : lightMode.background,
+                }}
+              >
+                <Dropdown.Item
+                  onClick={() => handleChangeRating('1')}
+                  style={{ color: isDarkModeEnabled ? darkMode.font : lightMode.font }}
+                >
+                  1+
+                </Dropdown.Item>
+                <Dropdown.Item
+                  onClick={() => handleChangeRating('2')}
+                  style={{ color: isDarkModeEnabled ? darkMode.font : lightMode.font }}
+                >
+                  2+
+                </Dropdown.Item>
+                <Dropdown.Item
+                  onClick={() => handleChangeRating('3')}
+                  style={{ color: isDarkModeEnabled ? darkMode.font : lightMode.font }}
+                >
+                  3+
+                </Dropdown.Item>
+                <Dropdown.Item
+                  onClick={() => handleChangeRating('4')}
+                  style={{ color: isDarkModeEnabled ? darkMode.font : lightMode.font }}
+                >
+                  4+
+                </Dropdown.Item>
+                <Dropdown.Item
+                  onClick={() => handleChangeRating('5')}
+                  style={{ color: isDarkModeEnabled ? darkMode.font : lightMode.font }}
+                >
+                  5+
+                </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>{' '}
-            <Button variant="light" id="button-addon2" onClick={searchRating}>
+            <Button
+              variant="light"
+              id="button-addon2"
+              onClick={searchRating}
+              style={{
+                backgroundColor: isDarkModeEnabled ? darkMode.buttonCard : lightMode.buttonCard,
+                color: isDarkModeEnabled ? darkMode.font : lightMode.font,
+              }}
+            >
               Add rating filter
             </Button>
           </InputGroup>
@@ -170,14 +242,28 @@ export function BookSearch() {
           <InputGroup>
             {selectedFilters.map((filter, index) => (
               <Col key={index} className="label">
-                {filter} <button onClick={() => removeFilter(index)}>x</button>
+                {filter}{' '}
+                <button
+                  onClick={() => removeFilter(index)}
+                  style={{
+                    color: isDarkModeEnabled ? darkMode.font : lightMode.font,
+                    backgroundColor: isDarkModeEnabled ? darkMode.buttonCard : lightMode.buttonCard,
+                  }}
+                >
+                  x
+                </button>
               </Col>
             ))}
           </InputGroup>
         </Col>
         {/* <h3 style={{ marginLeft: '20px', marginTop: '5px', marginBottom: '0px' }}>{searchTerm}</h3> */}
       </Row>
-      <Row>
+      <Row
+        style={{
+          backgroundColor: isDarkModeEnabled ? darkMode.background : lightMode.background,
+          paddingLeft: '50px',
+        }}
+      >
         {books.map((book: Book) => {
           return <BookCard book={book} />;
         })}
