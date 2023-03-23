@@ -43,17 +43,15 @@ export function BookSearch() {
   const searchWithYear = () => {
     if (yearFrom == '') updateYearFrom('-10000');
     if (yearTo == '') updateYearTo('10000');
-    window.location.href = `http://localhost:3000/#/books/search/${
-      searchTerm + '&' + yearFrom + '@@' + yearTo
-    }`;
+    window.location.href = `http://localhost:3000/#/books/search/${searchTerm + '&' + yearFrom + '@@' + yearTo
+      }`;
     //@ts-ignore
     addFilter(yearFrom + '-' + yearTo);
   };
 
   const searchRating = () => {
-    window.location.href = `http://localhost:3000/#/books/search/${
-      searchTerm + '&' + click + '++'
-    }`;
+    window.location.href = `http://localhost:3000/#/books/search/${searchTerm + '&' + click + '++'
+      }`;
     //@ts-ignore
     addFilter(click + '++');
   };
@@ -167,7 +165,7 @@ export function BookSearch() {
             <BookCard book={book} />
           );
         })}
-      </Container>
+    </Container>
     </Container >
   );
 }
@@ -183,7 +181,6 @@ export function AuthorSearch() {
       setAuthors(authors);
     };
     fetchAuthors();
-    console.log(authors);
   }, []);
 
   return (

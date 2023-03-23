@@ -46,8 +46,6 @@ class UserService {
   }
 
   updateLists(updatedLists: JSON, email: string) {
-    console.log("user service: ")
-    console.log(updatedLists)
     return axios
       .put('/users/lists', {
         lists: updatedLists,

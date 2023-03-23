@@ -83,8 +83,6 @@ router.put('/users/lists', (request, response) => {
   const data = request.body;
   const email = String(data.email);
   const lists = data.lists;
-  console.log('router: ');
-  console.log(lists);
 
   userService
     .updateLists(lists, email)
@@ -150,7 +148,6 @@ export default router;
 router.post('/reviews', (request, response) => {
   const data = request.body;
   const review: Review = data.review;
-  console.log('router', review);
   bookService
     //@ts-ignore
     .addReview(review)

@@ -128,7 +128,6 @@ class UserService {
       querySnapshot.forEach((doc) => {
         id = doc.id;
 
-        console.log(id);
         //@ts-ignore
         user = doc.data();
       });
