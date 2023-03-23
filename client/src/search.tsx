@@ -305,19 +305,11 @@ export function AuthorSearch() {
       >
         {searchTerm}
       </h3>
-      <Carousel interval={null}>
-        <Carousel.Item style={{ padding: '1rem' }}>
-          <Row>
-            {authors.map((author: Author) => {
-              return (
-                <Col xs={2} key={author.id}>
-                  <AuthorCard author={author} />
-                </Col>
-              );
-            })}
-          </Row>
-        </Carousel.Item>
-      </Carousel>
+      <Row>
+        {authors.map((author: Author) => {
+          return <AuthorCard author={author} />;
+        })}
+      </Row>
     </Container>
   );
 }
