@@ -244,8 +244,10 @@ export class BookDetails extends Component<{
 
     //check if already in chosen list
     // @ts-ignore
-    if (lists[list].includes(chosenBookISBN) == true) return
-
+    if (lists[list].includes(chosenBookISBN) == true) {
+      Alert.danger(`This book is already added to ${list}`)
+      return
+    }
     //add to list
     // @ts-ignore
     lists[list].push(chosenBookISBN)
@@ -270,6 +272,7 @@ export class BookDetails extends Component<{
     // @ts-ignore
     userService.updateLists(lists, email);
 
+    Alert.success('Added to ' + list);
   };
 
   render() {
