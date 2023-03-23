@@ -70,11 +70,12 @@ class BookService {
   }
 
   addBook(book: Book) {
-    console.log('book-service', book);
     return axios.post('/books', { book }).then((response) => response.data);
   }
 
   getBook(ISBN: string) {
+    console.log("book-service client")
+
     return axios.get('/books').then((response) => {
       const data = response.data;
       if (Array.isArray(data)) {

@@ -15,6 +15,7 @@ import {
   ListGroup,
   Badge,
   ListGroupItem,
+  Dropdown,
 } from 'react-bootstrap';
 import { createHashHistory } from 'history';
 import bookService, { Book, Review } from './book-service';
@@ -23,7 +24,8 @@ import { faStar } from '@fortawesome/free-solid-svg-icons';
 import StarRatings from 'react-star-ratings';
 import { computeAverage } from './average';
 import { Link } from 'react-router-dom';
-import { getCookieValue } from './getcookie';
+import { getCookieValue, setLoginCookies } from './getcookie';
+import userService from './user-service';
 
 // REMEMBER TO ADD IMPORTS FROM SERVICE
 
@@ -80,7 +82,6 @@ export const WriteReviewPage = (props: { book: Book }) => {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     // Here you can save the review to your database or do other logic
-    console.log('book-components', review);
     bookService.addReview(review);
     // Once done, navigate the user back to the book details page or homepage
     history.goBack(); //history.push(`/books/${props.book.ISBN}`); //book-details
@@ -232,6 +233,46 @@ export class BookDetails extends Component<{
     addedDate: new Date(),
     imagePath: '',
   };
+  //create a handleList
+  handleList = (list: string) => {
+    //retrieve and format current lists
+    let lists = getCookieValue('lists');
+    lists = JSON.parse(lists)
+
+    //retrieve chosen books ISBN
+    const chosenBookISBN = this.props.match.params.book_id
+
+    //check if already in chosen list
+    // @ts-ignore
+    if (lists[list].includes(chosenBookISBN) == true) return
+
+    //add to list
+    // @ts-ignore
+    lists[list].push(chosenBookISBN)
+
+    //update cookies
+    setLoginCookies(
+      {
+        "user_id": 0,
+        "email": getCookieValue('email'),
+        "first_name": getCookieValue('first_name'),
+        "last_name": getCookieValue('last_name'),
+        "password": getCookieValue('password'),
+        "admin": getCookieValue('admin'),
+        "lists": lists
+      }
+    )
+
+    const email = getCookieValue('email');
+
+    console.log("book-components: ")
+    console.log(lists)
+
+    //axios call to update lists at firestore 
+    // @ts-ignore
+    userService.updateLists(lists, email);
+
+  };
 
   render() {
     return (
@@ -262,24 +303,23 @@ export class BookDetails extends Component<{
                 alt="..."
               />
             </Row>
-            <Row className="m-3 ">
-              <Button
-                type="button"
-                className="btn btn-success mt-3"
-                style={{ backgroundColor: 'rgb(148, 180, 159)', color: 'rgb(255, 255, 255)' }}
-              >
-                Want to read
-              </Button>
-            </Row>
-            <Row className="m-3 ">
-              <Button
-                type="button"
-                className="btn btn-success mt-3"
-                style={{ backgroundColor: 'rgb(148, 180, 159)', color: 'rgb(255, 255, 255)' }}
-              >
-                Have read
-              </Button>
-            </Row>
+            {/* @ts-ignore */}
+            <Dropdown>
+              <Dropdown.Toggle id="dropdown-basic" style={{ backgroundColor: 'rgb(148, 180, 159)', color: 'rgb(255, 255, 255)' }}
+                className="btn btn-success mt-3">
+                Add to a list
+              </Dropdown.Toggle>
+
+
+              <Dropdown.Menu>
+                {
+                  Object.keys(JSON.parse(getCookieValue("lists"))).map((key: string) => (
+                    <Dropdown.Item onClick={() => this.handleList(key)}>{key}</Dropdown.Item>
+                  ))
+                }
+              </Dropdown.Menu>
+            </Dropdown>{' '}
+
             <Row className="m-3 ">
               <Button
                 type="button"
@@ -323,6 +363,7 @@ export class BookDetails extends Component<{
                     {genre}
                   </Link>
                 </Col>
+
               ))}
             </Row>
             <Row>
@@ -409,7 +450,6 @@ export class BookAdd extends Component {
   };
 
   addBook() {
-    console.log('book-components', this.book);
     bookService.addBook(this.book);
     Alert.success('The book has been added');
   }
@@ -625,7 +665,7 @@ export class BookAdd extends Component {
       </Card>
     );
   }
-  mounted() {}
+  mounted() { }
 }
 
 export class BookEdit extends Component<{ match: { params: { id: number } } }> {
@@ -641,7 +681,7 @@ export class BookEdit extends Component<{ match: { params: { id: number } } }> {
     );
   }
 
-  mounted() {}
+  mounted() { }
 }
 
 export function BookCard(props: { book: Book }) {

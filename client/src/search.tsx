@@ -164,13 +164,11 @@ export function BookSearch() {
       <Row>
         {books.map((book: Book) => {
           return (
-            <Col xs={2} key={book.id}>
-              <BookCard book={book} />
-            </Col>
+            <BookCard book={book} />
           );
         })}
-      </Row>
-    </Container>
+      </Container>
+    </Container >
   );
 }
 
@@ -181,7 +179,7 @@ export function AuthorSearch() {
   useEffect(() => {
     const fetchAuthors = async () => {
       const authorsData = await authorService.getFilteredAuthors(searchTerm);
-      const authors = authorsData.slice(0, 6);
+      const authors = authorsData;
       setAuthors(authors);
     };
     fetchAuthors();
