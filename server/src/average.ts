@@ -26,3 +26,17 @@ export function computeAuthorRating(books: Book[]): number {
   });
   return numRatings > 0 ? totalRating / numRatings : 0;
 }
+
+export function calculateAverageRating(reviews: Array<Review>): number {
+  console.log(reviews);
+  const totalRatings = reviews.length;
+  if (totalRatings === 0) {
+    return 0;
+  }
+  let sumOfRatings = 0;
+  for (let i = 0; i < totalRatings; i++) {
+    sumOfRatings += Number(reviews[i].rating);
+  }
+  const averageRating = sumOfRatings / totalRatings;
+  return Number(averageRating.toFixed(1));
+}
