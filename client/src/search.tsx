@@ -160,15 +160,12 @@ export function BookSearch() {
         </Col>
         {/* <h3 style={{ marginLeft: '20px', marginTop: '5px', marginBottom: '0px' }}>{searchTerm}</h3> */}
       </Row>
-      <Row></Row>
       <Row>
         {books.map((book: Book) => {
-          return (
-            <BookCard book={book} />
-          );
+          return <BookCard book={book} />;
         })}
-      </Container>
-    </Container >
+      </Row>
+    </Container>
   );
 }
 

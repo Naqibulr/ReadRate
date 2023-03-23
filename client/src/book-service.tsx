@@ -35,6 +35,7 @@ class BookService {
    * Get all testdata.
    */
   getBooks() {
+    console.log('gb');
     return axios.get('/books').then((response) => {
       const data = response.data;
       if (Array.isArray(data)) {
@@ -45,6 +46,7 @@ class BookService {
     });
   }
   async getFilteredBooks(searchTerm: string) {
+    console.log('gfb');
     const response = await axios.get<Array<Book>>('/books/search/' + searchTerm);
     return response.data;
   }
@@ -57,6 +59,7 @@ class BookService {
   }
 
   getBooksByGenre(genre: string) {
+    console.log('gbbg');
     return axios.get('/books').then((response) => {
       const data = response.data;
       if (Array.isArray(data)) {
@@ -70,11 +73,12 @@ class BookService {
   }
 
   addBook(book: Book) {
+    console.log('ab');
     return axios.post('/books', { book }).then((response) => response.data);
   }
 
   getBook(ISBN: string) {
-    console.log("book-service client")
+    console.log('book-service client');
 
     return axios.get('/books').then((response) => {
       const data = response.data;
@@ -91,6 +95,7 @@ class BookService {
     });
   }
   getBookByAuthor(author: string) {
+    console.log('gba');
     return axios.get('/books').then((response) => {
       const data = response.data;
       let books: Array<Book> = [];

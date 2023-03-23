@@ -51,6 +51,19 @@ router.get('/books/:isbn', (request, response) => {
     .catch((error) => response.status(500).send(error));
 });
 
+router.get('/books/search/:searchTerm', (request, response) => {
+  const searchTerm = String(request.params.searchTerm);
+
+  bookService
+    .getFilteredBooks(searchTerm)
+    .then((books) => {
+      response.send(books);
+    })
+    .catch((error) => {
+      response.status(500);
+    });
+});
+
 //////////////////////USER
 // Gets a user if the login is completed
 router.get('/users/login/:email/:password', (request, response) => {
