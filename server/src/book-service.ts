@@ -107,7 +107,6 @@ class BookService {
   }
 
   addBook(book: Book) {
-    console.log('book-service', book);
     return new Promise<void>(async (resolve, reject) => {
       addDoc(this.colRef, {
         id: '',
@@ -188,6 +187,21 @@ class BookService {
 
   async getBooksByISBN(ISBN: string) {
     return (await this.getBooks()).filter((book) => book.ISBN == ISBN)[0];
+  }
+  getBook(ISBN: string) {
+    return new Promise<Book>(async (resolve, reject) => {
+      const q = query(this.colRef, where('ISBN', '==', ISBN));
+      let book;
+      const qs = await getDocs(q);
+      qs.forEach((doc) => {
+        book = doc.data();
+      });
+      if (book) {
+        resolve(book as Book);
+      } else {
+        reject('No book was found');
+      }
+    });
   }
 }
 

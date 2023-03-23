@@ -1,10 +1,12 @@
 import * as React from 'react';
 import { Component } from 'react-simplified';
 import { Alert } from './widgets';
-import { Button, Form, Card, Row, Col, Container } from 'react-bootstrap';
+import { Carousel, Button, Form, Card, Row, Col, Container, ListGroup, ListGroupItem } from 'react-bootstrap';
 import userService, { User } from './user-service';
+import { BookCard } from './book-components';
 import { createHashHistory } from 'history';
 import { forgetLogin, getCookieValue, setLoginCookies } from './getcookie';
+import bookService, { Book } from './book-service';
 
 //false as default
 export let loggedIn: boolean = false;
@@ -15,7 +17,8 @@ export let currentUser: User = {
   last_name: '',
   password: '',
   admin: false,
-};
+  lists: new Map() as Map<string, Array<string>>
+}
 
 const history = createHashHistory(); // Use history.push(...)
 
@@ -76,7 +79,7 @@ export class UserLogIn extends Component {
               onClick={() => this.logIn()}
               style={{
                 marginBottom: '10px',
-                
+
               }}
             >
               Log in
@@ -138,7 +141,7 @@ export class UserLogIn extends Component {
 }
 
 export class RegisterUser extends Component {
-  user: User = { user_id: 0, email: '', first_name: '', last_name: '', password: '', admin: false };
+  user: User = { user_id: 0, email: '', first_name: '', last_name: '', password: '', admin: false, lists: new Map() as Map<string, Array<string>>, };
   confirm_password: string = '';
 
   render() {
@@ -274,8 +277,6 @@ export class RegisterUser extends Component {
       .then((response) => {
         if (response.length > 0) {
         } else {
-          console.log(response.status);
-          console.log(response.data);
           loggedIn = true;
           history.push('/books/login');
         }
@@ -291,16 +292,20 @@ export class RegisterUser extends Component {
       last_name: '',
       password: '',
       admin: false,
-    };
+      lists: new Map()
+    } as User;
+
     this.confirm_password = '';
   }
 }
 
 export class UserDetails extends Component {
+  listItems: { title: string; books: Book[]; }[] = [];
+  newList: string = ""
   render() {
     return (
       <>
-        <Card
+        <div
           style={{
             // border: 'none',
             padding: '15px',
@@ -311,7 +316,7 @@ export class UserDetails extends Component {
           }}
         >
           {/* Page for all relevant user info for logged in user */}
-          <Card.Title>
+          <Card.Title style={{ fontSize: '30px' }}>
             {'User page for ' + getCookieValue('first_name') + ' ' + getCookieValue('last_nam')}
           </Card.Title>
           <Row style={{ fontSize: '17px' }}>
@@ -325,8 +330,11 @@ export class UserDetails extends Component {
                 : 'registered as an ordinary user'}
             </Card.Text>
           </Row>
+          <br />
+          <br />
+          <br />
           <Row style={{ fontSize: '17px' }}>
-            <Card.Text style={{ fontWeight: 'bold' }}>Your reviews:</Card.Text>
+            {/* <Card.Text style={{ fontWeight: 'bold' }}>Your reviews:</Card.Text>
           </Row>
           <Row>
             <Col xs={3}>
@@ -368,20 +376,76 @@ export class UserDetails extends Component {
                 rows={12}
                 value="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer bibendum convallis ornare. Aliquam id iaculis leo. In malesuada mi sed mauris euismod, vitae pretium leo feugiat. Sed at nisl blandit, volutpat arcu at, dignissim enim. Donec vel massa nulla. Maecenas eget sollicitudin nisl. Morbi et ex id elit vehicula fringilla at vel velit. Maecenas at quam odio. Donec id consectetur purus, sit amet lacinia dolor. Vivamus gravida leo ut nisl sollicitudin, ac sagittis lectus consectetur. Nulla iaculis vel lectus ac sodales. Maecenas at sapien pretium, vehicula sapien eget, feugiat ligula. Nulla egestas ligula non tempus commodo. Quisque tristique urna dui, non finibus nisi bibendum non. Mauris pulvinar sed lacus vitae convallis. Sed dictum efficitur nibh eget condimentum."
               ></Form.Control>
-            </Col>
+            </Col> */}
           </Row>
           <Row>
-            <Card.Text style={{ fontWeight: 'bold' }}>Your Lists:</Card.Text>
-            <Col xs={3}>
-              <Card>List 1</Card>
-            </Col>
-            <Col xs={3}>
-              <Card>List 2</Card>
-            </Col>
-            <Col xs={3}>
-              <Card>List 3</Card>
-            </Col>
+            <Card.Text style={{ fontWeight: 'bold', fontSize: '25px' }}>Your Lists:</Card.Text>
           </Row>
+          <Row>
+            {/* @ts-ignore */}
+            {this.listItems.map((list, index) => {
+              if (list.books.length == 0) {
+                return (
+                  <div key={index}>
+                    <h4 style={{ marginLeft: '20px', marginTop: '5px', marginBottom: '0px' }}>{list.title}</h4>
+                    <p>The list is currently empty</p>
+                  </div>
+                )
+              } else {
+                return (
+                  <div key={index}>
+                    <h4 style={{ marginLeft: '20px', marginTop: '5px', marginBottom: '0px' }}>{list.title}</h4>
+                    {/* @ts-ignore */}
+                    <Carousel interval={null}>
+                      {list.books.map((book, index) => {
+                        if (index % 6 === 0) {
+                          return (<Carousel.Item key={index} style={{ padding: '1rem' }}>
+                            <Row>
+                              {list.books.slice(index, index + 6).map((book, index) => (
+                                <Col md={2} key={index} >
+                                  <BookCard book={book} />
+                                </Col>
+                              ))}
+                            </Row>
+                          </Carousel.Item>)
+
+                        }
+                        return null;
+                      })}
+                    </Carousel>
+
+
+                  </div>
+                )
+              }
+            })}
+          </Row>
+          <div style={{
+            width: '15rem',
+            marginLeft: 'auto',
+            marginRight: 'auto',
+            marginBottom: '10px',
+          }}>
+            <Card.Title>Create a new List</Card.Title>
+            <Form.Control
+              value={this.newList}
+              onChange={(event) => (this.newList = event.currentTarget.value)}
+              // Makes it possible to log in with enter as well as with button
+              onKeyUp={(event) => {
+                if (event.key == 'Enter') {
+                  this.addNewList(this.newList);
+                }
+              }}
+              style={{
+                marginBottom: '10px',
+                textAlign: 'center',
+              }}
+            ></Form.Control>
+
+            <Button variant="primary" onClick={() => this.addNewList(this.newList)}>
+              Add to Lists
+            </Button>
+          </div>
           <Row style={{ padding: '10vh' }}>
             <Button
               variant="outline-danger"
@@ -398,9 +462,46 @@ export class UserDetails extends Component {
               Log out
             </Button>
           </Row>
-        </Card>
+        </div>
       </>
     );
+  }
+
+  addNewList(list: string) {
+    //retrieve and format current lists
+    let lists = getCookieValue('lists');
+    lists = JSON.parse(lists)
+
+    if (list == "" || lists.hasOwnProperty(list) == true) {
+      return
+    }
+
+    //add to lists
+    // @ts-ignore
+    lists[list] = []
+
+    //update cookies
+    setLoginCookies(
+      {
+        "user_id": 0,
+        "email": getCookieValue('email'),
+        "first_name": getCookieValue('first_name'),
+        "last_name": getCookieValue('last_name'),
+        "password": getCookieValue('password'),
+        "admin": getCookieValue('admin'),
+        "lists": lists
+      }
+    )
+
+    const email = getCookieValue('email');
+
+    console.log("book-components: ")
+    console.log(lists)
+
+    //axios call to update lists at firestore 
+    // @ts-ignore
+    userService.updateLists(lists, email);
+    this.createLists()
   }
 
   mounted() {
@@ -408,11 +509,54 @@ export class UserDetails extends Component {
     if (!loggedIn) {
       history.push('/books/login');
     }
+
+    this.createLists()
+  }
+
+  async createLists() {
+    this.listItems = []
+
+    //Recieve and store lists
+    if (getCookieValue("loggedIn") != 'true')
+      return 0;
+    for (let title in JSON.parse(getCookieValue("lists"))) {
+      const books = new Array
+      var i = 0;
+      //@ts-ignore
+      for (let isbn in JSON.parse(getCookieValue("lists"))[title]) {
+
+        //@ts-ignore
+        await bookService.getBook(JSON.parse(getCookieValue("lists"))[title][isbn].toString()).then((book: Book) => {
+          console.log(book)
+          const item: Book = {
+            id: "",
+            title: book.title,
+            ISBN: book.ISBN,
+            author: book.author,
+            releaseYear: book.releaseYear,
+            publisher: book.publisher,
+            pages: book.pages,
+            description: book.description,
+            genre: book.genre,
+            rating: book.rating,
+            imagePath: book.imagePath,
+            review: [],
+            addedDate: new Date()
+          };
+
+          books.push(item)
+
+        })
+
+      }
+      this.listItems.push({ title, books })
+    }
+
   }
 
   logOut() {
     loggedIn = false;
-    history.push('/books');
+    history.push('/');
     currentUser = {
       user_id: 0,
       email: '',
@@ -420,10 +564,11 @@ export class UserDetails extends Component {
       last_name: '',
       password: '',
       admin: false,
-    };
+      lists: new Map() as Map<string, Array<string>>,
+    } as User;
     forgetLogin();
     window.location.reload();
   }
 
-  requestAdmin() {}
+  requestAdmin() { }
 }

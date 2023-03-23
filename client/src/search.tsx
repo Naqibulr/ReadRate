@@ -19,7 +19,7 @@ export function BookSearch() {
   useEffect(() => {
     const fetchBooks = async () => {
       const booksData = await bookService.getFilteredBooks(searchTerm);
-      const books = booksData.slice(0, 6);
+      const books = booksData;
       setBooks(books);
     };
     fetchBooks();
@@ -37,16 +37,14 @@ export function BookSearch() {
   const searchWithYear = () => {
     if (yearFrom == '') updateYearFrom('-10000');
     if (yearTo == '') updateYearTo('10000');
-    window.location.href = `http://localhost:3000/#/books/search/${
-      searchTerm + '&' + yearFrom + '@@' + yearTo
-    }`;
+    window.location.href = `http://localhost:3000/#/books/search/${searchTerm + '&' + yearFrom + '@@' + yearTo
+      }`;
     window.location.reload();
   };
 
   const searchRating = () => {
-    window.location.href = `http://localhost:3000/#/books/search/${
-      searchTerm + '&' + click + '++'
-    }`;
+    window.location.href = `http://localhost:3000/#/books/search/${searchTerm + '&' + click + '++'
+      }`;
     window.location.reload();
   };
 
@@ -133,16 +131,18 @@ export function BookSearch() {
         </Col>
         {/* <h3 style={{ marginLeft: '20px', marginTop: '5px', marginBottom: '0px' }}>{searchTerm}</h3> */}
       </InputGroup>
-      <Row>
+      <Container style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        flexWrap: 'wrap',
+      }}>
         {books.map((book: Book) => {
           return (
-            <Col xs={2} key={book.id}>
-              <BookCard book={book} />
-            </Col>
+            <BookCard book={book} />
           );
         })}
-      </Row>
-    </Container>
+      </Container>
+    </Container >
   );
 }
 
@@ -153,7 +153,7 @@ export function AuthorSearch() {
   useEffect(() => {
     const fetchAuthors = async () => {
       const authorsData = await authorService.getFilteredAuthors(searchTerm);
-      const authors = authorsData.slice(0, 6);
+      const authors = authorsData;
       setAuthors(authors);
     };
     fetchAuthors();
