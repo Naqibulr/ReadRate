@@ -54,7 +54,6 @@ class BookService {
   colRef = collection(firestore, 'books');
 
   addReview(review: Review) {
-    console.log('book-service', review);
     return axios.post('/reviews', { review }).then((response) => response.data);
   }
 
@@ -78,8 +77,6 @@ class BookService {
   }
 
   getBook(ISBN: string) {
-    console.log('book-service client');
-
     return axios.get('/books').then((response) => {
       const data = response.data;
       if (Array.isArray(data)) {

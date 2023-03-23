@@ -265,8 +265,6 @@ export class BookDetails extends Component<{
 
     const email = getCookieValue('email');
 
-    console.log("book-components: ")
-    console.log(lists)
 
     //axios call to update lists at firestore 
     // @ts-ignore

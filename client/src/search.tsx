@@ -180,7 +180,6 @@ export function AuthorSearch() {
       setAuthors(authors);
     };
     fetchAuthors();
-    console.log(authors);
   }, []);
 
   return (

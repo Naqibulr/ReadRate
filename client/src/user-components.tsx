@@ -495,9 +495,6 @@ export class UserDetails extends Component {
 
     const email = getCookieValue('email');
 
-    console.log("book-components: ")
-    console.log(lists)
-
     //axios call to update lists at firestore 
     // @ts-ignore
     userService.updateLists(lists, email);
@@ -527,7 +524,6 @@ export class UserDetails extends Component {
 
         //@ts-ignore
         await bookService.getBook(JSON.parse(getCookieValue("lists"))[title][isbn].toString()).then((book: Book) => {
-          console.log(book)
           const item: Book = {
             id: "",
             title: book.title,
