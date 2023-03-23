@@ -53,6 +53,16 @@ export function setLoginCookies(currentUser: any) {
   document.cookie = `lists=${JSON.stringify(currentUser.lists)}; path=/`;
 }
 
+export function setDarkModCookies(isDarkModeEnabled: boolean) {
+  document.cookie = `darkModeEnabled=${isDarkModeEnabled}; path=/`;
+}
+
+export function getDarkModeCookies() {
+  const cookie = document.cookie
+    .split(';')
+    .find((cookie) => cookie.trim().startsWith('darkModeEnabled='));
+  return cookie ? cookie.split('=')[1] === 'true' : false;
+}
 
 export function checkCookie(cookieName: string) {
   var cookies = document.cookie.split(';');

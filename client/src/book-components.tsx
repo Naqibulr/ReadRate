@@ -22,10 +22,14 @@ import bookService, { Book, Review } from './book-service';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar, faWindowRestore } from '@fortawesome/free-solid-svg-icons';
 import StarRatings from 'react-star-ratings';
-import { computeAverage } from './average';
+import { calculateAverageRating, computeAverage } from './average';
 import { Link } from 'react-router-dom';
 import { FaStar } from 'react-icons/fa';
 import { checkCookie, getCookieValue, setLoginCookies } from './getcookie';
+import { getDarkModeCookies } from './getcookie';
+
+import getBookRating from './google-books-rating';
+import { darkMode, lightMode } from './colors';
 import userService from './user-service';
 
 // REMEMBER TO ADD IMPORTS FROM SERVICE
@@ -211,6 +215,8 @@ export const WriteReviewPage = (props: { book: Book }) => {
     comment: '',
   });
 
+  const isDarkModeEnabled = getDarkModeCookies();
+
   const isbn = getIsbnFromUrl();
 
   let review: Review = {
@@ -244,7 +250,15 @@ export const WriteReviewPage = (props: { book: Book }) => {
   };
 
   return (
-    <Container className="p-3">
+    <Container
+      fluid
+      className="p-5"
+      style={{
+        backgroundColor: isDarkModeEnabled ? darkMode.background : lightMode.background,
+        color: isDarkModeEnabled ? darkMode.font : lightMode.font,
+        height: '100vh',
+      }}
+    >
       <h1>Write a Review</h1>
       <Form onSubmit={handleSubmit}>
         {/* <Form.Group controlId="name">
@@ -262,6 +276,10 @@ export const WriteReviewPage = (props: { book: Book }) => {
           <FormControl
             as="select"
             name="rating"
+            style={{
+              backgroundColor: isDarkModeEnabled ? darkMode.background : lightMode.background,
+              color: isDarkModeEnabled ? darkMode.font : lightMode.font,
+            }}
             //value={formData.rating}
             onChange={(event) => (review.rating = parseInt(event.currentTarget.value))}
             required
@@ -281,12 +299,25 @@ export const WriteReviewPage = (props: { book: Book }) => {
             as="textarea"
             rows={3}
             name="comment"
+            placeholder="Write your review here..."
+            style={{
+              backgroundColor: isDarkModeEnabled ? darkMode.background : lightMode.background,
+              color: isDarkModeEnabled ? darkMode.font : lightMode.font,
+            }}
             //value={formData.comment}
             onChange={(event) => (review.text = event.currentTarget.value)}
           />
         </Form.Group>
 
-        <Button variant="primary" type="submit" className="btn btn-success mt-3">
+        <Button
+          variant="primary"
+          type="submit"
+          className="btn btn-success mt-3"
+          style={{
+            backgroundColor: isDarkModeEnabled ? darkMode.buttonCard : lightMode.buttonCard,
+            color: isDarkModeEnabled ? darkMode.font : lightMode.font,
+          }}
+        >
           Submit
         </Button>
       </Form>
@@ -324,16 +355,29 @@ interface BookListProps {
 export function BookList(props: BookListProps) {
   const [books, setBooks] = useState<Book[]>([]);
   const genre = props.match.params.genre;
+  const [isDarkModeEnabled, setIsDarkModeEnabled] = useState(getDarkModeCookies());
 
   useEffect(() => {
     bookService
       .getBooksByGenre(genre)
-      .then((books) => setBooks(books))
+      .then((books) => {
+        const sortedBooks = books.sort(
+          (a, b) => calculateAverageRating(b.review) - calculateAverageRating(a.review)
+        );
+        setBooks(sortedBooks);
+      })
       .catch((error) => Alert.danger('Error getting recipe details: ' + error.message));
   }, []);
 
   return (
-    <div className="p-4 pt-1">
+    <div
+      className="p-4 pt-1"
+      style={{
+        backgroundColor: isDarkModeEnabled ? darkMode.background : lightMode.background,
+        color: isDarkModeEnabled ? darkMode.font : lightMode.font,
+        height: '100vh',
+      }}
+    >
       <Row style={{ marginTop: '10px' }}>
         <h3>{props.match.params.genre}</h3>
       </Row>
@@ -352,6 +396,7 @@ export class BookDetails extends Component<{
     params: { book_id: string };
   };
 }> {
+  googleBookRating: number = 0;
   book: Book = {
     id: '',
     rating: [],
@@ -367,6 +412,16 @@ export class BookDetails extends Component<{
     addedDate: new Date(),
     imagePath: '',
   };
+  isDarkModeEnabled = getDarkModeCookies();
+  isAdmin = document.cookie.includes('admin=true');
+  async deleteReview(email: string, ISBN: string) {
+    if (this.isAdmin) {
+      bookService.deleteReview(email, ISBN);
+      this.mounted();
+    } else {
+      Alert.danger('You have to be an admin to delete a review');
+    }
+  }
   //create a handleList
   handleList = (list: string) => {
     //retrieve and format current lists
@@ -407,16 +462,24 @@ export class BookDetails extends Component<{
 
   render() {
     return (
-      <Container className="p-3">
-        <Row xs={'auto'}>
-          <Col sm={3} className="pt-4 ">
+      <Container
+        fluid
+        style={{
+          backgroundColor: this.isDarkModeEnabled ? darkMode.background : lightMode.background,
+          color: this.isDarkModeEnabled ? darkMode.font : lightMode.font,
+          paddingLeft: '50px',
+          paddingTop: '0px',
+        }}
+      >
+        <Row style={{ paddingLeft: '30px' }}>
+          <Col sm={3} className="pl-5 ">
             <Button
               variant="light"
               onClick={() => history.push('/')}
               style={{
                 width: '5rem',
-                borderColor: 'rgb(223, 120, 97)',
-                color: 'rgb(223, 120, 97)',
+                borderColor: this.isDarkModeEnabled ? darkMode.buttonMenu : lightMode.buttonMenu,
+                color: this.isDarkModeEnabled ? darkMode.buttonMenu : lightMode.buttonMenu,
               }}
             >
               Back
@@ -435,10 +498,16 @@ export class BookDetails extends Component<{
               />
             </Row>
             {this.renderDropDownMenu()}
+
             <Row className="m-3 ">
               <Button
                 type="button"
-                style={{ backgroundColor: 'rgb(148, 180, 159)', color: 'rgb(255, 255, 255)' }}
+                style={{
+                  backgroundColor: this.isDarkModeEnabled
+                    ? darkMode.buttonCard
+                    : lightMode.buttonCard,
+                  color: this.isDarkModeEnabled ? darkMode.card : lightMode.card,
+                }}
                 className="btn btn-success mt-3"
                 onClick={() => handleWriteReviewButtonPress(this.book)} // () => history.push(`/books/${this.book.ISBN}/review`)
               >
@@ -454,13 +523,32 @@ export class BookDetails extends Component<{
               <h5>By {this.book.author}</h5>
             </Row>
             <Row className="mt-1">
-              <StarRating rating={computeAverage(this.book.rating)}></StarRating>
+              <Col>
+                <h5 style={{}}>ReadRate</h5>
+              </Col>
+              <Col>
+                <StarRating rating={calculateAverageRating(this.book.review)}></StarRating>
+              </Col>
+            </Row>
+            <Row className="mt-1">
+              <Col>
+                <h5>Google books:</h5>{' '}
+              </Col>
+              <Col>
+                <StarRating rating={this.googleBookRating}></StarRating>
+              </Col>
             </Row>
             <Row className="overflow-auto mt-4" style={{ height: '40vh' }}>
               <p>{this.book.description}</p>
             </Row>
             <Row className="mt-3">
-              <Col sm={1} style={{ fontWeight: 'bold', color: 'rgb(77, 77, 77)' }}>
+              <Col
+                sm={1}
+                style={{
+                  fontWeight: 'bold',
+                  color: this.isDarkModeEnabled ? darkMode.font : lightMode.font,
+                }}
+              >
                 <p> Genres:</p>
               </Col>
               {this.book.genre.map((genre) => (
@@ -469,7 +557,7 @@ export class BookDetails extends Component<{
                   <Link
                     to={`/books/genres/${genre}`}
                     style={{
-                      color: 'rgb(128, 128, 128)',
+                      color: this.isDarkModeEnabled ? darkMode.font : lightMode.font,
                       textDecoration: 'none',
                       borderBottom: '2px solid green',
                       fontWeight: 'bold',
@@ -482,7 +570,14 @@ export class BookDetails extends Component<{
             </Row>
             <Row>
               <Col sm={1}>
-                <small style={{ fontWeight: 'bold', color: 'rgb(77, 77, 77)' }}>Pages:</small>
+                <small
+                  style={{
+                    fontWeight: 'bold',
+                    color: this.isDarkModeEnabled ? darkMode.font : lightMode.font,
+                  }}
+                >
+                  Pages:
+                </small>
               </Col>
               <Col sm={8}>
                 <small>{this.book.pages}</small>
@@ -490,7 +585,14 @@ export class BookDetails extends Component<{
             </Row>
             <Row>
               <Col sm={1}>
-                <small style={{ fontWeight: 'bold', color: 'rgb(77, 77, 77)' }}>Published: </small>
+                <small
+                  style={{
+                    fontWeight: 'bold',
+                    color: this.isDarkModeEnabled ? darkMode.font : lightMode.font,
+                  }}
+                >
+                  Published:{' '}
+                </small>
               </Col>
               <Col sm={8}>
                 <small>
@@ -500,7 +602,14 @@ export class BookDetails extends Component<{
             </Row>
             <Row>
               <Col sm={1}>
-                <small style={{ fontWeight: 'bold', color: 'rgb(77, 77, 77)' }}>ISBN:</small>
+                <small
+                  style={{
+                    fontWeight: 'bold',
+                    color: this.isDarkModeEnabled ? darkMode.font : lightMode.font,
+                  }}
+                >
+                  ISBN:
+                </small>
               </Col>
               <Col sm={8}>
                 <small>{this.book.ISBN}</small>
@@ -521,13 +630,15 @@ export class BookDetails extends Component<{
                         </div>
                       </div>
                       <p className="mt-2"> {review.text} </p>
-                      <Button
-                        style={{ position: 'absolute', bottom: 0, right: 0, margin: '8px' }}
-                        variant="primary"
-                        onClick={() => handleReviewEditButtonPress(this.book, review)} //console.log('this.book, review', this.book, review)
-                      >
-                        Edit
-                      </Button>
+                      <div>
+                        <Button
+                          style={{ position: 'absolute', bottom: 0, right: 0, margin: '8px' }}
+                          variant="primary"
+                          onClick={() => handleReviewEditButtonPress(this.book, review)} //console.log('this.book, review', this.book, review)
+                        >
+                          Edit
+                        </Button>
+                      </div>
                     </ListGroupItem>
                   ))}
                 </ListGroup>
@@ -588,6 +699,7 @@ export class BookAdd extends Component {
   };
 
   ischecked: boolean = false;
+  isDarkModeEnabled = getDarkModeCookies();
 
   handleCheckboxChange = (event: any) => {
     this.ischecked = event.target.checked;
@@ -605,213 +717,276 @@ export class BookAdd extends Component {
 
   render() {
     return (
-      <Card
+      <Container
+        fluid
         style={{
-          border: '0',
-          textAlign: 'center',
-          margin: '10%',
-          marginTop: '3%',
+          backgroundColor: this.isDarkModeEnabled ? darkMode.background : lightMode.background,
+          color: this.isDarkModeEnabled ? darkMode.font : lightMode.font,
+          height: '100vh',
+          marginTop: '-50px',
+          paddingTop: '70px',
         }}
       >
-        <Card.Title>Details:</Card.Title>
-        <Form>
-          <Row>
-            <Col>
-              <Form.Group className="mb-3" controlId="title">
-                <Form.Label>Title</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Enter title"
-                  onChange={(event) => (this.book.title = event.currentTarget.value)}
+        <Card
+          style={{
+            border: '0',
+            textAlign: 'center',
+            margin: '10%',
+            marginTop: '3%',
+            backgroundColor: this.isDarkModeEnabled ? darkMode.background : lightMode.background,
+            color: this.isDarkModeEnabled ? darkMode.font : lightMode.font,
+          }}
+        >
+          <Card.Title>Details:</Card.Title>
+          <Form>
+            <Row>
+              <Col>
+                <Form.Group className="mb-3" controlId="title">
+                  <Form.Label>Title</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Enter title"
+                    onChange={(event) => (this.book.title = event.currentTarget.value)}
+                    style={{
+                      backgroundColor: this.isDarkModeEnabled
+                        ? darkMode.background
+                        : lightMode.background,
+                      color: this.isDarkModeEnabled ? darkMode.font : lightMode.font,
+                    }}
+                  />
+                </Form.Group>
+              </Col>
+              <Col>
+                <Form.Group className="mb-3" controlId="isbn">
+                  <Form.Label>ISBN</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Enter ISBN"
+                    onChange={(event) => (this.book.ISBN = event.currentTarget.value)}
+                    style={{
+                      backgroundColor: this.isDarkModeEnabled
+                        ? darkMode.background
+                        : lightMode.background,
+                      color: this.isDarkModeEnabled ? darkMode.font : lightMode.font,
+                    }}
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <Form.Group className="mb-3" controlId="author">
+                  <Form.Label>Author</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Enter author name"
+                    onChange={(event) => (this.book.author = event.currentTarget.value)}
+                    style={{
+                      backgroundColor: this.isDarkModeEnabled
+                        ? darkMode.background
+                        : lightMode.background,
+                      color: this.isDarkModeEnabled ? darkMode.font : lightMode.font,
+                    }}
+                  />
+                </Form.Group>
+              </Col>
+              <Col>
+                <Form.Group className="mb-3" controlId="releaseYear">
+                  <Form.Label>Release year</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Enter Release year"
+                    onChange={(event) =>
+                      (this.book.releaseYear = parseInt(event.currentTarget.value))
+                    }
+                    style={{
+                      backgroundColor: this.isDarkModeEnabled
+                        ? darkMode.background
+                        : lightMode.background,
+                      color: this.isDarkModeEnabled ? darkMode.font : lightMode.font,
+                    }}
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <Form.Group className="mb-3" controlId="publisher">
+                  <Form.Label>Publisher</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Enter publisher name"
+                    onChange={(event) => (this.book.publisher = event.currentTarget.value)}
+                    style={{
+                      backgroundColor: this.isDarkModeEnabled
+                        ? darkMode.background
+                        : lightMode.background,
+                      color: this.isDarkModeEnabled ? darkMode.font : lightMode.font,
+                    }}
+                  />
+                </Form.Group>
+              </Col>
+              <Col>
+                <Form.Group className="mb-3" controlId="pages">
+                  <Form.Label>Number of pages</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Enter number of pages"
+                    onChange={(event) => (this.book.pages = parseInt(event.currentTarget.value))}
+                    style={{
+                      backgroundColor: this.isDarkModeEnabled
+                        ? darkMode.background
+                        : lightMode.background,
+                      color: this.isDarkModeEnabled ? darkMode.font : lightMode.font,
+                    }}
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <Form.Group className="mb-3" controlId="description">
+                  <Form.Label>Description</Form.Label>
+                  <Form.Control
+                    type="text"
+                    as="textarea"
+                    placeholder="Enter description"
+                    rows={1}
+                    onChange={(event) => (this.book.description = event.currentTarget.value)}
+                    style={{
+                      backgroundColor: this.isDarkModeEnabled
+                        ? darkMode.background
+                        : lightMode.background,
+                      color: this.isDarkModeEnabled ? darkMode.font : lightMode.font,
+                    }}
+                  />
+                </Form.Group>
+              </Col>
+              <Col>
+                <Form.Group className="mb-3" controlId="image">
+                  <Form.Label>Image</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Enter image URL"
+                    onChange={(event) => (this.book.imagePath = event.currentTarget.value)}
+                    style={{
+                      backgroundColor: this.isDarkModeEnabled
+                        ? darkMode.background
+                        : lightMode.background,
+                      color: this.isDarkModeEnabled ? darkMode.font : lightMode.font,
+                    }}
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row>
+              <Form.Label>Choose Genre</Form.Label>
+              <Form.Group className="mb-3" controlId="formBasicCheckbox">
+                <Form.Check
+                  inline
+                  type="checkbox"
+                  label="Fantasy"
+                  value="Fantasy"
+                  onChange={(event) => this.handleCheckboxChange(event)}
+                />
+                <Form.Check
+                  inline
+                  type="checkbox"
+                  label="Humour"
+                  value="Humor"
+                  onChange={(event) => this.handleCheckboxChange(event)}
+                />
+                <Form.Check
+                  inline
+                  type="checkbox"
+                  label="History"
+                  value="History"
+                  onChange={(event) => this.handleCheckboxChange(event)}
+                />
+                <Form.Check
+                  inline
+                  type="checkbox"
+                  label="Novel"
+                  value="Novel"
+                  onChange={(event) => this.handleCheckboxChange(event)}
+                />
+                <Form.Check
+                  inline
+                  type="checkbox"
+                  label="Children's"
+                  value="Children's"
+                  onChange={(event) => this.handleCheckboxChange(event)}
+                />
+                <Form.Check
+                  inline
+                  type="checkbox"
+                  label="Crime"
+                  value="Crime"
+                  onChange={(event) => this.handleCheckboxChange(event)}
+                />
+                <Form.Check
+                  inline
+                  type="checkbox"
+                  label="Drama"
+                  value="Drama"
+                  onChange={(event) => this.handleCheckboxChange(event)}
+                />
+                <Form.Check
+                  inline
+                  type="checkbox"
+                  label="Horror"
+                  value="Horror"
+                  onChange={(event) => this.handleCheckboxChange(event)}
+                />
+                <Form.Check
+                  inline
+                  type="checkbox"
+                  label="Poetry"
+                  value="Poetry"
+                  onChange={(event) => this.handleCheckboxChange(event)}
+                />
+                <Form.Check
+                  inline
+                  type="checkbox"
+                  label="Science"
+                  value="Science"
+                  onChange={(event) => this.handleCheckboxChange(event)}
+                />
+                <Form.Check
+                  inline
+                  type="checkbox"
+                  label="Tragedy"
+                  value="Tragedy"
+                  onChange={(event) => this.handleCheckboxChange(event)}
+                />
+                <Form.Check
+                  inline
+                  type="checkbox"
+                  label="Fiction"
+                  value="Fiction"
+                  onChange={(event) => this.handleCheckboxChange(event)}
                 />
               </Form.Group>
-            </Col>
-            <Col>
-              <Form.Group className="mb-3" controlId="isbn">
-                <Form.Label>ISBN</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Enter ISBN"
-                  onChange={(event) => (this.book.ISBN = event.currentTarget.value)}
-                />
-              </Form.Group>
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <Form.Group className="mb-3" controlId="author">
-                <Form.Label>Author</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Enter author name"
-                  onChange={(event) => (this.book.author = event.currentTarget.value)}
-                />
-              </Form.Group>
-            </Col>
-            <Col>
-              <Form.Group className="mb-3" controlId="releaseYear">
-                <Form.Label>Release year</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Enter Release year"
-                  onChange={(event) =>
-                    (this.book.releaseYear = parseInt(event.currentTarget.value))
-                  }
-                />
-              </Form.Group>
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <Form.Group className="mb-3" controlId="publisher">
-                <Form.Label>Publisher</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Enter publisher name"
-                  onChange={(event) => (this.book.publisher = event.currentTarget.value)}
-                />
-              </Form.Group>
-            </Col>
-            <Col>
-              <Form.Group className="mb-3" controlId="pages">
-                <Form.Label>Number of pages</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Enter number of pages"
-                  onChange={(event) => (this.book.pages = parseInt(event.currentTarget.value))}
-                />
-              </Form.Group>
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <Form.Group className="mb-3" controlId="description">
-                <Form.Label>Description</Form.Label>
-                <Form.Control
-                  type="text"
-                  as="textarea"
-                  placeholder="Enter description"
-                  rows={1}
-                  onChange={(event) => (this.book.description = event.currentTarget.value)}
-                />
-              </Form.Group>
-            </Col>
-            <Col>
-              <Form.Group className="mb-3" controlId="image">
-                <Form.Label>Image</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Enter image URL"
-                  onChange={(event) => (this.book.imagePath = event.currentTarget.value)}
-                />
-              </Form.Group>
-            </Col>
-          </Row>
-          <Row>
-            <Form.Label>Choose Genre</Form.Label>
-            <Form.Group className="mb-3" controlId="formBasicCheckbox">
-              <Form.Check
-                inline
-                type="checkbox"
-                label="Fantasy"
-                value="Fantasy"
-                onChange={(event) => this.handleCheckboxChange(event)}
-              />
-              <Form.Check
-                inline
-                type="checkbox"
-                label="Humour"
-                value="Humor"
-                onChange={(event) => this.handleCheckboxChange(event)}
-              />
-              <Form.Check
-                inline
-                type="checkbox"
-                label="History"
-                value="History"
-                onChange={(event) => this.handleCheckboxChange(event)}
-              />
-              <Form.Check
-                inline
-                type="checkbox"
-                label="Novel"
-                value="Novel"
-                onChange={(event) => this.handleCheckboxChange(event)}
-              />
-              <Form.Check
-                inline
-                type="checkbox"
-                label="Children's"
-                value="Children's"
-                onChange={(event) => this.handleCheckboxChange(event)}
-              />
-              <Form.Check
-                inline
-                type="checkbox"
-                label="Crime"
-                value="Crime"
-                onChange={(event) => this.handleCheckboxChange(event)}
-              />
-              <Form.Check
-                inline
-                type="checkbox"
-                label="Drama"
-                value="Drama"
-                onChange={(event) => this.handleCheckboxChange(event)}
-              />
-              <Form.Check
-                inline
-                type="checkbox"
-                label="Horror"
-                value="Horror"
-                onChange={(event) => this.handleCheckboxChange(event)}
-              />
-              <Form.Check
-                inline
-                type="checkbox"
-                label="Poetry"
-                value="Poetry"
-                onChange={(event) => this.handleCheckboxChange(event)}
-              />
-              <Form.Check
-                inline
-                type="checkbox"
-                label="Science"
-                value="Science"
-                onChange={(event) => this.handleCheckboxChange(event)}
-              />
-              <Form.Check
-                inline
-                type="checkbox"
-                label="Tragedy"
-                value="Tragedy"
-                onChange={(event) => this.handleCheckboxChange(event)}
-              />
-              <Form.Check
-                inline
-                type="checkbox"
-                label="Fiction"
-                value="Fiction"
-                onChange={(event) => this.handleCheckboxChange(event)}
-              />
-            </Form.Group>
-          </Row>
-          <Row>
-            <Button
-              onClick={() => this.addBook()}
-              variant="lg"
-              style={{
-                backgroundColor: 'rgb(148, 180, 159)',
-                color: 'rgb(255, 255, 255)',
-                width: '50rem',
-                margin: 'auto',
-              }}
-            >
-              Submit
-            </Button>
-          </Row>
-        </Form>
-      </Card>
+            </Row>
+            <Row>
+              <Button
+                onClick={() => this.addBook()}
+                variant="lg"
+                style={{
+                  backgroundColor: this.isDarkModeEnabled
+                    ? darkMode.buttonCard
+                    : lightMode.buttonCard,
+                  color: this.isDarkModeEnabled ? darkMode.card : lightMode.card,
+                  width: '50rem',
+                  margin: 'auto',
+                }}
+              >
+                Submit
+              </Button>
+            </Row>
+          </Form>
+        </Card>
+      </Container>
     );
   }
   mounted() { }
@@ -834,18 +1009,35 @@ export class BookEdit extends Component<{ match: { params: { id: number } } }> {
 }
 
 export function BookCard(props: { book: Book }) {
+  const [isDarkModeEnabled, setIsDarkModeEnabled] = useState(getDarkModeCookies());
   return (
-    <Card className="shadow bg-white rounded" style={{ width: '14.5rem', margin: '2px' }}>
+    <Card
+      key={props.book.id}
+      className="shadow bg-white rounded"
+      style={{
+        width: '14.5rem',
+        margin: '2px',
+        border: 'none',
+      }}
+    >
       <Card.Img
         variant="top"
         src={props.book.imagePath}
         style={{ width: '100', height: '200px' }}
       />
-      <Card.Body>
+      <Card.Body
+        style={{
+          backgroundColor: isDarkModeEnabled ? darkMode.card : lightMode.card,
+          color: isDarkModeEnabled ? darkMode.font : lightMode.font,
+        }}
+      >
         <Card.Title className="text-truncate">{props.book.title}</Card.Title>
         <Card.Text
           className="text-truncate"
-          style={{ color: 'rgb(128,128,128)', cursor: 'pointer' }}
+          style={{
+            color: isDarkModeEnabled ? darkMode.fontAccent : lightMode.fontAccent,
+            cursor: 'pointer',
+          }}
         >
           {props.book.author}
         </Card.Text>
@@ -855,7 +1047,11 @@ export function BookCard(props: { book: Book }) {
             <Button
               variant="success"
               onClick={() => history.push(`/books/${props.book.ISBN}`)}
-              style={{ backgroundColor: 'rgb(148, 180, 159)', color: 'rgb(255, 255, 255)' }}
+              style={{
+                backgroundColor: isDarkModeEnabled ? darkMode.buttonCard : lightMode.buttonCard,
+                color: isDarkModeEnabled ? darkMode.font : lightMode.font,
+                border: 'none',
+              }}
             >
               Read more
             </Button>
@@ -865,10 +1061,15 @@ export function BookCard(props: { book: Book }) {
               className="d-flex align-items-center justify-content-end"
               style={{ fontSize: '1.2rem', fontWeight: 'bold' }}
             >
-              <span style={{ color: '#FFA500', marginRight: '5px' }}>
+              <span
+                style={{
+                  color: isDarkModeEnabled ? darkMode.star : lightMode.star,
+                  marginRight: '5px',
+                }}
+              >
                 <FontAwesomeIcon icon={faStar} />
               </span>
-              <span>{computeAverage(props.book.rating)}</span>
+              <span>{calculateAverageRating(props.book.review)}</span>
             </div>
           </Col>
         </Row>

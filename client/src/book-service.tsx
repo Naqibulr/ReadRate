@@ -6,13 +6,13 @@ import {
   where,
   getDocs,
   addDoc,
-  updateDoc,
+  deleteDoc,
   doc,
+  getDoc,
+  arrayRemove,
+  updateDoc,
   FieldValue,
   arrayUnion,
-  arrayRemove,
-  getDoc,
-  deleteDoc,
 } from 'firebase/firestore';
 import { User } from './user-service';
 import { getCookieValue } from './getcookie';

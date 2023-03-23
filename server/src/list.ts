@@ -1,6 +1,6 @@
 //@ts-ignore
 import { Author } from './author';
-import { computeAverage } from './average';
+import { calculateAverageRating, computeAverage } from './average';
 import { Book } from './book';
 
 export class List {
@@ -35,11 +35,14 @@ export class List {
       }
 
       if (searchTerm.includes('++') && obj.rating) {
-        return computeAverage(obj.rating) >= parseInt(searchTerm[searchTerm.indexOf('++') - 1]);
+        return (
+          calculateAverageRating(obj.review) >= parseInt(searchTerm[searchTerm.indexOf('++') - 1])
+        );
       }
 
       return Object.keys(obj).some((key) => {
         const val = obj[key];
+
         if (
           typeof val === 'object' &&
           val !== null &&

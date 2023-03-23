@@ -1,11 +1,22 @@
 import * as React from 'react';
 import { Component } from 'react-simplified';
 import { Alert } from './widgets';
-import { Carousel, Button, Form, Card, Row, Col, Container, ListGroup, ListGroupItem } from 'react-bootstrap';
+import {
+  Carousel,
+  Button,
+  Form,
+  Card,
+  Row,
+  Col,
+  Container,
+  ListGroup,
+  ListGroupItem,
+} from 'react-bootstrap';
 import userService, { User } from './user-service';
 import { BookCard } from './book-components';
 import { createHashHistory } from 'history';
-import { forgetLogin, getCookieValue, setLoginCookies } from './getcookie';
+import { forgetLogin, getCookieValue, getDarkModeCookies, setLoginCookies } from './getcookie';
+import { darkMode, lightMode } from './colors';
 import bookService, { Book } from './book-service';
 
 //false as default
@@ -17,29 +28,35 @@ export let currentUser: User = {
   last_name: '',
   password: '',
   admin: false,
-  lists: new Map() as Map<string, Array<string>>
-}
+  lists: new Map() as Map<string, Array<string>>,
+};
 
 const history = createHashHistory(); // Use history.push(...)
 
 export class UserLogIn extends Component {
   email: string = '';
   password: string = '';
+  isDarkModeEnabled = getDarkModeCookies();
 
   render() {
     return (
       <Card
         style={{
           border: 'none',
+          borderRadius: '0px',
           padding: '15px',
           textAlign: 'center',
           marginLeft: 'auto',
           marginRight: 'auto',
+          height: '100vh',
+          backgroundColor: this.isDarkModeEnabled ? darkMode.background : lightMode.background,
         }}
       >
         {/*Card forms in for log in screen */}
-        <Card.Title>Log in</Card.Title>
-        <Container style={{ width: '20rem', marginLeft: 'auto', marginRight: 'auto' }}>
+        <Card.Title style={{ color: this.isDarkModeEnabled ? darkMode.font : lightMode.font }}>
+          Log in
+        </Card.Title>
+        <Container fluid style={{ width: '20rem', marginLeft: 'auto', marginRight: 'auto' }}>
           <Row>
             <Form.Control
               value={this.email}
@@ -49,6 +66,10 @@ export class UserLogIn extends Component {
               style={{
                 textAlign: 'center',
                 marginBottom: '10px',
+                color: this.isDarkModeEnabled ? darkMode.font : lightMode.font,
+                backgroundColor: this.isDarkModeEnabled
+                  ? darkMode.background
+                  : lightMode.background,
               }}
             ></Form.Control>
           </Row>
@@ -67,6 +88,10 @@ export class UserLogIn extends Component {
               style={{
                 textAlign: 'center',
                 marginBottom: '10px',
+                backgroundColor: this.isDarkModeEnabled
+                  ? darkMode.background
+                  : lightMode.background,
+                color: this.isDarkModeEnabled ? darkMode.font : lightMode.font,
               }}
             ></Form.Control>
           </Row>
@@ -75,11 +100,9 @@ export class UserLogIn extends Component {
         <Container style={{ width: '15rem', marginLeft: 'auto', marginRight: 'auto' }}>
           <Row>
             <Button
-              variant="success"
               onClick={() => this.logIn()}
               style={{
                 marginBottom: '10px',
-
               }}
             >
               Log in
@@ -87,10 +110,15 @@ export class UserLogIn extends Component {
           </Row>
           <Row>
             <Button
-              variant="outline-success"
+              className={this.isDarkModeEnabled ? 'dark-mode-button' : 'light-mode-button'}
               onClick={() => this.createUser()}
               style={{
                 marginBottom: '10px',
+                backgroundColor: 'transparent',
+                border: this.isDarkModeEnabled
+                  ? ` 1px solid ${darkMode.buttonCard}`
+                  : ` 1px solid ${lightMode.buttonCard}`,
+                color: this.isDarkModeEnabled ? darkMode.buttonCard : lightMode.buttonCard,
               }}
             >
               No user? Create one here
@@ -141,8 +169,17 @@ export class UserLogIn extends Component {
 }
 
 export class RegisterUser extends Component {
-  user: User = { user_id: 0, email: '', first_name: '', last_name: '', password: '', admin: false, lists: new Map() as Map<string, Array<string>>, };
+  user: User = {
+    user_id: 0,
+    email: '',
+    first_name: '',
+    last_name: '',
+    password: '',
+    admin: false,
+    lists: new Map() as Map<string, Array<string>>,
+  };
   confirm_password: string = '';
+  isDarkModeEnabled = getDarkModeCookies();
 
   render() {
     return (
@@ -292,7 +329,7 @@ export class RegisterUser extends Component {
       last_name: '',
       password: '',
       admin: false,
-      lists: new Map()
+      lists: new Map(),
     } as User;
 
     this.confirm_password = '';
@@ -300,19 +337,23 @@ export class RegisterUser extends Component {
 }
 
 export class UserDetails extends Component {
-  listItems: { title: string; books: Book[]; }[] = [];
-  newList: string = ""
+  isDarkModeEnabled = getDarkModeCookies();
+  listItems: { title: string; books: Book[] }[] = [];
+  newList: string = '';
   render() {
     return (
       <>
         <div
           style={{
-            // border: 'none',
+            borderRadius: '0px',
             padding: '15px',
             textAlign: 'center',
             marginLeft: 'auto',
             marginRight: 'auto',
             height: '85vh',
+            backgroundColor: this.isDarkModeEnabled ? darkMode.background : lightMode.background,
+            color: this.isDarkModeEnabled ? darkMode.font : lightMode.font,
+            minHeight: '100vh',
           }}
         >
           {/* Page for all relevant user info for logged in user */}
@@ -387,45 +428,50 @@ export class UserDetails extends Component {
               if (list.books.length == 0) {
                 return (
                   <div key={index}>
-                    <h4 style={{ marginLeft: '20px', marginTop: '5px', marginBottom: '0px' }}>{list.title}</h4>
+                    <h4 style={{ marginLeft: '20px', marginTop: '5px', marginBottom: '0px' }}>
+                      {list.title}
+                    </h4>
                     <p>The list is currently empty</p>
                   </div>
-                )
+                );
               } else {
                 return (
                   <div key={index}>
-                    <h4 style={{ marginLeft: '20px', marginTop: '5px', marginBottom: '0px' }}>{list.title}</h4>
+                    <h4 style={{ marginLeft: '20px', marginTop: '5px', marginBottom: '0px' }}>
+                      {list.title}
+                    </h4>
                     {/* @ts-ignore */}
                     <Carousel interval={null}>
                       {list.books.map((book, index) => {
                         if (index % 6 === 0) {
-                          return (<Carousel.Item key={index} style={{ padding: '1rem' }}>
-                            <Row>
-                              {list.books.slice(index, index + 6).map((book, index) => (
-                                <Col md={2} key={index} >
-                                  <BookCard book={book} />
-                                </Col>
-                              ))}
-                            </Row>
-                          </Carousel.Item>)
-
+                          return (
+                            <Carousel.Item key={index} style={{ padding: '1rem' }}>
+                              <Row>
+                                {list.books.slice(index, index + 6).map((book, index) => (
+                                  <Col md={2} key={index}>
+                                    <BookCard book={book} />
+                                  </Col>
+                                ))}
+                              </Row>
+                            </Carousel.Item>
+                          );
                         }
                         return null;
                       })}
                     </Carousel>
-
-
                   </div>
-                )
+                );
               }
             })}
           </Row>
-          <div style={{
-            width: '15rem',
-            marginLeft: 'auto',
-            marginRight: 'auto',
-            marginBottom: '10px',
-          }}>
+          <div
+            style={{
+              width: '15rem',
+              marginLeft: 'auto',
+              marginRight: 'auto',
+              marginBottom: '10px',
+            }}
+          >
             <Card.Title>Create a new List</Card.Title>
             <Form.Control
               value={this.newList}
@@ -455,8 +501,11 @@ export class UserDetails extends Component {
                 marginLeft: 'auto',
                 marginRight: 'auto',
                 marginBottom: '10px',
-                backgroundColor: 'rgb(223, 120, 97)',
-                color: 'rgb(254, 252, 251)',
+                backgroundColor: this.isDarkModeEnabled
+                  ? darkMode.buttonMenu
+                  : lightMode.buttonMenu,
+                color: this.isDarkModeEnabled ? darkMode.background : lightMode.background,
+                border: 'none',
               }}
             >
               Log out
@@ -470,35 +519,33 @@ export class UserDetails extends Component {
   addNewList(list: string) {
     //retrieve and format current lists
     let lists = getCookieValue('lists');
-    lists = JSON.parse(lists)
+    lists = JSON.parse(lists);
 
-    if (list == "" || lists.hasOwnProperty(list) == true) {
-      return
+    if (list == '' || lists.hasOwnProperty(list) == true) {
+      return;
     }
 
     //add to lists
     // @ts-ignore
-    lists[list] = []
+    lists[list] = [];
 
     //update cookies
-    setLoginCookies(
-      {
-        "user_id": 0,
-        "email": getCookieValue('email'),
-        "first_name": getCookieValue('first_name'),
-        "last_name": getCookieValue('last_name'),
-        "password": getCookieValue('password'),
-        "admin": getCookieValue('admin'),
-        "lists": lists
-      }
-    )
+    setLoginCookies({
+      user_id: 0,
+      email: getCookieValue('email'),
+      first_name: getCookieValue('first_name'),
+      last_name: getCookieValue('last_name'),
+      password: getCookieValue('password'),
+      admin: getCookieValue('admin'),
+      lists: lists,
+    });
 
     const email = getCookieValue('email');
 
-    //axios call to update lists at firestore 
+    //axios call to update lists at firestore
     // @ts-ignore
     userService.updateLists(lists, email);
-    this.createLists()
+    this.createLists();
   }
 
   mounted() {
@@ -507,52 +554,49 @@ export class UserDetails extends Component {
       history.push('/books/login');
     }
 
-    this.createLists()
+    this.createLists();
   }
 
   async createLists() {
-    this.listItems = []
+    this.listItems = [];
 
     //Recieve and store lists
-    if (getCookieValue("loggedIn") != 'true')
-      return 0;
-    for (let title in JSON.parse(getCookieValue("lists"))) {
-      const books = new Array
+    if (getCookieValue('loggedIn') != 'true') return 0;
+    for (let title in JSON.parse(getCookieValue('lists'))) {
+      const books = new Array();
       var i = 0;
       //@ts-ignore
-      for (let isbn in JSON.parse(getCookieValue("lists"))[title]) {
-
+      for (let isbn in JSON.parse(getCookieValue('lists'))[title]) {
         //@ts-ignore
-        await bookService.getBook(JSON.parse(getCookieValue("lists"))[title][isbn].toString()).then((book: Book) => {
-          const item: Book = {
-            id: "",
-            title: book.title,
-            ISBN: book.ISBN,
-            author: book.author,
-            releaseYear: book.releaseYear,
-            publisher: book.publisher,
-            pages: book.pages,
-            description: book.description,
-            genre: book.genre,
-            rating: book.rating,
-            imagePath: book.imagePath,
-            review: [],
-            addedDate: new Date()
-          };
+        await bookService
+          .getBook(JSON.parse(getCookieValue('lists'))[title][isbn].toString())
+          .then((book: Book) => {
+            const item: Book = {
+              id: '',
+              title: book.title,
+              ISBN: book.ISBN,
+              author: book.author,
+              releaseYear: book.releaseYear,
+              publisher: book.publisher,
+              pages: book.pages,
+              description: book.description,
+              genre: book.genre,
+              rating: book.rating,
+              imagePath: book.imagePath,
+              review: [],
+              addedDate: new Date(),
+            };
 
-          books.push(item)
-
-        })
-
+            books.push(item);
+          });
       }
-      this.listItems.push({ title, books })
+      this.listItems.push({ title, books });
     }
-
   }
 
   logOut() {
     loggedIn = false;
-    history.push('/');
+    history.push('/books/login');
     currentUser = {
       user_id: 0,
       email: '',
@@ -566,5 +610,5 @@ export class UserDetails extends Component {
     window.location.reload();
   }
 
-  requestAdmin() { }
+  requestAdmin() {}
 }

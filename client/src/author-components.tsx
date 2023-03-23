@@ -10,13 +10,15 @@ import StarRatings from 'react-star-ratings';
 import bookService, { Book } from './book-service';
 import { BookCard } from './book-components';
 import { computeAuthorRating } from './average';
+import { getDarkModeCookies } from './getcookie';
+import { darkMode, lightMode } from './colors';
 
 // REMEMBER TO ADD IMPORTS FROM SERVICE
 
 const history = createHashHistory(); // Use history.push(...) to programmatically change path
 
 function StarRating(props: { rating: number }) {
-  const [rating, setRating] = useState(4.8);
+  const [rating, setRating] = useState(props.rating);
 
   return (
     <div>
@@ -37,6 +39,7 @@ function StarRating(props: { rating: number }) {
  */
 export class AuthorList extends Component {
   testData: String = '';
+  isDarkModeEnabled = getDarkModeCookies();
 
   render() {
     return (
@@ -68,6 +71,7 @@ export class AuthorDetails extends Component<{
     params: { author_id: string };
   };
 }> {
+  isDarkModeEnabled = getDarkModeCookies();
   author: Author = {
     id: '',
     name: '',
@@ -79,17 +83,28 @@ export class AuthorDetails extends Component<{
     description: '',
     imagePath: '',
   };
-
   books: Array<Book> = [];
 
   render() {
     return (
-      <Container className="p-3">
-        <Row xs={'auto'}>
+      <Container
+        fluid
+        style={{
+          backgroundColor: this.isDarkModeEnabled ? darkMode.background : lightMode.background,
+          color: this.isDarkModeEnabled ? darkMode.font : lightMode.font,
+          paddingLeft: '50px',
+          paddingTop: '0px',
+        }}
+      >
+        <Row xs={'auto'} style={{ paddingLeft: '30px' }}>
           <Button
             className="btn btn-light"
             onClick={() => history.push('/')}
-            style={{ width: '5rem', borderColor: 'rgb(223, 120, 97)', color: 'rgb(223, 120, 97)' }}
+            style={{
+              width: '5rem',
+              borderColor: this.isDarkModeEnabled ? darkMode.buttonMenu : lightMode.buttonMenu,
+              color: this.isDarkModeEnabled ? darkMode.buttonMenu : lightMode.buttonMenu,
+            }}
           >
             Back
           </Button>
@@ -117,7 +132,13 @@ export class AuthorDetails extends Component<{
               <p>{this.author.description}</p>
             </Row>
             <Row className="mt-3">
-              <Col sm={1} style={{ fontWeight: 'bold', color: 'rgb(77, 77, 77)' }}>
+              <Col
+                sm={1}
+                style={{
+                  fontWeight: 'bold',
+                  color: this.isDarkModeEnabled ? darkMode.font : lightMode.font,
+                }}
+              >
                 <p> Life:</p>
               </Col>
               <Col>
@@ -127,7 +148,14 @@ export class AuthorDetails extends Component<{
             </Row>
             <Row>
               <Col sm={1}>
-                <small style={{ fontWeight: 'bold', color: 'rgb(77, 77, 77)' }}>Country:</small>
+                <small
+                  style={{
+                    fontWeight: 'bold',
+                    color: this.isDarkModeEnabled ? darkMode.font : lightMode.font,
+                  }}
+                >
+                  Country:
+                </small>
               </Col>
               <Col sm={8}>
                 <small>{this.author.country}</small>
@@ -175,6 +203,7 @@ export class AuthorDetails extends Component<{
 }
 
 export class AuthorAdd extends Component {
+  isDarkModeEnabled = getDarkModeCookies();
   author: Author = {
     id: '',
     name: '',
@@ -202,124 +231,177 @@ export class AuthorAdd extends Component {
     Alert.success('The book has been added');
   }
 
-  getBookByAuthor(author: string) {
-    console.log(bookService.getBookByAuthor(author));
-  }
-
   render() {
     return (
-      <Card
+      <Container
+        fluid
         style={{
-          border: '0',
-          textAlign: 'center',
-          margin: '10%',
-          marginTop: '3%',
+          backgroundColor: this.isDarkModeEnabled ? darkMode.background : lightMode.background,
+          color: this.isDarkModeEnabled ? darkMode.font : lightMode.font,
+          height: '100vh',
+          marginTop: '-50px',
+          paddingTop: '70px',
         }}
       >
-        <Card.Title>Details:</Card.Title>
-        <Form>
-          <Row>
-            <Col>
-              <Form.Group className="mb-3" controlId="name">
-                <Form.Label>Name</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Enter name"
-                  onChange={(event) => (this.author.name = event.currentTarget.value)}
-                />
-              </Form.Group>
-            </Col>
-            <Col>
-              <Form.Group className="mb-3" controlId="id">
-                <Form.Label>ID</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Enter ID"
-                  onChange={(event) => (this.author.id = event.currentTarget.value)}
-                />
-              </Form.Group>
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <Form.Group className="mb-3" controlId="image">
-                <Form.Label>Image</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Enter image URL"
-                  onChange={(event) => (this.author.imagePath = event.currentTarget.value)}
-                />
-              </Form.Group>
-            </Col>
-            <Col>
-              <Form.Group className="mb-3" controlId="country">
-                <Form.Label>Country</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Enter country"
-                  onChange={(event) => (this.author.country = event.currentTarget.value)}
-                />
-              </Form.Group>
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <Form.Group className="mb-3" controlId="birthDate">
-                <Form.Label>Birth date</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="dd. month yyyy"
-                  onChange={(event) => (this.author.birthDate = event.currentTarget.value)}
-                />
-              </Form.Group>
-            </Col>
-            <Col>
-              <Form.Group className="mb-3" controlId="deathDate">
-                <Form.Label>Death date</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Enter death date, if alive leave empty"
-                  onChange={(event) => (this.author.deathDate = event.currentTarget.value)}
-                />
-              </Form.Group>
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <Form.Group className="mb-3" controlId="description">
-                <Form.Label>Description</Form.Label>
-                <Form.Control
-                  type="text"
-                  as="textarea"
-                  placeholder="Enter description"
-                  rows={1}
-                  onChange={(event) => (this.author.description = event.currentTarget.value)}
-                />
-              </Form.Group>
-            </Col>
-          </Row>
-          <Row>
-            <Button
-              onClick={() => this.getBookByAuthor('J.R.R.Tolkein')}
-              variant="lg"
-              style={{
-                backgroundColor: 'rgb(148, 180, 159)',
-                color: 'rgb(255, 255, 255)',
-                width: '50rem',
-                margin: 'auto',
-              }}
-            >
-              Submit
-            </Button>
-          </Row>
-        </Form>
-      </Card>
+        <Card
+          style={{
+            border: '0',
+            textAlign: 'center',
+            margin: '10%',
+            marginTop: '3%',
+            backgroundColor: this.isDarkModeEnabled ? darkMode.background : lightMode.background,
+          }}
+        >
+          <Card.Title>Details:</Card.Title>
+          <Form>
+            <Row>
+              <Col>
+                <Form.Group className="mb-3" controlId="name">
+                  <Form.Label>Name</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Enter name"
+                    onChange={(event) => (this.author.name = event.currentTarget.value)}
+                    style={{
+                      backgroundColor: this.isDarkModeEnabled
+                        ? darkMode.background
+                        : lightMode.background,
+                      color: this.isDarkModeEnabled ? darkMode.font : lightMode.font,
+                    }}
+                  />
+                </Form.Group>
+              </Col>
+              <Col>
+                <Form.Group className="mb-3" controlId="id">
+                  <Form.Label>ID</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Enter ID"
+                    onChange={(event) => (this.author.id = event.currentTarget.value)}
+                    style={{
+                      backgroundColor: this.isDarkModeEnabled
+                        ? darkMode.background
+                        : lightMode.background,
+                      color: this.isDarkModeEnabled ? darkMode.font : lightMode.font,
+                    }}
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <Form.Group className="mb-3" controlId="image">
+                  <Form.Label>Image</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Enter image URL"
+                    onChange={(event) => (this.author.imagePath = event.currentTarget.value)}
+                    style={{
+                      backgroundColor: this.isDarkModeEnabled
+                        ? darkMode.background
+                        : lightMode.background,
+                      color: this.isDarkModeEnabled ? darkMode.font : lightMode.font,
+                    }}
+                  />
+                </Form.Group>
+              </Col>
+              <Col>
+                <Form.Group className="mb-3" controlId="country">
+                  <Form.Label>Country</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Enter country"
+                    onChange={(event) => (this.author.country = event.currentTarget.value)}
+                    style={{
+                      backgroundColor: this.isDarkModeEnabled
+                        ? darkMode.background
+                        : lightMode.background,
+                      color: this.isDarkModeEnabled ? darkMode.font : lightMode.font,
+                    }}
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <Form.Group className="mb-3" controlId="birthDate">
+                  <Form.Label>Birth date</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="dd. month yyyy"
+                    onChange={(event) => (this.author.birthDate = event.currentTarget.value)}
+                    style={{
+                      backgroundColor: this.isDarkModeEnabled
+                        ? darkMode.background
+                        : lightMode.background,
+                      color: this.isDarkModeEnabled ? darkMode.font : lightMode.font,
+                    }}
+                  />
+                </Form.Group>
+              </Col>
+              <Col>
+                <Form.Group className="mb-3" controlId="deathDate">
+                  <Form.Label>Death date</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Enter death date, if alive leave empty"
+                    onChange={(event) => (this.author.deathDate = event.currentTarget.value)}
+                    style={{
+                      backgroundColor: this.isDarkModeEnabled
+                        ? darkMode.background
+                        : lightMode.background,
+                      color: this.isDarkModeEnabled ? darkMode.font : lightMode.font,
+                    }}
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <Form.Group className="mb-3" controlId="description">
+                  <Form.Label>Description</Form.Label>
+                  <Form.Control
+                    type="text"
+                    as="textarea"
+                    placeholder="Enter description"
+                    rows={1}
+                    onChange={(event) => (this.author.description = event.currentTarget.value)}
+                    style={{
+                      backgroundColor: this.isDarkModeEnabled
+                        ? darkMode.background
+                        : lightMode.background,
+                      color: this.isDarkModeEnabled ? darkMode.font : lightMode.font,
+                    }}
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row>
+              <Button
+                onClick={() => this.addAuthor()}
+                variant="lg "
+                style={{
+                  backgroundColor: this.isDarkModeEnabled
+                    ? darkMode.buttonCard
+                    : lightMode.buttonCard,
+                  color: this.isDarkModeEnabled ? darkMode.card : lightMode.card,
+                  width: '50rem',
+                  margin: 'auto',
+                }}
+              >
+                Submit
+              </Button>
+            </Row>
+          </Form>
+        </Card>
+      </Container>
     );
   }
   mounted() { }
 }
 
 export class AuthorEdit extends Component<{ match: { params: { id: number } } }> {
+  isDarkModeEnabled = getDarkModeCookies();
   render() {
     return (
       <>
@@ -337,6 +419,7 @@ export class AuthorEdit extends Component<{ match: { params: { id: number } } }>
 
 export function AuthorCard(props: { author: Author }) {
   const [books, setBooks] = useState<Book[]>([]);
+  const [isDarkModeEnabled, setIsDarkModeEnabled] = useState(getDarkModeCookies());
 
   useEffect(() => {
     const fetchBooks = async () => {
@@ -346,19 +429,35 @@ export function AuthorCard(props: { author: Author }) {
     fetchBooks();
   }, []);
   return (
-    <Card className="shadow bg-white rounded" style={{ width: '14.5rem', margin: '2px' }}>
+    <Card
+      className="shadow rounded"
+      style={{
+        width: '14.5rem',
+        margin: '2px',
+        backgroundColor: isDarkModeEnabled ? darkMode.background : lightMode.background,
+      }}
+    >
       <Card.Img
         variant="top"
         src={props.author.imagePath}
         style={{ width: '100', height: '200px' }}
       />
       <Card.Body>
-        <Card.Title className="text-truncate">{props.author.name}</Card.Title>
+        <Card.Title
+          className="text-truncate"
+          style={{ color: isDarkModeEnabled ? darkMode.font : lightMode.font }}
+        >
+          {props.author.name}
+        </Card.Title>
         <Row>
           <Col className="col-8">
             <Button
               onClick={() => history.push(`/authors/${props.author.id}`)}
-              style={{ backgroundColor: 'rgb(148, 180, 159)', color: 'rgb(255, 255, 255)' }}
+              style={{
+                backgroundColor: isDarkModeEnabled ? darkMode.buttonCard : lightMode.buttonCard,
+                color: isDarkModeEnabled ? darkMode.card : lightMode.card,
+                border: 'none',
+              }}
             >
               Read more
             </Button>
@@ -368,10 +467,17 @@ export function AuthorCard(props: { author: Author }) {
               className="d-flex align-items-center justify-content-end"
               style={{ fontSize: '1.2rem', fontWeight: 'bold' }}
             >
-              <span style={{ color: '#FFA500', marginRight: '5px' }}>
+              <span
+                style={{
+                  color: isDarkModeEnabled ? darkMode.star : lightMode.star,
+                  marginRight: '5px',
+                }}
+              >
                 <FontAwesomeIcon icon={faStar} />
               </span>
-              <span>{computeAuthorRating(books)}</span>
+              <span style={{ color: isDarkModeEnabled ? darkMode.font : lightMode.font }}>
+                {computeAuthorRating(books)}
+              </span>
             </div>
           </Col>
         </Row>

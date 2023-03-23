@@ -6,6 +6,8 @@ import bookService, { Book } from './book-service';
 import { AuthorCard } from './author-components';
 import authorService, { Author } from './author-service';
 import { useEffect, useState, useCallback } from 'react';
+import { getDarkModeCookies } from './getcookie';
+import { darkMode, lightMode } from './colors';
 import { useHistory, useLocation } from 'react-router-dom';
 
 export function BookSearch() {
@@ -16,6 +18,7 @@ export function BookSearch() {
   const [yearTo, updateYearTo] = useState<string>();
   const [searchTermArray, updateSearchTermArray] = useState<Array<string>>();
   const [click, updateClick] = useState<string>('1');
+  const [isDarkModeEnabled, setIsDarkModeEnabled] = useState(getDarkModeCookies());
   const [selectedFilters, setSelectedFilters] = useState([]);
   const history = useHistory();
 
@@ -117,12 +120,26 @@ export function BookSearch() {
               aria-label="Search"
               aria-describedby="Search field"
               onChange={handleChangeYearFrom}
-            />{' '}
+              style={{
+                backgroundColor: isDarkModeEnabled ? darkMode.background : lightMode.background,
+                color: isDarkModeEnabled ? darkMode.font : lightMode.font,
+              }}
+            />
+          </InputGroup>
+        </Col>
+
+        <Col>
+          {' '}
+          <InputGroup className="p-0">
             <Form.Control
               placeholder="To year"
               aria-label="Search"
               aria-describedby="Search field"
               onChange={handleChangeYearTo}
+              style={{
+                backgroundColor: isDarkModeEnabled ? darkMode.background : lightMode.background,
+                color: isDarkModeEnabled ? darkMode.font : lightMode.font,
+              }}
             />
             <Button variant="light" id="button-addon2" onClick={searchWithYear}>
               Search
@@ -172,6 +189,7 @@ export function BookSearch() {
 export function AuthorSearch() {
   const [authors, setAuthors] = useState<Author[]>([]);
   const { searchTerm } = useParams<{ searchTerm: string }>();
+  const [isDarkModeEnabled, setIsDarkModeEnabled] = useState(getDarkModeCookies());
 
   useEffect(() => {
     const fetchAuthors = async () => {
@@ -183,8 +201,24 @@ export function AuthorSearch() {
   }, []);
 
   return (
-    <Container fluid style={{ margin: 0 }}>
-      <h3 style={{ marginLeft: '20px', marginTop: '5px', marginBottom: '0px' }}>{searchTerm}</h3>
+    <Container
+      fluid
+      style={{
+        marginTop: '-10px',
+        backgroundColor: isDarkModeEnabled ? darkMode.background : lightMode.background,
+        height: '100vh',
+      }}
+    >
+      <h3
+        style={{
+          marginLeft: '20px',
+          marginTop: '5px',
+          marginBottom: '0px',
+          color: isDarkModeEnabled ? darkMode.font : lightMode.font,
+        }}
+      >
+        {searchTerm}
+      </h3>
       <Carousel interval={null}>
         <Carousel.Item style={{ padding: '1rem' }}>
           <Row>
