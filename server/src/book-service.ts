@@ -1,5 +1,14 @@
 import { firestore } from './firebase';
-import { collection, query, getDocs, addDoc, updateDoc, doc, arrayUnion } from 'firebase/firestore';
+import {
+  collection,
+  query,
+  getDocs,
+  addDoc,
+  updateDoc,
+  doc,
+  arrayUnion,
+  where,
+} from 'firebase/firestore';
 import { List } from './list';
 import userService from './user-service';
 
@@ -122,7 +131,6 @@ class BookService {
   }
 
   addBook(book: Book) {
-    console.log('book-service', book);
     return new Promise<void>(async (resolve, reject) => {
       addDoc(this.colRef, {
         id: '',
@@ -207,6 +215,22 @@ class BookService {
 
   getReviewByBookAndEmail(book: Book, email: string) {
     return book.review.filter((review) => review.email == email)[0];
+  }
+
+  getBook(ISBN: string) {
+    return new Promise<Book>(async (resolve, reject) => {
+      const q = query(this.colRef, where('ISBN', '==', ISBN));
+      let book;
+      const qs = await getDocs(q);
+      qs.forEach((doc) => {
+        book = doc.data();
+      });
+      if (book) {
+        resolve(book as Book);
+      } else {
+        reject('No book was found');
+      }
+    });
   }
 }
 

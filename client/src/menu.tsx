@@ -3,7 +3,9 @@ import { faRightToBracket } from '@fortawesome/free-solid-svg-icons';
 import React, { useState } from 'react';
 import { Button, Container, Dropdown, Form, InputGroup, Nav, Navbar } from 'react-bootstrap';
 import { Component } from 'react-simplified';
+import { getCookieValue } from './getcookie';
 import Logo from './Logo.png';
+import { loggedIn } from './user-components';
 //import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
 export class Menu extends Component {
@@ -29,7 +31,7 @@ export class Menu extends Component {
     if (this.state.filterValue == 'Book')
       window.location.href = `http://localhost:3000/#/books/search/${this.state.searchValue}`; // Navigate to the search URL with the search input value
     else window.location.href = `http://localhost:3000/#/authors/search/${this.state.searchValue}`;
-    window.location.reload;
+    window.location.reload();
   };
 
   render() {
@@ -57,12 +59,12 @@ export class Menu extends Component {
             <Nav>
               <InputGroup className="p-3">
                 <Dropdown id="dropdown" >
-                  <Dropdown.Toggle variant="light" style={{borderColor: 'rgb(223, 120, 97)', color: 'rgb(223, 120, 97)'}} id="dropdown-basic" >
+                  <Dropdown.Toggle variant="light" style={{ borderColor: 'rgb(223, 120, 97)', color: 'rgb(223, 120, 97)' }} id="dropdown-basic" >
                     {this.state.filterValue}
                   </Dropdown.Toggle>
 
                   <Dropdown.Menu >
-                    <Dropdown.Item  onClick={() => this.handleItemClick('Book')}>Book</Dropdown.Item>
+                    <Dropdown.Item onClick={() => this.handleItemClick('Book')}>Book</Dropdown.Item>
                     <Dropdown.Item onClick={() => this.handleItemClick('Author')}>
                       Author
                     </Dropdown.Item>
@@ -76,7 +78,7 @@ export class Menu extends Component {
                   onChange={this.handleInputChange}
                 />
 
-                <Button variant="light" id="button-addon2" onClick={this.handleSearch} style={{backgroundColor: 'rgb(223, 120, 97)' , color: 'rgb(254, 252, 251)'}}>
+                <Button variant="light" id="button-addon2" onClick={this.handleSearch} style={{ backgroundColor: 'rgb(223, 120, 97)', color: 'rgb(254, 252, 251)' }}>
                   Search
                 </Button>
               </InputGroup>
@@ -102,7 +104,10 @@ export class Menu extends Component {
                 </Nav.Link>
               ) : null}
               <Nav.Link href="/#/books/user" style={{ color: 'rgb(34, 34, 34)', marginTop: '15px' }}>
-                Login
+                {getCookieValue('loggedIn') == "true"
+                  ? "Profile"
+
+                  : "Login"}
               </Nav.Link>
             </Nav>
           </Navbar.Collapse>
