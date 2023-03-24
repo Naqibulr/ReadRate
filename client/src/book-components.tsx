@@ -481,6 +481,8 @@ export class BookDetails extends Component<{
     //axios call to update lists at firestore
     // @ts-ignore
     userService.updateLists(lists, email);
+    Alert.success(`Added to ${list}`);
+
   };
 
   render() {
@@ -1074,7 +1076,7 @@ export class BookAdd extends Component {
       </Container>
     );
   }
-  mounted() {}
+  mounted() { }
 }
 
 export class BookEdit extends Component<{ match: { params: { id: number } } }> {
@@ -1090,7 +1092,7 @@ export class BookEdit extends Component<{ match: { params: { id: number } } }> {
     );
   }
 
-  mounted() {}
+  mounted() { }
 }
 
 export function BookCard(props: { book: Book }) {
