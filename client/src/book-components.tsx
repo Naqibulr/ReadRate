@@ -361,7 +361,7 @@ function StarRating(props: { rating: number }) {
         rating={props.rating}
         starRatedColor="orange"
         //changeRating={setRating}
-        numberOfStars={6}
+        numberOfStars={5}
         starDimension="30px"
         starSpacing="5px"
       />
